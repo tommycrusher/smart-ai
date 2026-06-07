@@ -1,6 +1,7 @@
 import { Core } from "core/core";
 import { DataLogger } from "core/data/log";
 import { myersDiff } from "core/diff/myers";
+import { TrainingCaptureService } from "core/training";
 
 import { ContinueGUIWebviewViewProvider } from "../ContinueGUIWebviewViewProvider";
 import { editOutcomeTracker } from "../extension/EditOutcomeTracker";
@@ -48,12 +49,49 @@ export async function processDiff(
     // Capture file content before save to detect autoformatting
     const preSaveContent = await ide.readFile(newOrCurrentUri);
 
+    // Get pending edit data before recording outcome (which clears it)
+    const pendingEdit = editOutcomeTracker.getPendingEdit(streamId);
+
     // Record the edit outcome before updating the apply state
     await editOutcomeTracker.recordEditOutcome(
       streamId,
       action === "accept",
       DataLogger.getInstance(),
     );
+
+    // Capture training data for accepted edits
+    if (action === "accept") {
+      const trainingService = TrainingCaptureService.getInstance();
+      const workspaceDirs = await ide.getWorkspaceDirs();
+      const isSmarterp = trainingService.isSmarterpWorkspace();
+
+      if (pendingEdit) {
+        await trainingService.capture({
+          instruction: pendingEdit.prompt,
+          input: pendingEdit.previousCode,
+          output: pendingEdit.newCode,
+          model: pendingEdit.modelName,
+          provider: pendingEdit.modelProvider,
+          workspaceRoot: workspaceDirs[0],
+          filePaths: [pendingEdit.filepath],
+          accepted: true,
+          source: "edit",
+          smarterpMode: isSmarterp,
+        });
+      } else {
+        // Fallback: use TrainingCaptureService pending interaction
+        // (e.g., for apply operations that don't go through editOutcomeTracker)
+        const pending = trainingService.getPendingInteraction();
+        if (pending) {
+          await trainingService.capture({
+            ...pending,
+            accepted: true,
+            workspaceRoot: workspaceDirs[0],
+            smarterpMode: isSmarterp,
+          });
+        }
+      }
+    }
 
     // Save the file
     await ide.saveFile(newOrCurrentUri);

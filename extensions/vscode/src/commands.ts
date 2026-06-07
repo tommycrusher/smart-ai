@@ -9,12 +9,13 @@ import { Core } from "core/core";
 import { walkDirAsync } from "core/indexing/walkDir";
 import { isModelInstaller } from "core/llm";
 import { NextEditLoggingService } from "core/nextEdit/NextEditLoggingService";
+import { TrainingCaptureService } from "core/training";
 import { startLocalLemonade } from "core/util/lemonadeHelper";
 import { startLocalOllama } from "core/util/ollamaHelper";
 import {
-  getConfigJsonPath,
-  getConfigYamlPath,
-  setConfigFilePermissions,
+    getConfigJsonPath,
+    getConfigYamlPath,
+    setConfigFilePermissions,
 } from "core/util/paths";
 import { Telemetry } from "core/util/posthog";
 import * as vscode from "vscode";
@@ -23,16 +24,16 @@ import * as YAML from "yaml";
 import { convertJsonToYamlConfig } from "../../../packages/config-yaml/dist";
 
 import {
-  getAutocompleteStatusBarDescription,
-  getAutocompleteStatusBarTitle,
-  getNextEditMenuItems,
-  getStatusBarStatus,
-  getStatusBarStatusFromQuickPickItemLabel,
-  handleNextEditToggle,
-  isNextEditToggleLabel,
-  quickPickStatusText,
-  setupStatusBar,
-  StatusBarStatus,
+    getAutocompleteStatusBarDescription,
+    getAutocompleteStatusBarTitle,
+    getNextEditMenuItems,
+    getStatusBarStatus,
+    getStatusBarStatusFromQuickPickItemLabel,
+    handleNextEditToggle,
+    isNextEditToggleLabel,
+    quickPickStatusText,
+    setupStatusBar,
+    StatusBarStatus,
 } from "./autocomplete/statusBar";
 import { ContinueConsoleWebviewViewProvider } from "./ContinueConsoleWebviewViewProvider";
 import { ContinueGUIWebviewViewProvider } from "./ContinueGUIWebviewViewProvider";
@@ -41,9 +42,9 @@ import { VerticalDiffManager } from "./diff/vertical/manager";
 import EditDecorationManager from "./quickEdit/EditDecorationManager";
 import { QuickEdit, QuickEditShowParams } from "./quickEdit/QuickEditQuickPick";
 import {
-  addCodeToContextFromRange,
-  addEntireFileToContext,
-  addHighlightedCodeToContext,
+    addCodeToContextFromRange,
+    addEntireFileToContext,
+    addHighlightedCodeToContext,
 } from "./util/addCode";
 import { Battery } from "./util/battery";
 import { getMetaKeyLabel } from "./util/util";
@@ -881,6 +882,86 @@ const getCommandsMap: (
 
       await vscode.commands.executeCommand(
         "editor.action.inlineSuggest.trigger",
+      );
+    },
+    // Smart AI Training Capture Commands
+    "smartai.toggleTrainingCapture": async () => {
+      const trainingService = TrainingCaptureService.getInstance();
+      const currentConfig = trainingService.getConfig();
+      const newEnabled = !currentConfig.enabled;
+      trainingService.setConfig({ enabled: newEnabled });
+      vscode.window.showInformationMessage(
+        `Smart AI training capture is now ${newEnabled ? "enabled" : "disabled"}.`,
+      );
+    },
+    "smartai.saveLastExchange": async () => {
+      const trainingService = TrainingCaptureService.getInstance();
+      const pending = trainingService.getPendingInteraction();
+      if (!pending) {
+        vscode.window.showWarningMessage(
+          "No recent exchange available to save as training example.",
+        );
+        return;
+      }
+      const success = await trainingService.capture(pending);
+      if (success) {
+        vscode.window.showInformationMessage(
+          "Saved last exchange as training example.",
+        );
+      }
+    },
+    "smartai.saveLastPatch": async () => {
+      const trainingService = TrainingCaptureService.getInstance();
+      const pending = trainingService.getPendingInteraction();
+      if (!pending) {
+        vscode.window.showWarningMessage(
+          "No recent patch available to save as training example.",
+        );
+        return;
+      }
+      const success = await trainingService.capture(pending);
+      if (success) {
+        vscode.window.showInformationMessage(
+          "Saved last patch as training example.",
+        );
+      }
+    },
+    "smartai.exportTrainingBundle": async () => {
+      const trainingService = TrainingCaptureService.getInstance();
+      const result = await trainingService.exportBundle({
+        trainEvalSplit: 0.9,
+        includePatches: true,
+      });
+      if (result) {
+        vscode.window.showInformationMessage(
+          `Training bundle exported to: ${result.bundleDir}`,
+        );
+      } else {
+        vscode.window.showWarningMessage("No training data found to export.");
+      }
+    },
+    "smartai.openTrainingFolder": async () => {
+      const { getTrainingDataDirectoryPath } = await import("core/util/paths");
+      const datasetPath = getTrainingDataDirectoryPath();
+      const uri = vscode.Uri.file(datasetPath);
+      vscode.commands.executeCommand("vscode.openFolder", uri);
+    },
+    "smartai.markHighQuality": async () => {
+      const trainingService = TrainingCaptureService.getInstance();
+      const success = await trainingService.markHighQuality();
+      if (success) {
+        vscode.window.showInformationMessage(
+          "Marked last response as high quality training example.",
+        );
+      } else {
+        vscode.window.showWarningMessage("No pending interaction to mark.");
+      }
+    },
+    "smartai.markReject": async () => {
+      const trainingService = TrainingCaptureService.getInstance();
+      await trainingService.markRejected();
+      vscode.window.showInformationMessage(
+        "Marked last response as reject. Will not be used for training.",
       );
     },
   };

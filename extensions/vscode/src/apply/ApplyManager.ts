@@ -9,6 +9,7 @@ import { generateLines } from "core/diff/util";
 import { ApplyAbortManager } from "core/edit/applyAbortManager";
 import { streamDiffLines } from "core/edit/streamDiffLines";
 import { pruneLinesFromBottom, pruneLinesFromTop } from "core/llm/countTokens";
+import { TrainingCaptureService } from "core/training";
 import { getMarkdownLanguageTagForFile } from "core/util";
 import { VerticalDiffManager } from "../diff/vertical/manager";
 import { VsCodeIde } from "../VsCodeIde";
@@ -44,6 +45,29 @@ export class ApplyManager {
 
     // Capture the original file content before applying changes
     const originalFileContent = activeTextEditor.document.getText();
+
+    // Set up training capture pending state
+    const trainingService = TrainingCaptureService.getInstance();
+    if (trainingService.isEnabled()) {
+      const workspaceDirs = await this.ide.getWorkspaceDirs();
+      const isSmarterp = trainingService.isSmarterpWorkspace();
+      trainingService.setPendingInteraction({
+        instruction: `Apply the following code to ${filepath ?? "the active file"}`,
+        input: originalFileContent,
+        output: text,
+        workspaceRoot: workspaceDirs[0],
+        filePaths: filepath ? [filepath] : undefined,
+        accepted: false,
+        source: "apply",
+        smarterpMode: isSmarterp,
+        sessionId: streamId,
+      });
+      trainingService.setPendingPatch(
+        originalFileContent,
+        text,
+        filepath ? [filepath] : [],
+      );
+    }
 
     await this.webviewProtocol.request("updateApplyState", {
       streamId,

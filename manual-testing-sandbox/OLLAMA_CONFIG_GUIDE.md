@@ -310,6 +310,78 @@ Smart AI is designed as a Copilot-grade assistant:
 - Use `@Folder` to get context from a specific directory
 - Smart AI remembers open files automatically via `@Open Files`
 
+## Training Data Capture
+
+Smart AI can automatically collect high-quality training data from your real IDE usage. This data can later be used for LoRA/QLoRA fine-tuning to improve your custom models.
+
+### What is Captured
+
+- **Accepted chat outputs** - When you find a response helpful
+- **Accepted edits/applies** - Code changes you accept via diff
+- **Agent mode runs** - Multi-step tasks you approve
+- **Manual saves** - Explicit "Save as Training Example" commands
+
+### Dataset Format
+
+Records are stored in JSONL format (`~/.continue/training/train.jsonl`) with fields:
+- `instruction` - The prompt or task description
+- `input` - Context or previous code
+- `output` - The generated response or new code
+- `taskType` - Classification (e.g., `code-generation`, `bug-fix`, `addon-analysis`)
+- `model` / `provider` / `apiBase` - Which model was used
+- `workspaceRoot` / `filePaths` - Where the interaction happened
+- `accepted` - Whether the user accepted the output
+- `source` - `chat`, `edit`, `apply`, `agent`, or `manual`
+- `tags` - Enriched tags (e.g., `smarterp`, `high-quality`)
+- `smarterpMode` - True when working in a Smarterp repository
+- `patchPath` - Path to unified diff patch file (for edits)
+- `beforeHash` / `afterHash` - Content hashes for integrity
+
+### Enabling Training Capture
+
+Add to your VS Code settings:
+
+```json
+{
+  "smartai.trainingCaptureEnabled": true,
+  "smartai.trainingAutoCaptureAccepted": true,
+  "smartai.trainingAutoCaptureChat": true,
+  "smartai.trainingAutoCaptureEditApply": true,
+  "smartai.trainingAutoCaptureAgent": true,
+  "smartai.trainingSmarterpOnly": false
+}
+```
+
+Or use the command: `Smart AI: Toggle Training Capture`
+
+### Commands
+
+- `Smart AI: Toggle Training Capture` - Enable/disable globally
+- `Smart AI: Save Last Exchange as Training Example` - Manually save chat
+- `Smart AI: Save Last Patch as Training Example` - Manually save edit
+- `Smart AI: Mark Last Response as High Quality` - Flag as premium example
+- `Smart AI: Mark Last Response as Reject` - Exclude from training
+- `Smart AI: Export Training Bundle` - Generate a clean dataset bundle
+- `Smart AI: Open Training Storage Folder` - Open `~/.smart-ai/training`
+
+### Export for Fine-Tuning
+
+Run `Smart AI: Export Training Bundle` to generate:
+- `train.jsonl` - 90% of records (default)
+- `eval.jsonl` - 10% of records for validation
+- `patches/` - Unified diff files for edits
+- `manifest.json` - Metadata about the export
+
+This bundle is ready for a separate LoRA/QLoRA fine-tuning pipeline. The resulting adapter can be imported back into Ollama for continued use.
+
+### Important Notes
+
+- Training capture does **not** self-train Ollama automatically
+- Data is stored **locally** by default (`~/.smart-ai/training/`)
+- No data leaves your machine unless you explicitly export and transfer it
+- For Smarterp repos, tags like `smarterp`, `addon-analysis` are auto-added
+- Set `smarterpOnly: true` to capture only in Smarterp repositories
+
 ## Troubleshooting
 
 ### Model Not Found

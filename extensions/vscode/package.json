@@ -147,6 +147,82 @@
           "type": "number",
           "default": 60,
           "description": "The period of time in minutes between automatic syncs."
+        },
+        "smartai.trainingCaptureEnabled": {
+          "type": "boolean",
+          "default": false,
+          "description": "Enable automatic training data capture from Smart AI interactions. Stores structured examples for later model fine-tuning."
+        },
+        "smartai.trainingAutoCaptureAccepted": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically capture accepted edits/applies as training examples."
+        },
+        "smartai.trainingAutoCaptureChat": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically capture chat outputs as training examples."
+        },
+        "smartai.trainingAutoCaptureEditApply": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically capture edit and apply operations as training examples."
+        },
+        "smartai.trainingAutoCaptureAgent": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically capture agent mode outputs as training examples."
+        },
+        "smartai.trainingMaxPatchSize": {
+          "type": "number",
+          "default": 500000,
+          "description": "Maximum patch size in bytes to store for training data."
+        },
+        "smartai.trainingMaxResponseSize": {
+          "type": "number",
+          "default": 100000,
+          "description": "Maximum response size in bytes to capture as training data."
+        },
+        "smartai.trainingSmarterpOnly": {
+          "type": "boolean",
+          "default": false,
+          "description": "Only capture training data when working in a Smarterp repository."
+        },
+        "smartai.trainingDatasetPath": {
+          "type": "string",
+          "default": null,
+          "description": "Custom path for the training dataset JSONL file. Defaults to ~/.smart-ai/training/train.jsonl."
+        },
+        "smartai.trainingEvalPath": {
+          "type": "string",
+          "default": null,
+          "description": "Custom path for the evaluation dataset JSONL file. Defaults to ~/.smart-ai/training/eval.jsonl."
+        },
+        "smartai.trainingPatchDirPath": {
+          "type": "string",
+          "default": null,
+          "description": "Custom path for storing training patch files. Defaults to ~/.smart-ai/training/patches."
+        },
+        "smartai.trainingExportDirPath": {
+          "type": "string",
+          "default": null,
+          "description": "Custom path for exported training bundles. Defaults to ~/.smart-ai/training/exports."
+        },
+        "smartai.trainingTempDirPath": {
+          "type": "string",
+          "default": null,
+          "description": "Optional temp directory for staging files during export. Defaults to ~/.smart-ai/training/temp."
+        },
+        "smartai.trainingRuntimeMode": {
+          "type": "string",
+          "enum": ["local", "remote-host"],
+          "default": "local",
+          "description": "Runtime mode for training data capture. 'local' for direct IDE usage, 'remote-host' for SSH tunnel / remote extension host setups."
+        },
+        "smartai.trainingOllamaApiBase": {
+          "type": "string",
+          "default": "http://localhost:11434",
+          "description": "Ollama API base URL to record in training metadata. Use http://localhost:11435 for remote tunnel mode."
         }
       }
     },
@@ -381,6 +457,48 @@
         "category": "Smart AI",
         "title": "Open in new window",
         "group": "Smart AI"
+      },
+      {
+        "command": "smartai.toggleTrainingCapture",
+        "category": "Smart AI",
+        "title": "Toggle Training Capture",
+        "group": "Smart AI Training"
+      },
+      {
+        "command": "smartai.saveLastExchange",
+        "category": "Smart AI",
+        "title": "Save Last Exchange as Training Example",
+        "group": "Smart AI Training"
+      },
+      {
+        "command": "smartai.saveLastPatch",
+        "category": "Smart AI",
+        "title": "Save Last Patch as Training Example",
+        "group": "Smart AI Training"
+      },
+      {
+        "command": "smartai.exportTrainingBundle",
+        "category": "Smart AI",
+        "title": "Export Training Bundle",
+        "group": "Smart AI Training"
+      },
+      {
+        "command": "smartai.openTrainingFolder",
+        "category": "Smart AI",
+        "title": "Open Training Storage Folder",
+        "group": "Smart AI Training"
+      },
+      {
+        "command": "smartai.markHighQuality",
+        "category": "Smart AI",
+        "title": "Mark Last Response as High Quality",
+        "group": "Smart AI Training"
+      },
+      {
+        "command": "smartai.markReject",
+        "category": "Smart AI",
+        "title": "Mark Last Response as Reject / Do Not Train",
+        "group": "Smart AI Training"
       }
     ],
     "keybindings": [
@@ -529,6 +647,27 @@
         },
         {
           "command": "continue.openInNewWindow"
+        },
+        {
+          "command": "smartai.toggleTrainingCapture"
+        },
+        {
+          "command": "smartai.saveLastExchange"
+        },
+        {
+          "command": "smartai.saveLastPatch"
+        },
+        {
+          "command": "smartai.exportTrainingBundle"
+        },
+        {
+          "command": "smartai.openTrainingFolder"
+        },
+        {
+          "command": "smartai.markHighQuality"
+        },
+        {
+          "command": "smartai.markReject"
         }
       ],
       "editor/context": [

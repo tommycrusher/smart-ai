@@ -24,15 +24,15 @@ export function setConfigFilePermissions(filePath: string): void {
   }
 }
 
-const CONTINUE_GLOBAL_DIR = (() => {
-  const configPath = process.env.CONTINUE_GLOBAL_DIR;
+const SMART_AI_GLOBAL_DIR = (() => {
+  const configPath = process.env.SMART_AI_GLOBAL_DIR;
   if (configPath) {
     // Convert relative path to absolute paths based on current working directory
     return path.isAbsolute(configPath)
       ? configPath
       : path.resolve(process.cwd(), configPath);
   }
-  return path.join(os.homedir(), ".continue");
+  return path.join(os.homedir(), ".smart-ai");
 })();
 
 // export const DEFAULT_CONFIG_TS_CONTENTS = `import { Config } from "./types"\n\nexport function modifyConfig(config: Config): Config {
@@ -67,12 +67,16 @@ export function getGlobalContinueIgnorePath(): string {
 }
 
 export function getContinueGlobalPath(): string {
-  // This is ~/.continue on mac/linux
-  const continuePath = CONTINUE_GLOBAL_DIR;
-  if (!fs.existsSync(continuePath)) {
-    fs.mkdirSync(continuePath);
+  // Deprecated: use getSmartAiGlobalPath(). Retained for backward compat.
+  return getSmartAiGlobalPath();
+}
+
+export function getSmartAiGlobalPath(): string {
+  const smartAiPath = SMART_AI_GLOBAL_DIR;
+  if (!fs.existsSync(smartAiPath)) {
+    fs.mkdirSync(smartAiPath);
   }
-  return continuePath;
+  return smartAiPath;
 }
 
 export function getSessionsFolderPath(): string {
@@ -475,6 +479,38 @@ export function getDiffsDirectoryPath(): string {
     });
   }
   return diffsPath;
+}
+
+export function getTrainingDataDirectoryPath(): string {
+  const trainingPath = path.join(getSmartAiGlobalPath(), "training");
+  if (!fs.existsSync(trainingPath)) {
+    fs.mkdirSync(trainingPath, { recursive: true });
+  }
+  return trainingPath;
+}
+
+export function getTrainingJsonlPath(): string {
+  return path.join(getTrainingDataDirectoryPath(), "train.jsonl");
+}
+
+export function getTrainingEvalJsonlPath(): string {
+  return path.join(getTrainingDataDirectoryPath(), "eval.jsonl");
+}
+
+export function getTrainingPatchesDirectoryPath(): string {
+  const patchesPath = path.join(getTrainingDataDirectoryPath(), "patches");
+  if (!fs.existsSync(patchesPath)) {
+    fs.mkdirSync(patchesPath, { recursive: true });
+  }
+  return patchesPath;
+}
+
+export function getTrainingExportDirectoryPath(): string {
+  const exportPath = path.join(getTrainingDataDirectoryPath(), "exports");
+  if (!fs.existsSync(exportPath)) {
+    fs.mkdirSync(exportPath, { recursive: true });
+  }
+  return exportPath;
 }
 
 export const isFileWithinFolder = (

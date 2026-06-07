@@ -39,6 +39,13 @@ class EditOutcomeTracker {
   }
 
   /**
+   * Peek at a pending edit without removing it
+   */
+  public getPendingEdit(streamId: string): PendingEditData | undefined {
+    return this.pendingEdits.get(streamId);
+  }
+
+  /**
    * Record the outcome of an edit interaction and emit the editOutcome event
    */
   public async recordEditOutcome(

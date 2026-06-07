@@ -8,19 +8,19 @@ import { Core } from "core/core";
 import { FromCoreProtocol, ToCoreProtocol } from "core/protocol";
 import { InProcessMessenger } from "core/protocol/messenger";
 import {
-  getConfigJsonPath,
-  getConfigTsPath,
-  getConfigYamlPath,
-  getContinueGlobalPath,
+    getConfigJsonPath,
+    getConfigTsPath,
+    getConfigYamlPath,
+    getContinueGlobalPath,
 } from "core/util/paths";
 import { v4 as uuidv4 } from "uuid";
 import * as vscode from "vscode";
 
 import { ContinueCompletionProvider } from "../autocomplete/completionProvider";
 import {
-  monitorBatteryChanges,
-  setupStatusBar,
-  StatusBarStatus,
+    monitorBatteryChanges,
+    setupStatusBar,
+    StatusBarStatus,
 } from "../autocomplete/statusBar";
 import { registerAllCommands } from "../commands";
 import { ContinueConsoleWebviewViewProvider } from "../ContinueConsoleWebviewViewProvider";
@@ -33,8 +33,8 @@ import { QuickEdit } from "../quickEdit/QuickEditQuickPick";
 import { setupRemoteConfigSync } from "../stubs/activation";
 import { UriEventHandler } from "../stubs/uriHandler";
 import {
-  getControlPlaneSessionInfo,
-  WorkOsAuthProvider,
+    getControlPlaneSessionInfo,
+    WorkOsAuthProvider,
 } from "../stubs/WorkOsAuthProvider";
 import { Battery } from "../util/battery";
 import { FileSearch } from "../util/FileSearch";
@@ -48,20 +48,21 @@ import { modelSupportsNextEdit } from "core/llm/autodetect";
 import { NEXT_EDIT_MODELS } from "core/llm/constants";
 import { NextEditProvider } from "core/nextEdit/NextEditProvider";
 import { isNextEditTest } from "core/nextEdit/utils";
+import { TrainingCaptureService } from "core/training";
 import { JumpManager } from "../activation/JumpManager";
 import setupNextEditWindowManager, {
-  NextEditWindowManager,
+    NextEditWindowManager,
 } from "../activation/NextEditWindowManager";
 import {
-  HandlerPriority,
-  SelectionChangeManager,
+    HandlerPriority,
+    SelectionChangeManager,
 } from "../activation/SelectionChangeManager";
 import { GhostTextAcceptanceTracker } from "../autocomplete/GhostTextAcceptanceTracker";
 import { getDefinitionsFromLsp } from "../autocomplete/lsp";
 import {
-  clearDocumentContentCache,
-  handleTextDocumentChange,
-  initDocumentContentCache,
+    clearDocumentContentCache,
+    handleTextDocumentChange,
+    initDocumentContentCache,
 } from "../util/editLoggingUtils";
 import type { VsCodeWebviewProtocol } from "../webviewProtocol";
 
@@ -434,6 +435,9 @@ export class VsCodeExtension {
       this.editDecorationManager,
     );
 
+    // Initialize Smart AI Training Capture Service
+    this.initializeTrainingCapture();
+
     // Disabled due to performance issues
     // registerDebugTracker(this.sidebar.webviewProtocol, this.ide);
 
@@ -686,5 +690,53 @@ export class VsCodeExtension {
 
   public deactivateNextEdit() {
     this.completionProvider.deactivateNextEdit();
+  }
+
+  private initializeTrainingCapture(): void {
+    const trainingService = TrainingCaptureService.getInstance();
+    const vscodeConfig = vscode.workspace.getConfiguration("smartai");
+
+    const runtimeMode = vscodeConfig.get<string>("trainingRuntimeMode", "local");
+    const ollamaApiBase = vscodeConfig.get<string>(
+      "trainingOllamaApiBase",
+      "http://localhost:11434",
+    );
+
+    const config = {
+      enabled: vscodeConfig.get<boolean>("trainingCaptureEnabled", false),
+      autoCaptureAccepted: vscodeConfig.get<boolean>(
+        "trainingAutoCaptureAccepted",
+        true,
+      ),
+      autoCaptureChat: vscodeConfig.get<boolean>("trainingAutoCaptureChat", true),
+      autoCaptureEditApply: vscodeConfig.get<boolean>(
+        "trainingAutoCaptureEditApply",
+        true,
+      ),
+      autoCaptureAgent: vscodeConfig.get<boolean>("trainingAutoCaptureAgent", true),
+      maxPatchSizeBytes: vscodeConfig.get<number>("trainingMaxPatchSize", 500_000),
+      maxResponseSizeBytes: vscodeConfig.get<number>(
+        "trainingMaxResponseSize",
+        100_000,
+      ),
+      smarterpOnly: vscodeConfig.get<boolean>("trainingSmarterpOnly", false),
+      datasetPath: vscodeConfig.get<string>("trainingDatasetPath") ?? undefined,
+      evalPath: vscodeConfig.get<string>("trainingEvalPath") ?? undefined,
+      patchDirPath: vscodeConfig.get<string>("trainingPatchDirPath") ?? undefined,
+      exportDirPath: vscodeConfig.get<string>("trainingExportDirPath") ?? undefined,
+      tempDirPath: vscodeConfig.get<string>("trainingTempDirPath") ?? undefined,
+      runtimeMode: runtimeMode === "remote-host" ? "remote-host" : "local",
+      ollamaApiBase,
+    };
+
+    trainingService.setConfig(config);
+
+    // Detect Smarterp workspace and pre-set the mode
+    void this.ide.getWorkspaceDirs().then((dirs) => {
+      const isSmarterp = detectSmarterpWorkspace(dirs.map((d) => d));
+      if (isSmarterp) {
+        (trainingService as any)._smarterpWorkspaceDetected = true;
+      }
+    });
   }
 }
