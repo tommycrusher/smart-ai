@@ -123,16 +123,29 @@ export const SMARTAI_OLLAMA_DEFAULTS = {
   // Provider name
   provider: "ollama",
 
-  // Completion options
+  // Completion options (chat / edit / apply)
+  // Lower temperature for more deterministic code generation
   completionOptions: {
-    temperature: 0.7,
-    maxTokens: 2048,
-    topP: 0.95,
+    temperature: 0.3,
+    maxTokens: 4096,
+    topP: 0.9,
+    topK: 20,
+    presencePenalty: 0,
+    frequencyPenalty: 0,
   },
 
-  // Autocomplete specific options
+  // Autocomplete specific options (FIM - fast, deterministic)
   autocompleteOptions: {
-    temperature: 0.5,
+    temperature: 0.2,
     maxTokens: 256,
+    topP: 0.9,
   },
+
+  // System message for smarterp-coder to behave like a Copilot-style assistant
+  systemMessage:
+    "You are Smart AI, a practical coding assistant. " +
+    "You write clean, modern code following the project's existing conventions. " +
+    "You prefer minimal, targeted changes. " +
+    "You explain your reasoning briefly when asked, but default to concise answers. " +
+    "When editing code, preserve existing style and formatting.",
 };

@@ -190,13 +190,15 @@ models:
     provider: "ollama"
     model: "smarterp-coder"
     completionOptions:
-      temperature: 0.7        # Randomness (0-1, higher = more creative)
-      maxTokens: 2048         # Maximum response length
-      topP: 0.95              # Nucleus sampling
-      topK: 40                # Top-K sampling
+      temperature: 0.3        # Lower = more deterministic code (0-1)
+      maxTokens: 4096         # Maximum response length
+      topP: 0.9               # Nucleus sampling
+      topK: 20                # Top-K sampling
       mirostat: 0             # Mirostat sampling (0=disabled)
       numThreads: 8           # CPU threads for generation
       keepAlive: 1800         # Keep model loaded for 30 minutes
+    chatOptions:
+      baseSystemMessage: "You are Smart AI, a practical coding assistant..."
 ```
 
 ### Tab Autocomplete Options
@@ -213,6 +215,44 @@ tabAutocompleteOptions:
   useCache: true              # Cache completions
   onlyMyCode: false           # Only suggest from project code
 ```
+
+### Project Rules (Always Active)
+
+Define rules that are always applied to every chat and edit session. This gives Smart AI persistent project awareness:
+
+```yaml
+rules:
+  - name: "Smart AI Copilot Behavior"
+    rule: "You are Smart AI, a practical coding assistant. Write clean, modern code following the project's existing conventions. Prefer minimal, targeted changes."
+    alwaysApply: true
+```
+
+You can also create a `.continuerules` file at your project root. Smart AI will automatically load it as an always-active rule.
+
+### Reusable Slash Commands
+
+Create custom slash commands in `.continue/prompts/` as `.prompt` or `.md` files:
+
+```bash
+mkdir -p .continue/prompts
+```
+
+Example `.continue/prompts/review.prompt`:
+
+```
+name: Review Code
+description: Review code for quality and project standards
+---
+You are a senior code reviewer. Review the provided code for TypeScript correctness, project conventions, security, and testing. Be constructive but direct.
+```
+
+Available in chat by typing `/Review Code`.
+
+Smart AI ships with default project prompts when you clone the repo:
+- `/Review Code` - Code review with project standards
+- `/Refactor Code` - Refactor following project patterns
+- `/Explain Code` - Explain with architectural context
+- `/Fix Errors` - Fix problems using diagnostics context
 
 ## Troubleshooting
 

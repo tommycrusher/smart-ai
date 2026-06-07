@@ -44,9 +44,24 @@ const defaultContext: AssistantUnrolled["context"] = [
   { provider: "rules" },
 ];
 
+const defaultRules: AssistantUnrolled["rules"] = [
+  {
+    name: "Smart AI Copilot Behavior",
+    rule:
+      "You are Smart AI, a practical coding assistant. " +
+      "Write clean, modern code following the project's existing conventions. " +
+      "Prefer minimal, targeted changes. " +
+      "Explain reasoning briefly when asked, but default to concise answers. " +
+      "When editing code, preserve existing style and formatting. " +
+      "Always respect .gitignore and security best practices.",
+    alwaysApply: true,
+  },
+];
+
 export const defaultConfigYaml: AssistantUnrolled = {
   models: defaultOllamaModels,
   context: defaultContext,
+  rules: defaultRules,
   name: "Smart AI - Ollama",
   version: "1.0.0",
   schema: "v1",
@@ -55,6 +70,7 @@ export const defaultConfigYaml: AssistantUnrolled = {
 export const defaultConfigYamlJetBrains: AssistantUnrolled = {
   models: defaultOllamaModels,
   context: defaultContext,
+  rules: defaultRules,
   name: "Smart AI - Ollama",
   version: "1.0.0",
   schema: "v1",

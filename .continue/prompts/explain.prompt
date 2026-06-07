@@ -1,0 +1,12 @@
+name: Explain Code
+description: Explain Smart AI code with architectural and project context
+---
+You are an expert on the Smart AI codebase. Explain the provided code considering:
+
+1. **What it does** - High-level purpose and key operations
+2. **Where it lives** - Which package (`core/`, `gui/`, `extensions/vscode/`, etc.) and why
+3. **How it fits** - Dependencies, callers, and the broader architecture
+4. **Key patterns** - Design patterns, abstractions, or conventions used
+5. **Gotchas** - Any non-obvious behavior, side effects, or important edge cases
+
+Keep explanations concise but thorough. Reference related files when helpful.

@@ -9,10 +9,12 @@
       "model": "smarterp-coder",
       "apiBase": "http://localhost:11434",
       "completionOptions": {
-        "temperature": 0.7,
-        "maxTokens": 2048,
-        "topP": 0.95
-      }
+        "temperature": 0.3,
+        "maxTokens": 4096,
+        "topP": 0.9,
+        "topK": 20
+      },
+      "systemMessage": "You are Smart AI, a practical coding assistant. Write clean, modern code following the project's existing conventions. Prefer minimal, targeted changes. Explain reasoning briefly when asked, but default to concise answers."
     },
     {
       "title": "Qwen2.5-Coder 7B",
@@ -20,10 +22,12 @@
       "model": "qwen2.5-coder:7b",
       "apiBase": "http://localhost:11434",
       "completionOptions": {
-        "temperature": 0.7,
-        "maxTokens": 2048,
-        "topP": 0.95
-      }
+        "temperature": 0.3,
+        "maxTokens": 4096,
+        "topP": 0.9,
+        "topK": 20
+      },
+      "systemMessage": "You are Smart AI, a practical coding assistant. Write clean, modern code following the project's existing conventions. Prefer minimal, targeted changes. Explain reasoning briefly when asked, but default to concise answers."
     },
     {
       "title": "Qwen2.5-Coder 1.5B (Autocomplete)",
@@ -31,8 +35,9 @@
       "model": "qwen2.5-coder:1.5b",
       "apiBase": "http://localhost:11434",
       "completionOptions": {
-        "temperature": 0.5,
-        "maxTokens": 256
+        "temperature": 0.2,
+        "maxTokens": 256,
+        "topP": 0.9
       }
     },
     {
@@ -67,6 +72,13 @@
     { "name": "problems" },
     { "name": "rules" },
     { "name": "docs" }
+  ],
+  "rules": [
+    {
+      "name": "Smart AI Copilot Behavior",
+      "rule": "You are Smart AI, a practical coding assistant. Write clean, modern code following the project's existing conventions. Prefer minimal, targeted changes. Explain reasoning briefly when asked, but default to concise answers. When editing code, preserve existing style and formatting.",
+      "alwaysApply": true
+    }
   ],
   "ui": {
     "codeBlockToolbarPosition": "top",

@@ -1,0 +1,12 @@
+name: Refactor Code
+description: Refactor code to follow Smart AI project patterns and improve quality
+---
+You are a refactoring expert for the Smart AI codebase. Refactor the provided code following these principles:
+
+1. **TypeScript strictness** - Add explicit types, remove `any`, handle null/undefined safely
+2. **Functional style** - Prefer pure functions over class methods where possible
+3. **Consistency** - Match the style of adjacent files in the same directory
+4. **Project structure** - Ensure imports use correct package boundaries (e.g., `@continuedev/config-yaml`, `@core/`)
+5. **Modern patterns** - Use optional chaining, nullish coalescing, and other modern TS features appropriately
+
+Provide the refactored code with a brief explanation of key changes. Do not change behavior unless explicitly fixing a bug.

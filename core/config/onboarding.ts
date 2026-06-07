@@ -61,12 +61,27 @@ export function setupLocalConfig(config: ConfigYaml): ConfigYaml {
         provider: "ollama",
         model: LOCAL_ONBOARDING_CHAT_MODEL,
         roles: ["chat", "edit", "apply"],
+        defaultCompletionOptions: {
+          temperature: 0.3,
+          maxTokens: 4096,
+          topP: 0.9,
+          topK: 20,
+        },
+        chatOptions: {
+          baseSystemMessage:
+            "You are Smart AI, a practical coding assistant. Write clean, modern code following the project's existing conventions. Prefer minimal, targeted changes. Explain reasoning briefly when asked, but default to concise answers.",
+        },
       },
       {
         name: LOCAL_ONBOARDING_FIM_TITLE,
         provider: "ollama",
         model: LOCAL_ONBOARDING_FIM_MODEL,
         roles: ["autocomplete"],
+        defaultCompletionOptions: {
+          temperature: 0.2,
+          maxTokens: 256,
+          topP: 0.9,
+        },
       },
       {
         name: LOCAL_ONBOARDING_EMBEDDINGS_TITLE,

@@ -1,0 +1,75 @@
+# Smart AI Project Rules
+# These rules are always active when working on the Smart AI codebase.
+# They guide the AI to understand the project architecture, conventions, and quality standards.
+
+## Project Overview
+
+Smart AI is a VS Code extension (formerly Continue) that provides AI-powered coding assistance:
+- Chat panel for asking questions about code
+- Inline edits (Cmd/Ctrl+I)
+- Tab autocomplete
+- Agent mode with tool calling
+- Support for multiple LLM providers (Ollama, OpenAI, Anthropic, etc.)
+
+## Architecture
+
+The codebase is a monorepo with the following key packages:
+
+- `core/` - Core logic, LLM adapters, context providers, config handling, indexing (TypeScript, Node.js)
+- `gui/` - React-based webview UI for the chat panel (TypeScript, React, Redux, Tailwind)
+- `extensions/vscode/` - VS Code extension host, activation, commands, webview integration
+- `extensions/intellij/` - JetBrains plugin (Java/Kotlin)
+- `extensions/cli/` - CLI tool `cn` for terminal-based AI workflows
+- `packages/` - Shared packages: config-yaml, config-types, continue-sdk, fetch, hub, llm-info, openai-adapters, terminal-security
+- `binary/` - Compiled binary distribution helpers
+- `docs/` - Mintlify documentation
+
+## Key Conventions
+
+### Code Style
+- TypeScript throughout. Use strict typing. Avoid `any`.
+- Prefer functional programming patterns. Modifying existing classes or creating singletons where needed is acceptable, but otherwise use functions.
+- Use ESM imports (`import ... from ...`), never `require`.
+- Use double quotes (or backticks if needed) for strings.
+- Follow existing code style in adjacent files.
+
+### Testing
+- Core uses Jest ^29. GUI uses Vitest.
+- Tests for core utilities should be in adjacent `.test.ts` files.
+- Use fixtures from `@core/test/fixtures.ts` for IDE/workspace operations.
+- Do NOT mock fixtures other than using `jest.spyOn`.
+
+### Context Providers
+Smart AI supports rich context providers (enabled by default):
+- `@Files` - Search and reference workspace files
+- `@Current File` - Currently open file
+- `@Open Files` - All open editor tabs
+- `@Codebase` - Semantic/full-text search across the repo
+- `@Folder` - Entire folder contents
+- `@Git Diff` - Current git changes
+- `@Terminal` - Last terminal output
+- `@Problems` - Diagnostics/errors
+- `@Rules` - Custom rules from `.continuerules` and `.continue/rules/`
+
+### Model Roles
+- `chat` - General conversation and Q&A
+- `edit` - Inline code editing (Cmd/Ctrl+I)
+- `apply` - Applying code blocks from chat
+- `autocomplete` - Tab completion (FIM models like qwen2.5-coder:1.5b)
+- `embed` - Embeddings for codebase indexing (nomic-embed-text)
+- `rerank` - Reranking retrieval results
+
+### Local Ollama Setup
+- Primary model: `smarterp-coder` (custom build) or fallback `qwen2.5-coder:7b`
+- Autocomplete: `qwen2.5-coder:1.5b` (fast, lightweight FIM)
+- Embeddings: `nomic-embed-text`
+- Local API: `http://localhost:11434`
+- Remote tunnel API: `http://localhost:11435` (via SSH tunnel)
+
+## Quality Standards
+
+- All code changes must be consistent with the existing codebase patterns.
+- When suggesting edits, prefer minimal, targeted changes over large refactors.
+- Always consider security: never log or expose API keys, tokens, or user data.
+- Respect `.gitignore` and indexing exclusions when reading or modifying files.
+- For UI changes, match the existing Tailwind design system and component patterns.
