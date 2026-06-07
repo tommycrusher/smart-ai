@@ -255,7 +255,7 @@ class Ollama extends BaseLLM implements ModelInstaller {
     return this.modelInfoPromise;
   }
 
-  // Map of "continue model name" to Ollama actual model name
+  // Map of "Smart AI model name" to Ollama actual model name
   private modelMap: Record<string, string> = {
     "mistral-7b": "mistral:7b",
     "mixtral-8x7b": "mixtral:8x7b",

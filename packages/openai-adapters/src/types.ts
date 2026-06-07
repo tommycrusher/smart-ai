@@ -105,7 +105,7 @@ export const LlamastackConfigSchema = OpenAIConfigSchema.extend({
 export type LlamastackConfig = z.infer<typeof LlamastackConfigSchema>;
 
 export const ContinueProxyConfigSchema = BasePlusConfig.extend({
-  provider: z.literal("continue-proxy"),
+  provider: z.literal("smartai-proxy"),
   env: z.object({
     apiKeyLocation: z.string().optional(),
     envSecretLocations: z.record(z.string(), z.string()).optional(),

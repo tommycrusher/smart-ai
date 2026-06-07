@@ -15,7 +15,7 @@
     }
   ],
   "analytics": {
-    "provider": "continue-proxy"
+    "provider": "smartai-proxy"
   },
   "tabAutocompleteModel": {
     "title": "TEST LLM",

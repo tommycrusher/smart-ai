@@ -201,7 +201,7 @@ const baseModelFields = {
 export const modelSchema = z.union([
   z.object({
     ...baseModelFields,
-    provider: z.literal("continue-proxy"),
+    provider: z.literal("smartai-proxy"),
     apiKeyLocation: z.string().optional(),
     envSecretLocations: z.record(z.string(), z.string()).optional(),
     orgScopeId: z.string().nullable(),
@@ -209,7 +209,7 @@ export const modelSchema = z.union([
   }),
   z.object({
     ...baseModelFields,
-    provider: z.string().refine((val) => val !== "continue-proxy"),
+    provider: z.string().refine((val) => val !== "smartai-proxy"),
     sourceFile: z.string().optional(),
   }),
 ]);
@@ -218,7 +218,7 @@ export const partialModelSchema = z.union([
   z
     .object({
       ...baseModelFields,
-      provider: z.literal("continue-proxy"),
+      provider: z.literal("smartai-proxy"),
       apiKeyLocation: z.string().optional(),
       envSecretLocations: z.record(z.string(), z.string()).optional(),
     })
@@ -226,7 +226,7 @@ export const partialModelSchema = z.union([
   z
     .object({
       ...baseModelFields,
-      provider: z.string().refine((val) => val !== "continue-proxy"),
+      provider: z.string().refine((val) => val !== "smartai-proxy"),
     })
     .partial(),
 ]);

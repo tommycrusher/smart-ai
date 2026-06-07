@@ -216,7 +216,7 @@ async function buildWithEsbuild() {
     const exe = target.startsWith("win") ? ".exe" : "";
     const targetDir = `bin/${target}`;
     pathsToVerify.push(
-      `${targetDir}/continue-binary${exe}`,
+      `${targetDir}/smartai-binary${exe}`,
       `${targetDir}/index.node`, // @lancedb
       `${targetDir}/build/Release/node_sqlite3.node`,
       `${targetDir}/rg${exe}`, // ripgrep binary

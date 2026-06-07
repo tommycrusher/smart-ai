@@ -10,7 +10,7 @@ import { BaseContextProvider } from "../index.js";
 
 class SmartAiProxyContextProvider extends BaseContextProvider {
   static description: ContextProviderDescription = {
-    title: "continue-proxy",
+    title: "smartai-proxy",
     displayTitle: "Smart AI Proxy",
     description: "Retrieve a context item from a Smart AI for Teams add-on",
     type: "submenu",

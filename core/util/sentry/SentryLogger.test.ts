@@ -530,8 +530,8 @@ describe("Sentry Data Anonymization Tests", () => {
               stacktrace: {
                 frames: [
                   {
-                    filename: "/Users/dev/continue/core/util/sentry.js",
-                    abs_path: "/Users/dev/continue/core/util/sentry.js",
+                    filename: "/Users/dev/smart-ai/core/util/sentry.js",
+                    abs_path: "/Users/dev/smart-ai/core/util/sentry.js",
                     function: "captureException",
                     lineno: 42,
                     vars: { secret: "password123" },
@@ -840,13 +840,13 @@ describe("Sentry Data Anonymization Tests", () => {
                 frames: [
                   {
                     filename:
-                      "C:\\Users\\dev\\continue\\extensions\\vscode\\src\\extension.js",
+                      "C:\Users\dev\smart-ai\extensions\\vscode\\src\\extension.js",
                     abs_path:
-                      "C:\\Users\\dev\\continue\\extensions\\vscode\\src\\extension.js",
+                      "C:\Users\dev\smart-ai\extensions\\vscode\\src\\extension.js",
                   },
                   {
-                    filename: "/home/dev/continue/core/util/sentry.js",
-                    abs_path: "/home/dev/continue/core/util/sentry.js",
+                    filename: "/home/dev/smart-ai/core/util/sentry.js",
+                    abs_path: "/home/dev/smart-ai/core/util/sentry.js",
                   },
                   {
                     filename: "relative/path/file.js",

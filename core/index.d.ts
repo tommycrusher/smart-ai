@@ -1029,7 +1029,7 @@ export type ContextProviderName =
   | "currentFile"
   | "greptile"
   | "outline"
-  | "continue-proxy"
+  | "smartai-proxy"
   | "highlights"
   | "file"
   | "issue"

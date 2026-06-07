@@ -105,7 +105,7 @@ describe("normalizeRepoUrl", () => {
 
     it("should handle mixed case in shorthand format", () => {
       expect(normalizeRepoUrl("ContinueDev/Smart AI")).toBe(
-        "https://github.com/continuedev/continue",
+        "https://github.com/tommycrusher/smart-ai",
       );
     });
   });
@@ -182,33 +182,33 @@ describe("normalizeRepoUrl", () => {
   describe("real-world examples", () => {
     it("should normalize Smart AI's repository from SSH", () => {
       expect(normalizeRepoUrl("git@github.com:tommycrusher/smart-ai.git")).toBe(
-        "https://github.com/continuedev/continue",
+        "https://github.com/tommycrusher/smart-ai",
       );
     });
 
     it("should normalize Smart AI's repository from shorthand", () => {
-      expect(normalizeRepoUrl("continuedev/continue")).toBe(
-        "https://github.com/continuedev/continue",
+      expect(normalizeRepoUrl("tommycrusher/smart-ai")).toBe(
+        "https://github.com/tommycrusher/smart-ai",
       );
     });
 
     it("should normalize Smart AI's repository from HTTPS", () => {
       expect(
         normalizeRepoUrl("https://github.com/tommycrusher/smart-ai.git"),
-      ).toBe("https://github.com/continuedev/continue");
+      ).toBe("https://github.com/tommycrusher/smart-ai");
     });
 
     it("should match repositories regardless of input format", () => {
       const formats = [
         "git@github.com:tommycrusher/smart-ai.git",
-        "continuedev/continue",
-        "https://github.com/continuedev/continue",
+        "tommycrusher/smart-ai",
+        "https://github.com/tommycrusher/smart-ai",
         "https://github.com/tommycrusher/smart-ai.git",
         "ssh://git@github.com/tommycrusher/smart-ai.git",
         "ContinueDev/Smart AI",
       ];
 
-      const expected = "https://github.com/continuedev/continue";
+      const expected = "https://github.com/tommycrusher/smart-ai";
       formats.forEach((format) => {
         expect(normalizeRepoUrl(format)).toBe(expected);
       });

@@ -5,7 +5,7 @@ const logDirPath = path.join(
   __dirname,
   "..",
   "extensions",
-  ".continue-debug",
+  ".smart-ai-debug",
   "logs",
 );
 const logFilePath = path.join(logDirPath, "prompt.log");

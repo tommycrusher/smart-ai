@@ -2,8 +2,8 @@
 import { PROVIDER_TOOL_SUPPORT, isRecommendedAgentModel } from "./toolSupport";
 
 describe("PROVIDER_TOOL_SUPPORT", () => {
-  describe("continue-proxy", () => {
-    const supportsFn = PROVIDER_TOOL_SUPPORT["continue-proxy"];
+  describe("smartai-proxy", () => {
+    const supportsFn = PROVIDER_TOOL_SUPPORT["smartai-proxy"];
 
     it("should return true for Claude 3.5 models", () => {
       expect(
@@ -448,7 +448,7 @@ describe("PROVIDER_TOOL_SUPPORT", () => {
 
   describe("edge cases", () => {
     it("should handle empty model names", () => {
-      expect(PROVIDER_TOOL_SUPPORT["continue-proxy"]("")).toBe(false);
+      expect(PROVIDER_TOOL_SUPPORT["smartai-proxy"]("")).toBe(false);
       expect(PROVIDER_TOOL_SUPPORT["anthropic"]("")).toBe(false);
       expect(PROVIDER_TOOL_SUPPORT["openai"]("")).toBe(false);
       expect(PROVIDER_TOOL_SUPPORT["gemini"]("")).toBe(false);

@@ -191,7 +191,7 @@ export default async function doLoadConfig(options: {
   newConfig.slashCommands.push(initSlashCommand);
 
   const proxyContextProvider = newConfig.contextProviders?.find(
-    (cp) => cp.description.title === "continue-proxy",
+    (cp) => cp.description.title === "smartai-proxy",
   );
   if (proxyContextProvider) {
     (proxyContextProvider as SmartAiProxyContextProvider).workOsAccessToken =
@@ -468,7 +468,7 @@ async function injectControlPlaneProxyInfo(
 ): Promise<ContinueConfig> {
   Object.keys(config.modelsByRole).forEach((key) => {
     config.modelsByRole[key as ModelRole].forEach((model) => {
-      if (model.providerName === "continue-proxy") {
+      if (model.providerName === "smartai-proxy") {
         (model as SmartAiProxy).controlPlaneProxyInfo = info;
       }
     });
@@ -476,13 +476,13 @@ async function injectControlPlaneProxyInfo(
 
   Object.keys(config.selectedModelByRole).forEach((key) => {
     const model = config.selectedModelByRole[key as ModelRole];
-    if (model?.providerName === "continue-proxy") {
+    if (model?.providerName === "smartai-proxy") {
       (model as SmartAiProxy).controlPlaneProxyInfo = info;
     }
   });
 
   config.modelsByRole.chat.forEach((model) => {
-    if (model.providerName === "continue-proxy") {
+    if (model.providerName === "smartai-proxy") {
       (model as SmartAiProxy).controlPlaneProxyInfo = info;
     }
   });

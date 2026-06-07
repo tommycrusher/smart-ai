@@ -153,13 +153,13 @@ describe("E2E Scenarios", () => {
     expect(openAiModel.apiKey).toBe("sk-123");
 
     const geminiModel = config?.models?.[1]!;
-    expect(geminiModel.provider).toBe("continue-proxy");
+    expect(geminiModel.provider).toBe("smartai-proxy");
     expect(geminiModel.apiKey).toBeUndefined();
     const geminiSecretLocation = "organization:test-org/GEMINI_API_KEY";
     expect((geminiModel as any).apiKeyLocation).toBe(geminiSecretLocation);
 
     const anthropicModel = config?.models?.[2]!;
-    expect(anthropicModel.provider).toBe("continue-proxy");
+    expect(anthropicModel.provider).toBe("smartai-proxy");
     expect(anthropicModel.apiKey).toBeUndefined();
     const anthropicSecretLocation =
       "models_add_on:test-org/claude35sonnet/ANTHROPIC_API_KEY";

@@ -516,10 +516,10 @@ You are a helpful agent`;
         mockLoadPackageFromHub.mockResolvedValue(mockAgentFile);
 
         const result =
-          await agentFileService.getAgentFile("continue/dev-agent");
+          await agentFileService.getAgentFile("smartai/dev-agent");
 
         expect(mockLoadPackageFromHub).toHaveBeenCalledWith(
-          "continue/dev-agent",
+          "smartai/dev-agent",
           expect.any(Object),
         );
         expect(result).toEqual(mockAgentFile);

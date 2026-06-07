@@ -44,7 +44,7 @@ function mergeUserAgentIntoRequestOptions(
 
 /**
  * Creates an LLM API instance from a ModelConfig and auth configuration
- * Handles special logic for continue-proxy provider and constructs the API
+ * Handles special logic for smartai-proxy provider and constructs the API
  */
 export function createLlmApi(
   model: ModelConfig,
@@ -54,7 +54,7 @@ export function createLlmApi(
   const organizationId = getOrganizationId(authConfig);
 
   const config: LLMConfig =
-    model.provider === "continue-proxy"
+    model.provider === "smartai-proxy"
       ? {
           provider: model.provider,
           requestOptions: mergeUserAgentIntoRequestOptions(

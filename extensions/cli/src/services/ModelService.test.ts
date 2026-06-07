@@ -143,9 +143,9 @@ describe("ModelService", () => {
       );
     });
 
-    test("should handle continue-proxy provider specially", async () => {
+    test("should handle smartai-proxy provider specially", async () => {
       const proxyModel = {
-        provider: "continue-proxy",
+        provider: "smartai-proxy",
         name: "Proxy Model",
         apiBase: "https://proxy.smart-ai.dev",
         apiKeyLocation: "env.PROXY_KEY",

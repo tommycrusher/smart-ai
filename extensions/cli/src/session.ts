@@ -51,9 +51,9 @@ function getSessionDir(): string {
     return sessionDir;
   }
 
-  // Use CONTINUE_GLOBAL_DIR if set (for testing)
+  // Use SMARTAI_GLOBAL_DIR if set (for testing)
   const continueHome =
-    process.env.CONTINUE_GLOBAL_DIR || path.join(os.homedir(), ".continue");
+    process.env.SMARTAI_GLOBAL_DIR || path.join(os.homedir(), ".continue");
   const sessionDir = path.join(continueHome, "sessions");
 
   // Create directory if it doesn't exist

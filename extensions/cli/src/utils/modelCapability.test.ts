@@ -97,8 +97,8 @@ describe("isModelCapable", () => {
   });
 
   describe("Smart AI Proxy models", () => {
-    test("should consider continue-proxy models as not capable", () => {
-      expect(isModelCapable("continue-proxy", "any-model")).toBe(false);
+    test("should consider smartai-proxy models as not capable", () => {
+      expect(isModelCapable("smartai-proxy", "any-model")).toBe(false);
     });
   });
 

@@ -936,7 +936,7 @@ export class Core {
         await this.configHandler.refreshAll("Local config file created");
       } else if (nonColocatedRuleUris.some(isContinueConfigRelatedUri)) {
         await this.configHandler.reloadConfig(
-          ".continue config-related file created",
+          ".smart-ai config-related file created",
         );
       }
     });
@@ -968,7 +968,7 @@ export class Core {
         await this.configHandler.refreshAll("Local config file deleted");
       } else if (nonColocatedRuleUris.some(isContinueConfigRelatedUri)) {
         await this.configHandler.reloadConfig(
-          ".continue config-related file deleted",
+          ".smart-ai config-related file deleted",
         );
       }
     });

@@ -88,7 +88,7 @@ models:
       args: ["-p", "test prompt"],
       env: {
         ANTHROPIC_API_KEY: "TEST-test-invalid-key-format",
-        CONTINUE_GLOBAL_DIR: context.testDir + "/.continue",
+        SMARTAI_GLOBAL_DIR: context.testDir + "/.continue",
       },
       expectError: true, // API call should fail with invalid key
       timeout: 15000,

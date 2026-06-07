@@ -35,7 +35,7 @@ describe("E2E: Resume Flag", () => {
       env: {
         // Use a fixed session ID so both CLI calls use the same session
         CONTINUE_CLI_TEST_SESSION_ID: "test-session-123",
-        CONTINUE_GLOBAL_DIR: path.join(context.testDir, ".continue"),
+        SMARTAI_GLOBAL_DIR: path.join(context.testDir, ".continue"),
       },
       timeout: 15000,
     });
@@ -85,7 +85,7 @@ describe("E2E: Resume Flag", () => {
       args: ["-p", "--resume", "--config", context.configPath],
       env: {
         CONTINUE_CLI_TEST_SESSION_ID: "test-session-123",
-        CONTINUE_GLOBAL_DIR: path.join(context.testDir, ".continue"),
+        SMARTAI_GLOBAL_DIR: path.join(context.testDir, ".continue"),
       },
       timeout: 15000,
     });
@@ -104,7 +104,7 @@ describe("E2E: Resume Flag", () => {
       args: ["-p", "--resume", "--config", context.configPath],
       env: {
         CONTINUE_CLI_TEST_SESSION_ID: "no-session-456",
-        CONTINUE_GLOBAL_DIR: path.join(context.testDir, ".continue"),
+        SMARTAI_GLOBAL_DIR: path.join(context.testDir, ".continue"),
       },
       timeout: 15000,
     });
@@ -142,7 +142,7 @@ describe("E2E: Resume Flag", () => {
       args: ["-p", "--config", context.configPath, "first message"],
       env: {
         CONTINUE_CLI_TEST_SESSION_ID: sessionId,
-        CONTINUE_GLOBAL_DIR: path.join(context.testDir, ".continue"),
+        SMARTAI_GLOBAL_DIR: path.join(context.testDir, ".continue"),
       },
       timeout: 15000,
     });
@@ -181,7 +181,7 @@ describe("E2E: Resume Flag", () => {
       ],
       env: {
         CONTINUE_CLI_TEST_SESSION_ID: sessionId,
-        CONTINUE_GLOBAL_DIR: path.join(context.testDir, ".continue"),
+        SMARTAI_GLOBAL_DIR: path.join(context.testDir, ".continue"),
       },
       timeout: 15000,
     });

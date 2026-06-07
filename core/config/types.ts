@@ -818,7 +818,7 @@ declare global {
     | "currentFile"
     | "greptile"
     | "outline"
-    | "continue-proxy"
+    | "smartai-proxy"
     | "highlights"
     | "file"
     | "issue"

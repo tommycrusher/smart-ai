@@ -157,7 +157,7 @@ export function useProxyForUnrenderedSecrets(
         config.models[i] = {
           ...config.models[i],
           name: config.models[i]?.name ?? "",
-          provider: "continue-proxy",
+          provider: "smartai-proxy",
           model: getContinueProxyModelName(
             packageIdentifier,
             config.models[i]?.provider ?? "",

@@ -144,17 +144,17 @@ describe("hookConfig", () => {
       projectDir = path.join(tmpDir, "project");
       fs.mkdirSync(fakeHome, { recursive: true });
       fs.mkdirSync(projectDir, { recursive: true });
-      // Override CONTINUE_GLOBAL_DIR so that user-global settings
+      // Override SMARTAI_GLOBAL_DIR so that user-global settings
       // from the real ~/.smart-ai/settings.json don't leak into tests
-      originalContinueGlobalDir = process.env.CONTINUE_GLOBAL_DIR;
-      process.env.CONTINUE_GLOBAL_DIR = path.join(fakeHome, ".continue");
+      originalContinueGlobalDir = process.env.SMARTAI_GLOBAL_DIR;
+      process.env.SMARTAI_GLOBAL_DIR = path.join(fakeHome, ".continue");
     });
 
     afterEach(() => {
       if (originalContinueGlobalDir === undefined) {
-        delete process.env.CONTINUE_GLOBAL_DIR;
+        delete process.env.SMARTAI_GLOBAL_DIR;
       } else {
-        process.env.CONTINUE_GLOBAL_DIR = originalContinueGlobalDir;
+        process.env.SMARTAI_GLOBAL_DIR = originalContinueGlobalDir;
       }
       fs.rmSync(tmpDir, { recursive: true, force: true });
     });

@@ -78,7 +78,7 @@ models:
   return configPath;
 }
 
-// continue-proxy requires a 4-part model name (owner/package/provider/model).
+// smartai-proxy requires a 4-part model name (owner/package/provider/model).
 // Override via SMOKE_PROXY_MODEL env var.
 const SMOKE_PROXY_MODEL = process.env.SMOKE_PROXY_MODEL || "";
 
@@ -96,7 +96,7 @@ schema: v1
 models:
   - name: smoke-haiku
     model: ${SMOKE_PROXY_MODEL}
-    provider: continue-proxy
+    provider: smartai-proxy
     apiKey: "${apiKey}"
     defaultCompletionOptions:
       maxTokens: 1024

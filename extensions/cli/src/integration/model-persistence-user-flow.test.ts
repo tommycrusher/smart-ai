@@ -31,8 +31,8 @@ describe("Model Persistence User Flow", () => {
 
     // Create a temporary directory for testing
     testDir = fs.mkdtempSync(path.join(os.tmpdir(), "continue-test-"));
-    originalContinueHome = process.env.CONTINUE_GLOBAL_DIR;
-    process.env.CONTINUE_GLOBAL_DIR = testDir;
+    originalContinueHome = process.env.SMARTAI_GLOBAL_DIR;
+    process.env.SMARTAI_GLOBAL_DIR = testDir;
 
     mockAssistant = {
       name: "test-assistant",
@@ -86,9 +86,9 @@ describe("Model Persistence User Flow", () => {
       fs.rmSync(testDir, { recursive: true });
     }
     if (originalContinueHome) {
-      process.env.CONTINUE_GLOBAL_DIR = originalContinueHome;
+      process.env.SMARTAI_GLOBAL_DIR = originalContinueHome;
     } else {
-      delete process.env.CONTINUE_GLOBAL_DIR;
+      delete process.env.SMARTAI_GLOBAL_DIR;
     }
   });
 

@@ -186,7 +186,7 @@ export async function llmFromDescription(
     uniqueId,
   };
 
-  if (desc.provider === "continue-proxy") {
+  if (desc.provider === "smartai-proxy") {
     options.apiKey = ideSettings.userToken;
     if (ideSettings.remoteConfigServerUrl) {
       options.apiBase = new URL(

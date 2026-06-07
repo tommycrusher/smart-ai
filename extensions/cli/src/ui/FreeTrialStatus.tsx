@@ -8,7 +8,7 @@ import React, { useEffect, useState } from "react";
 
 export function isModelUsingFreeTrial(model: ModelConfig): boolean {
   return (
-    model.provider === "continue-proxy" &&
+    model.provider === "smartai-proxy" &&
     "apiKeyLocation" in model &&
     !!model.apiKeyLocation?.startsWith("free_trial:")
   );

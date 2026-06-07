@@ -11,7 +11,7 @@ export default defineConfig({
     tailwindcss(),
     sentryVitePlugin({
       org: "continue-xd",
-      project: "continue",
+      project: "smartai",
     }),
   ],
   build: {

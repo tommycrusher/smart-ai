@@ -19,7 +19,7 @@ function createAnalyticsProvider(
       return new PostHogAnalyticsProvider();
     case "logstash":
       return new LogStashAnalyticsProvider();
-    case "continue-proxy":
+    case "smartai-proxy":
       return new SmartAiProxyAnalyticsProvider();
     default:
       return undefined;
@@ -58,7 +58,7 @@ export class TeamAnalytics {
       controlPlaneProxyInfo,
     );
 
-    if (config.provider === "continue-proxy") {
+    if (config.provider === "smartai-proxy") {
       (
         TeamAnalytics.provider as SmartAiProxyAnalyticsProvider
       ).controlPlaneClient = controlPlaneClient;

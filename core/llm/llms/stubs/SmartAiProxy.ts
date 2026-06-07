@@ -51,7 +51,7 @@ class SmartAiProxy extends OpenAI {
     }
   }
 
-  static providerName = "continue-proxy";
+  static providerName = "smartai-proxy";
   static defaultOptions: Partial<LLMOptions> = {
     useLegacyCompletionsEndpoint: false,
   };

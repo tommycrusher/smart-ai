@@ -195,7 +195,7 @@ export function HelpSection() {
                 onClick={() =>
                   ideMessenger.post(
                     "openUrl",
-                    "https://github.com/continuedev/continue/issues/new/choose",
+                    "https://github.com/tommycrusher/smart-ai/issues/new/choose",
                   )
                 }
               />
@@ -207,7 +207,7 @@ export function HelpSection() {
                 onClick={() =>
                   ideMessenger.post(
                     "openUrl",
-                    "https://github.com/continuedev/continue/discussions",
+                    "https://github.com/tommycrusher/smart-ai/discussions",
                   )
                 }
               />

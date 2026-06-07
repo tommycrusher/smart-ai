@@ -39,8 +39,8 @@ class SmartAiAuthService {
         when (env) {
             "none" -> return "https://control-plane-api-service-i3dqylpbqa-uc.a.run.app"
             "local" -> return "http://localhost:3001"
-            "production" -> return "https://api.continue.dev"
-            "test" -> return "https://api-test.continue.dev"
+            "production" -> return "https://api.smart-ai.dev"
+            "test" -> return "https://api-test.smart-ai.dev"
         }
 
         return "https://control-plane-api-service-i3dqylpbqa-uc.a.run.app"

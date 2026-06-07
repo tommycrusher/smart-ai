@@ -177,10 +177,10 @@ function extractRegValue(output: string): string | undefined {
 // Common locations for MDM configurations in Linux systems
 const LINUX_MDM_PATHS = [
   // System-wide configuration
-  "/etc/continue/mdm.json",
-  "/var/lib/continue/mdm.json",
+  "/etc/smartai/mdm.json",
+  "/var/lib/smartai/mdm.json",
   // User-specific configuration
-  path.join(os.homedir(), ".config/continue/mdm.json"),
+  path.join(os.homedir(), ".config/smartai/mdm.json"),
 ];
 
 function readMdmKeysLinux(): MdmKeys | undefined {
@@ -314,7 +314,7 @@ function writeMdmKeysWindows(licenseKey: string): boolean {
 function writeMdmKeysLinux(licenseKey: string): boolean {
   try {
     // Write to user-specific configuration
-    const userMdmPath = path.join(os.homedir(), ".config/continue/mdm.json");
+    const userMdmPath = path.join(os.homedir(), ".config/smartai/mdm.json");
 
     const config = {
       licenseKey,

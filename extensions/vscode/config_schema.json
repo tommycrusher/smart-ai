@@ -2858,7 +2858,7 @@
                 "ollama",
                 "openai",
                 "cohere",
-                "continue-proxy",
+                "smartai-proxy",
                 "gemini",
                 "voyage",
                 "nvidia",
