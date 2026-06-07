@@ -67,13 +67,18 @@ models:
     roles:
       - embed
 
-# Context providers
+# Context providers - Copilot-style repo and file awareness
 context:
-  - name: "code"
-  - name: "docs"
-  - name: "diff"
-  - name: "terminal"
-  - name: "folder"
+  - provider: "file"
+  - provider: "currentFile"
+  - provider: "open"
+  - provider: "codebase"
+  - provider: "folder"
+  - provider: "diff"
+  - provider: "terminal"
+  - provider: "problems"
+  - provider: "rules"
+  - provider: "docs"
 
 # Tab autocomplete configuration
 tabAutocompleteOptions:

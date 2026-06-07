@@ -36,6 +36,34 @@ You can include the contents of the terminal in your IDE by typing '@Terminal'.
 
 You can include all of the changes you've made to your current branch by typing '@Git Diff'.
 
+## How to Include Open Files
+
+You can include all currently open files by typing `@Open Files`. This is useful when working across multiple related files.
+
+## How to Include the Entire Codebase
+
+For repo-wide awareness, type `@Codebase` to automatically retrieve relevant files based on your query. This requires an embeddings model (configured by default in the Ollama template).
+
+## How to Include a Folder
+
+You can include all files in a specific folder by typing `@Folder` and selecting the directory.
+
 ## How to Use Other Context Providers
 
 You can see a full list of built-in context providers [here](/customize/deep-dives/custom-providers).
+
+### Default Context Providers
+
+Smart AI enables the following providers by default for a Copilot-style experience:
+
+| Provider | Description |
+|----------|-------------|
+| `@Files` | Reference any file in the workspace |
+| `@Current File` | The currently open file |
+| `@Open Files` | All currently open files |
+| `@Codebase` | Automatically find relevant files |
+| `@Folder` | Reference an entire folder |
+| `@Git Diff` | Current git diff |
+| `@Terminal` | Last terminal command output |
+| `@Problems` | Diagnostics / errors |
+| `@Rules` | Custom rules from `.continuerules` |

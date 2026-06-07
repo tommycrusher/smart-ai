@@ -1,8 +1,11 @@
 import { beforeEach, describe, expect, it, MockedFunction, vi } from "vitest";
 import { contextProviderClassFromName } from "../context/providers";
+import CodebaseContextProvider from "../context/providers/CodebaseContextProvider";
 import CurrentFileContextProvider from "../context/providers/CurrentFileContextProvider";
 import DiffContextProvider from "../context/providers/DiffContextProvider";
 import FileContextProvider from "../context/providers/FileContextProvider";
+import FolderContextProvider from "../context/providers/FolderContextProvider";
+import OpenFilesContextProvider from "../context/providers/OpenFilesContextProvider";
 import ProblemsContextProvider from "../context/providers/ProblemsContextProvider";
 import RulesContextProvider from "../context/providers/RulesContextProvider";
 import TerminalContextProvider from "../context/providers/TerminalContextProvider";
@@ -31,6 +34,27 @@ vi.mock("../context/providers/DiffContextProvider", () => ({
 vi.mock("../context/providers/FileContextProvider", () => ({
   default: vi.fn().mockImplementation((options) => ({
     description: { title: "file" },
+    options,
+  })),
+}));
+
+vi.mock("../context/providers/CodebaseContextProvider", () => ({
+  default: vi.fn().mockImplementation((options) => ({
+    description: { title: "codebase" },
+    options,
+  })),
+}));
+
+vi.mock("../context/providers/FolderContextProvider", () => ({
+  default: vi.fn().mockImplementation((options) => ({
+    description: { title: "folder" },
+    options,
+  })),
+}));
+
+vi.mock("../context/providers/OpenFilesContextProvider", () => ({
+  default: vi.fn().mockImplementation((options) => ({
+    description: { title: "open" },
     options,
   })),
 }));
@@ -75,7 +99,7 @@ describe("loadConfigContextProviders", () => {
       const result = loadConfigContextProviders(undefined, false, "vscode");
 
       expect(result.errors).toEqual([]);
-      expect(result.providers).toHaveLength(6);
+      expect(result.providers).toHaveLength(9);
 
       // Verify all default providers are included
       const providerTitles = result.providers.map((p) => p.description.title);
@@ -83,6 +107,9 @@ describe("loadConfigContextProviders", () => {
         expect.arrayContaining([
           "file",
           "current-file",
+          "open",
+          "codebase",
+          "folder",
           "diff",
           "terminal",
           "problems",
@@ -95,13 +122,16 @@ describe("loadConfigContextProviders", () => {
       const result = loadConfigContextProviders([], false, "vscode");
 
       expect(result.errors).toEqual([]);
-      expect(result.providers).toHaveLength(6);
+      expect(result.providers).toHaveLength(9);
 
       const providerTitles = result.providers.map((p) => p.description.title);
       expect(providerTitles).toEqual(
         expect.arrayContaining([
           "file",
           "current-file",
+          "open",
+          "codebase",
+          "folder",
           "diff",
           "terminal",
           "problems",
@@ -114,11 +144,19 @@ describe("loadConfigContextProviders", () => {
       const result = loadConfigContextProviders([], false, "jetbrains");
 
       expect(result.errors).toEqual([]);
-      expect(result.providers).toHaveLength(4);
+      expect(result.providers).toHaveLength(7);
 
       const providerTitles = result.providers.map((p) => p.description.title);
       expect(providerTitles).toEqual(
-        expect.arrayContaining(["file", "current-file", "diff", "rules"]),
+        expect.arrayContaining([
+          "file",
+          "current-file",
+          "open",
+          "codebase",
+          "folder",
+          "diff",
+          "rules",
+        ]),
       );
     });
   });
@@ -127,13 +165,16 @@ describe("loadConfigContextProviders", () => {
     const result = loadConfigContextProviders([], true, "vscode");
 
     expect(result.errors).toEqual([]);
-    expect(result.providers).toHaveLength(7);
+    expect(result.providers).toHaveLength(10);
 
     const providerTitles = result.providers.map((p) => p.description.title);
     expect(providerTitles).toEqual(
       expect.arrayContaining([
         "file",
         "current-file",
+        "open",
+        "codebase",
+        "folder",
         "diff",
         "terminal",
         "problems",
@@ -177,7 +218,7 @@ describe("with valid config", () => {
     });
 
     // Should have custom provider + all defaults
-    expect(result.providers).toHaveLength(7);
+    expect(result.providers).toHaveLength(10);
 
     const customProvider = result.providers.find(
       (p) => p.description.title === "custom-provider",
@@ -221,7 +262,7 @@ describe("with valid config", () => {
     const result = loadConfigContextProviders(config, false, "vscode");
 
     expect(result.errors).toEqual([]);
-    expect(result.providers).toHaveLength(8); // 2 custom + 6 defaults
+    expect(result.providers).toHaveLength(11); // 2 custom + 9 defaults
 
     expect(mockProvider1).toHaveBeenCalledWith({
       name: "first-provider",
@@ -304,7 +345,7 @@ describe("error handling", () => {
     ]);
 
     // Should still have default providers
-    expect(result.providers).toHaveLength(6);
+    expect(result.providers).toHaveLength(9);
     expect(mockedContextProviderClassFromName).toHaveBeenCalledWith(
       "unknown-provider",
     );
@@ -339,7 +380,7 @@ describe("error handling", () => {
       },
     ]);
 
-    expect(result.providers).toHaveLength(6); // Only defaults
+    expect(result.providers).toHaveLength(9); // Only defaults
   });
 
   it("should handle mix of valid and invalid providers", () => {
@@ -375,7 +416,7 @@ describe("error handling", () => {
     ]);
 
     // Should have valid provider + defaults
-    expect(result.providers).toHaveLength(7);
+    expect(result.providers).toHaveLength(10);
     expect(mockValidProvider).toHaveBeenCalledWith({
       name: "valid",
       key: "value",
@@ -401,7 +442,7 @@ describe("default provider merging", () => {
     expect(result.errors).toEqual([]);
 
     // Should have configured file provider + other defaults (not duplicate file)
-    expect(result.providers).toHaveLength(6);
+    expect(result.providers).toHaveLength(9);
 
     const fileProviders = result.providers.filter(
       (p) => p.description.title === "file",
@@ -434,7 +475,7 @@ describe("default provider merging", () => {
     const result = loadConfigContextProviders(config, false, "vscode");
 
     expect(result.errors).toEqual([]);
-    expect(result.providers).toHaveLength(7); // 1 custom + 6 defaults
+    expect(result.providers).toHaveLength(10); // 1 custom + 9 defaults
 
     // All defaults should be present
     const providerTitles = result.providers.map((p) => p.description.title);
@@ -443,6 +484,9 @@ describe("default provider merging", () => {
         "custom-only",
         "file",
         "current-file",
+        "open",
+        "codebase",
+        "folder",
         "diff",
         "terminal",
         "problems",
@@ -478,6 +522,9 @@ describe("default provider merging", () => {
     expect(defaultTitles).toEqual([
       "file",
       "current-file",
+      "open",
+      "codebase",
+      "folder",
       "diff",
       "terminal",
       "problems",
@@ -571,6 +618,9 @@ describe("provider instantiation", () => {
 
     expect(FileContextProvider).toHaveBeenCalledWith({});
     expect(CurrentFileContextProvider).toHaveBeenCalledWith({});
+    expect(OpenFilesContextProvider).toHaveBeenCalledWith({});
+    expect(CodebaseContextProvider).toHaveBeenCalledWith({});
+    expect(FolderContextProvider).toHaveBeenCalledWith({});
     expect(DiffContextProvider).toHaveBeenCalledWith({});
     expect(TerminalContextProvider).toHaveBeenCalledWith({});
     expect(ProblemsContextProvider).toHaveBeenCalledWith({});
@@ -582,6 +632,9 @@ describe("provider instantiation", () => {
 
     expect(FileContextProvider).toHaveBeenCalledTimes(1);
     expect(CurrentFileContextProvider).toHaveBeenCalledTimes(1);
+    expect(OpenFilesContextProvider).toHaveBeenCalledTimes(1);
+    expect(CodebaseContextProvider).toHaveBeenCalledTimes(1);
+    expect(FolderContextProvider).toHaveBeenCalledTimes(1);
     expect(DiffContextProvider).toHaveBeenCalledTimes(1);
     expect(TerminalContextProvider).toHaveBeenCalledTimes(1);
     expect(ProblemsContextProvider).toHaveBeenCalledTimes(1);

@@ -130,6 +130,54 @@ If primary models are unavailable, Smart AI will try:
 - **Autocomplete**: Fallback to `qwen2.5-coder:7b` (slower but functional)
 - **Embeddings**: Fallback to `mistral-embed` if available
 
+## Context Providers (Copilot-Style Awareness)
+
+Smart AI ships with a set of default context providers that give it strong repo and file awareness, similar to GitHub Copilot:
+
+| Provider | Trigger | Description |
+|----------|---------|-------------|
+| `file` | `@Files` | Reference any file in the workspace |
+| `currentFile` | Auto / `@Current File` | The currently open file |
+| `open` | `@Open Files` | All currently open (or pinned) files |
+| `codebase` | `@Codebase` | Automatically find relevant files across the repo |
+| `folder` | `@Folder` | Reference an entire folder for context |
+| `diff` | `@Git Diff` | Current git diff (staged + unstaged) |
+| `terminal` | `@Terminal` | Last terminal command output |
+| `problems` | `@Problems` | Diagnostics / errors in the current file |
+| `rules` | `@Rules` | Custom rules from `.continuerules` files |
+| `docs` | `@Docs` | Indexed documentation (if configured) |
+
+These providers are enabled by default when using the Ollama template or when no explicit context configuration is provided.
+
+### Using Context Providers
+
+In chat or edit mode, type `@` to see available providers:
+
+- `@Codebase` - Ask questions about the entire repository without manually adding files
+- `@Folder src/components` - Get context from a specific directory
+- `@Git Diff` - Review your current changes
+- `@Terminal` - Debug a failed command using terminal output
+- `@Problems` - Ask Smart AI to fix errors shown in the Problems panel
+
+### Context Provider Configuration
+
+If you want to customize which providers are active, edit your `context` block:
+
+```yaml
+context:
+  - provider: "file"
+  - provider: "currentFile"
+  - provider: "open"
+  - provider: "codebase"
+  - provider: "folder"
+  - provider: "diff"
+  - provider: "terminal"
+  - provider: "problems"
+  - provider: "rules"
+```
+
+**Note:** `codebase` and `folder` require an embeddings model (e.g., `nomic-embed-text`) for semantic search. If indexing is disabled, they will fall back to basic text search.
+
 ## Advanced Configuration
 
 ### Custom Completion Options

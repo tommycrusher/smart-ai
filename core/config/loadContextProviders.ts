@@ -4,10 +4,13 @@ import {
 } from "@continuedev/config-yaml";
 import { IContextProvider, IdeType } from "..";
 import { contextProviderClassFromName } from "../context/providers";
+import CodebaseContextProvider from "../context/providers/CodebaseContextProvider";
 import CurrentFileContextProvider from "../context/providers/CurrentFileContextProvider";
 import DiffContextProvider from "../context/providers/DiffContextProvider";
 import DocsContextProvider from "../context/providers/DocsContextProvider";
 import FileContextProvider from "../context/providers/FileContextProvider";
+import FolderContextProvider from "../context/providers/FolderContextProvider";
+import OpenFilesContextProvider from "../context/providers/OpenFilesContextProvider";
 import ProblemsContextProvider from "../context/providers/ProblemsContextProvider";
 import RulesContextProvider from "../context/providers/RulesContextProvider";
 import TerminalContextProvider from "../context/providers/TerminalContextProvider";
@@ -33,6 +36,9 @@ export function loadConfigContextProviders(
   const defaultProviders: IContextProvider[] = [
     new FileContextProvider({}),
     new CurrentFileContextProvider({}),
+    new OpenFilesContextProvider({}),
+    new CodebaseContextProvider({}),
+    new FolderContextProvider({}),
     new DiffContextProvider({}),
     new TerminalContextProvider({}),
     new ProblemsContextProvider({}),

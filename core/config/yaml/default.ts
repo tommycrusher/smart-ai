@@ -32,9 +32,21 @@ const defaultOllamaModels: AssistantUnrolled["models"] = [
   },
 ];
 
+const defaultContext: AssistantUnrolled["context"] = [
+  { provider: "file" },
+  { provider: "currentFile" },
+  { provider: "open" },
+  { provider: "codebase" },
+  { provider: "folder" },
+  { provider: "diff" },
+  { provider: "terminal" },
+  { provider: "problems" },
+  { provider: "rules" },
+];
+
 export const defaultConfigYaml: AssistantUnrolled = {
   models: defaultOllamaModels,
-  context: [],
+  context: defaultContext,
   name: "Smart AI - Ollama",
   version: "1.0.0",
   schema: "v1",
@@ -42,7 +54,7 @@ export const defaultConfigYaml: AssistantUnrolled = {
 
 export const defaultConfigYamlJetBrains: AssistantUnrolled = {
   models: defaultOllamaModels,
-  context: [],
+  context: defaultContext,
   name: "Smart AI - Ollama",
   version: "1.0.0",
   schema: "v1",

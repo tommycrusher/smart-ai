@@ -57,21 +57,16 @@
     "useCache": true
   },
   "contextProviders": [
-    {
-      "name": "code"
-    },
-    {
-      "name": "docs"
-    },
-    {
-      "name": "diff"
-    },
-    {
-      "name": "terminal"
-    },
-    {
-      "name": "folder"
-    }
+    { "name": "file" },
+    { "name": "currentFile" },
+    { "name": "open" },
+    { "name": "codebase" },
+    { "name": "folder" },
+    { "name": "diff" },
+    { "name": "terminal" },
+    { "name": "problems" },
+    { "name": "rules" },
+    { "name": "docs" }
   ],
   "ui": {
     "codeBlockToolbarPosition": "top",
