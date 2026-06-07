@@ -1,11 +1,29 @@
-import { ConfigYaml } from "@continuedev/config-yaml";
+import { ConfigYaml } from "@smartai/config-yaml";
+import {
+    SMARTAI_OLLAMA_DEFAULTS
+} from "./ollama.js";
 
 export const LOCAL_ONBOARDING_PROVIDER_TITLE = "Ollama";
-export const LOCAL_ONBOARDING_FIM_MODEL = "qwen2.5-coder:1.5b-base";
+
+// Primary Smart AI models with fallbacks
+export const LOCAL_ONBOARDING_CHAT_MODEL =
+  SMARTAI_OLLAMA_DEFAULTS.chatModels[0]; // smarterp-coder (fallback: qwen2.5-coder:7b)
+export const LOCAL_ONBOARDING_CHAT_TITLE = "Smart AI Coder";
+
+export const LOCAL_ONBOARDING_EDIT_MODEL =
+  SMARTAI_OLLAMA_DEFAULTS.chatModels[0]; // smarterp-coder
+export const LOCAL_ONBOARDING_EDIT_TITLE = "Smart AI Coder (Edit)";
+
+export const LOCAL_ONBOARDING_APPLY_MODEL =
+  SMARTAI_OLLAMA_DEFAULTS.chatModels[0]; // smarterp-coder
+export const LOCAL_ONBOARDING_APPLY_TITLE = "Smart AI Coder (Apply)";
+
+export const LOCAL_ONBOARDING_FIM_MODEL =
+  SMARTAI_OLLAMA_DEFAULTS.autocompleteModels[0]; // qwen2.5-coder:1.5b
 export const LOCAL_ONBOARDING_FIM_TITLE = "Qwen2.5-Coder 1.5B";
-export const LOCAL_ONBOARDING_CHAT_MODEL = "llama3.1:8b";
-export const LOCAL_ONBOARDING_CHAT_TITLE = "Llama 3.1 8B";
-export const LOCAL_ONBOARDING_EMBEDDINGS_MODEL = "nomic-embed-text:latest";
+
+export const LOCAL_ONBOARDING_EMBEDDINGS_MODEL =
+  SMARTAI_OLLAMA_DEFAULTS.embeddingModels[0]; // nomic-embed-text
 export const LOCAL_ONBOARDING_EMBEDDINGS_TITLE = "Nomic Embed";
 
 const ANTHROPIC_MODEL_CONFIG = {

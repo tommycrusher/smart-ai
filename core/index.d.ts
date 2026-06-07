@@ -1,12 +1,12 @@
-import {
-  DataDestination,
-  ModelRole,
-  PromptTemplates,
-  ToolOverrideConfig,
-} from "@smartai/config-yaml";
-import { ToolPolicy } from "@smartai/terminal-security";
 import { McpUiResourceMeta } from "@modelcontextprotocol/ext-apps";
 import { TextResourceContents } from "@modelcontextprotocol/sdk/types.js";
+import {
+    DataDestination,
+    ModelRole,
+    PromptTemplates,
+    ToolOverrideConfig,
+} from "@smartai/config-yaml";
+import { ToolPolicy } from "@smartai/terminal-security";
 import Parser from "web-tree-sitter";
 import { CodebaseIndexer } from "./indexing/CodebaseIndexer";
 import { LLMConfigurationStatuses } from "./llm/constants";

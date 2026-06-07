@@ -2,13 +2,13 @@ import { DevDataLogEvent } from "@smartai/config-yaml";
 import fs from "fs";
 import path from "path";
 import {
-  afterAll,
-  beforeAll,
-  beforeEach,
-  describe,
-  expect,
-  it,
-  vi,
+    afterAll,
+    beforeAll,
+    beforeEach,
+    describe,
+    expect,
+    it,
+    vi,
 } from "vitest";
 import { IdeInfo, IdeSettings } from "..";
 import { Core } from "../core";

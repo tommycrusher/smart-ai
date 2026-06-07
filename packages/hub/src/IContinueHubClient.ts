@@ -1,9 +1,9 @@
 import {
-  AssistantUnrolled,
-  ConfigResult,
-  FQSN,
-  FullSlug,
-  SecretResult,
+    AssistantUnrolled,
+    ConfigResult,
+    FQSN,
+    FullSlug,
+    SecretResult,
 } from "@smartai/config-yaml";
 
 /**

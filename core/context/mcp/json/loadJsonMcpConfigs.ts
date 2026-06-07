@@ -1,19 +1,19 @@
 import {
-  claudeCodeLikeConfigFileSchema,
-  claudeDesktopLikeConfigFileSchema,
-  ConfigValidationError,
-  convertJsonMcpConfigToYamlMcpConfig,
-  McpJsonConfig,
-  mcpServersJsonSchema,
-  RequestOptions,
+    claudeCodeLikeConfigFileSchema,
+    claudeDesktopLikeConfigFileSchema,
+    ConfigValidationError,
+    convertJsonMcpConfigToYamlMcpConfig,
+    McpJsonConfig,
+    mcpServersJsonSchema,
+    RequestOptions,
 } from "@smartai/config-yaml";
 import * as JSONC from "comment-json";
 import ignore from "ignore";
 import { IDE, InternalMcpOptions } from "../../..";
 import { convertYamlMcpConfigToInternalMcpOptions } from "../../../config/yaml/yamlToContinueConfig";
 import {
-  DEFAULT_IGNORE_DIRS,
-  DEFAULT_IGNORE_FILETYPES,
+    DEFAULT_IGNORE_DIRS,
+    DEFAULT_IGNORE_FILETYPES,
 } from "../../../indexing/ignore";
 import { walkDir } from "../../../indexing/walkDir";
 import { deduplicateArray } from "../../../util";

@@ -2,10 +2,10 @@ import fs from "fs";
 import path from "path";
 
 import {
-  allDevEventNames,
-  DataLogLevel,
-  DevDataLogEvent,
-  devDataVersionedSchemas,
+    allDevEventNames,
+    DataLogLevel,
+    DevDataLogEvent,
+    devDataVersionedSchemas,
 } from "@smartai/config-yaml";
 import { fetchwithRequestOptions } from "@smartai/fetch";
 import * as URI from "uri-js";

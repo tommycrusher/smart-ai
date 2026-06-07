@@ -1,0 +1,92 @@
+{
+  "name": "Smart AI - Ollama Local",
+  "version": "1.0.0",
+  "schema": "v1",
+  "models": [
+    {
+      "title": "Smart AI Coder",
+      "provider": "ollama",
+      "model": "smarterp-coder",
+      "apiBase": "http://localhost:11434",
+      "completionOptions": {
+        "temperature": 0.7,
+        "maxTokens": 2048,
+        "topP": 0.95
+      }
+    },
+    {
+      "title": "Qwen2.5-Coder 7B",
+      "provider": "ollama",
+      "model": "qwen2.5-coder:7b",
+      "apiBase": "http://localhost:11434",
+      "completionOptions": {
+        "temperature": 0.7,
+        "maxTokens": 2048,
+        "topP": 0.95
+      }
+    },
+    {
+      "title": "Qwen2.5-Coder 1.5B (Autocomplete)",
+      "provider": "ollama",
+      "model": "qwen2.5-coder:1.5b",
+      "apiBase": "http://localhost:11434",
+      "completionOptions": {
+        "temperature": 0.5,
+        "maxTokens": 256
+      }
+    },
+    {
+      "title": "Nomic Embed",
+      "provider": "ollama",
+      "model": "nomic-embed-text",
+      "apiBase": "http://localhost:11434"
+    }
+  ],
+  "tabAutocompleteModel": {
+    "title": "Qwen2.5-Coder 1.5B (Autocomplete)",
+    "provider": "ollama",
+    "model": "qwen2.5-coder:1.5b",
+    "apiBase": "http://localhost:11434"
+  },
+  "tabAutocompleteOptions": {
+    "disable": false,
+    "maxPromptTokens": 1024,
+    "debounceDelay": 300,
+    "maxSuffixPercentage": 0.2,
+    "prefixPercentage": 0.5,
+    "useCache": true
+  },
+  "contextProviders": [
+    {
+      "name": "code"
+    },
+    {
+      "name": "docs"
+    },
+    {
+      "name": "diff"
+    },
+    {
+      "name": "terminal"
+    },
+    {
+      "name": "folder"
+    }
+  ],
+  "ui": {
+    "codeBlockToolbarPosition": "top",
+    "displayRawMarkdown": false,
+    "showChatScrollbar": true,
+    "codeWrap": true
+  },
+  "analytics": {
+    "provider": "null"
+  },
+  "experimental": {
+    "modelRoles": {
+      "inlineEdit": "Smart AI Coder",
+      "applyCodeBlock": "Smart AI Coder",
+      "repoMapFileSelection": "Smart AI Coder"
+    }
+  }
+}

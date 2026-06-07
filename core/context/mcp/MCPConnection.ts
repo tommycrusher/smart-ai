@@ -4,30 +4,30 @@ import { homedir } from "os";
 import { fileURLToPath } from "url";
 
 import {
-  decodeSecretLocation,
-  getTemplateVariables,
-} from "@smartai/config-yaml";
-import {
-  SSEClientTransport,
-  SseError,
+    SSEClientTransport,
+    SseError,
 } from "@modelcontextprotocol/sdk/client/sse.js";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
 import { StreamableHTTPClientTransport } from "@modelcontextprotocol/sdk/client/streamableHttp.js";
 import { WebSocketClientTransport } from "@modelcontextprotocol/sdk/client/websocket.js";
+import {
+    decodeSecretLocation,
+    getTemplateVariables,
+} from "@smartai/config-yaml";
 import { Agent as HttpsAgent } from "https";
 import {
-  IDE,
-  InternalMcpOptions,
-  InternalSseMcpOptions,
-  InternalStdioMcpOptions,
-  InternalStreamableHttpMcpOptions,
-  InternalWebsocketMcpOptions,
-  MCPConnectionStatus,
-  MCPPrompt,
-  MCPResource,
-  MCPResourceTemplate,
-  MCPServerStatus,
-  MCPTool,
+    IDE,
+    InternalMcpOptions,
+    InternalSseMcpOptions,
+    InternalStdioMcpOptions,
+    InternalStreamableHttpMcpOptions,
+    InternalWebsocketMcpOptions,
+    MCPConnectionStatus,
+    MCPPrompt,
+    MCPResource,
+    MCPResourceTemplate,
+    MCPServerStatus,
+    MCPTool,
 } from "../..";
 import { resolveRelativePathInDir } from "../../util/ideUtils";
 import { getEnvPathFromUserShell } from "../../util/shellPath";

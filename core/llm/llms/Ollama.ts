@@ -2,7 +2,7 @@ import { Mutex } from "async-mutex";
 import { JSONSchema7, JSONSchema7Object } from "json-schema";
 import { v4 as uuidv4 } from "uuid";
 
-import { streamResponse } from "@continuedev/fetch";
+import { streamResponse } from "@smartai/fetch";
 import {
   ChatMessage,
   ChatMessageRole,
@@ -14,6 +14,7 @@ import {
 import { renderChatMessage } from "../../util/messageContent.js";
 import { getRemoteModelInfo } from "../../util/ollamaHelper.js";
 import { extractBase64FromDataUrl } from "../../util/url.js";
+import { getOllamaConfig } from "../../config/ollama.js";
 import { BaseLLM } from "../index.js";
 
 type OllamaChatMessage = {
@@ -166,6 +167,12 @@ class Ollama extends BaseLLM implements ModelInstaller {
   private explicitContextLength: boolean;
 
   constructor(options: LLMOptions) {
+    // Use Ollama config for apiBase if not explicitly provided
+    if (!options.apiBase) {
+      const ollamaConfig = getOllamaConfig();
+      options.apiBase = ollamaConfig.apiBase;
+    }
+
     super(options);
     this.explicitContextLength = options.contextLength !== undefined;
   }
