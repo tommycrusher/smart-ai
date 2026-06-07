@@ -1,10 +1,10 @@
-# OTLP Metrics Specification for Continue CLI
+# OTLP Metrics Specification for Smart AI CLI
 
-This document specifies the OpenTelemetry Protocol (OTLP) metrics that should be emitted by the Continue CLI to provide comprehensive observability and usage monitoring. The metrics are designed to be compatible with Claude Code dashboards for easy migration.
+This document specifies the OpenTelemetry Protocol (OTLP) metrics that should be emitted by the Smart AI CLI to provide comprehensive observability and usage monitoring. The metrics are designed to be compatible with Claude Code dashboards for easy migration.
 
 ## Overview
 
-The Continue CLI should emit metrics that provide insights into:
+The Smart AI CLI should emit metrics that provide insights into:
 
 - Usage patterns and session analytics
 - Performance and reliability
@@ -45,7 +45,7 @@ All metrics and events share these standard attributes:
 | Attribute           | Description                                                   | Controlled By                                       |
 | ------------------- | ------------------------------------------------------------- | --------------------------------------------------- |
 | `session.id`        | Unique session identifier                                     | `OTEL_METRICS_INCLUDE_SESSION_ID` (default: true)   |
-| `app.version`       | Current Continue CLI version                                  | `OTEL_METRICS_INCLUDE_VERSION` (default: false)     |
+| `app.version`       | Current Smart AI CLI version                                  | `OTEL_METRICS_INCLUDE_VERSION` (default: false)     |
 | `organization.id`   | Organization UUID (when authenticated)                        | Always included when available                      |
 | `user.account_uuid` | Account UUID (when authenticated)                             | `OTEL_METRICS_INCLUDE_ACCOUNT_UUID` (default: true) |
 | `terminal.type`     | Terminal type (e.g., `iTerm.app`, `vscode`, `cursor`, `tmux`) | Always included when detected                       |
@@ -113,7 +113,7 @@ All metrics and events share these standard attributes:
 
 **Type:** Counter  
 **Unit:** `USD`  
-**Description:** Cost of the Continue CLI session
+**Description:** Cost of the Smart AI CLI session
 
 **Attributes:**
 
@@ -229,7 +229,7 @@ All metrics and events share these standard attributes:
 
 ## Additional Metrics
 
-These metrics are unique to Continue CLI and provide additional insights without conflicting with compatibility:
+These metrics are unique to Smart AI CLI and provide additional insights without conflicting with compatibility:
 
 ### Authentication Metrics
 
@@ -311,7 +311,7 @@ The core metrics (`session_count`, `lines_of_code_count`, `token_usage`, `cost_u
 
 All metrics should include these resource attributes:
 
-- `service.name`: `continue-cli`
+- `service.name: smartai-cli`
 - `service.version`: CLI version
 - `deployment.environment`: `development` | `production`
 - `os.type`: Operating system

@@ -447,7 +447,7 @@ class VertexAI extends BaseLLM {
       return; // Aborted by user
     }
     // Streaming is not supported by code-gecko
-    // TODO: convert to non-streaming fim method when one exist in continue.
+    // TODO: convert to non-streaming fim method when one exists in Smart AI.
     yield (await resp.json()).predictions[0].content;
   }
 

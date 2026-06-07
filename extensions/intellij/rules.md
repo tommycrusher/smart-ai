@@ -1,8 +1,8 @@
-# Continue JetBrains Extension
+# Smart AI JetBrains Extension
 
 ## Project Purpose
 
-JetBrains/IntelliJ extension for Continue AI code agent. Provides chat, autocomplete, inline edit, and agent features within JetBrains IDEs.
+JetBrains/IntelliJ extension for Smart AI AI code agent. Provides chat, autocomplete, inline edit, and agent features within JetBrains IDEs.
 
 ## Architecture
 
@@ -15,7 +15,7 @@ JetBrains/IntelliJ extension for Continue AI code agent. Provides chat, autocomp
 
 ```
 src/main/kotlin/com/github/continuedev/continueintellijextension/
-├── continue/         # Core integration (CoreMessenger, IntelliJIde, IdeProtocolClient)
+├── Smart AI/         # Core integration (CoreMessenger, IntelliJIde, IdeProtocolClient)
 ├── autocomplete/     # Code completion logic
 ├── editor/          # Diff handling, inline edits
 ├── toolWindow/      # Main UI panel

@@ -23,7 +23,7 @@ const TelemetryProviders = ({ children }: PropsWithChildren) => {
   );
   const { session } = useAuth();
 
-  // TODO: Remove Continue team member check once Sentry is ready for all users
+  // TODO: Remove Smart AI team member check once Sentry is ready for all users
   const hasContinueEmail = isContinueTeamMember(
     (session as HubSessionInfo)?.account?.id,
   );
@@ -115,7 +115,7 @@ const TelemetryProviders = ({ children }: PropsWithChildren) => {
     }
   }, [allowAnonymousTelemetry, hasContinueEmail]);
 
-  // Conditionally wrap with ErrorBoundary when telemetry is enabled and user is Continue team member
+  // Conditionally wrap with ErrorBoundary when telemetry is enabled and user is Smart AI team member
   const content =
     allowAnonymousTelemetry && hasContinueEmail ? (
       <Sentry.ErrorBoundary showDialog={false}>{children}</Sentry.ErrorBoundary>

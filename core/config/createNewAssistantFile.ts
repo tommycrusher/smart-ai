@@ -20,7 +20,7 @@ models:
     with:
       ANTHROPIC_API_KEY: \${{ secrets.ANTHROPIC_API_KEY }}
 
-# MCP Servers that Continue can access
+# MCP Servers that Smart AI can access
 # https://docs.smart-ai.dev/customization/mcp-tools
 mcpServers:
   - uses: anthropic/memory-mcp

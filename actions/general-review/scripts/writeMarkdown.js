@@ -12,7 +12,7 @@ const messages = {
 `,
   cli_install_failed: `## Code Review Summary
 
-⚠️ AI review skipped: Continue CLI installation failed.
+⚠️ AI review skipped: Smart AI CLI installation failed.
 
 ### Troubleshooting
 - Check that npm installation succeeded
@@ -20,7 +20,7 @@ const messages = {
 `,
   empty_output: `## Code Review Summary
 
-⚠️ Continue CLI returned an empty response. Please check the configuration.
+⚠️ Smart AI CLI returned an empty response. Please check the configuration.
 `,
   cli_not_found: `## Code Review Summary
 
@@ -28,20 +28,20 @@ const messages = {
 `,
   config_error: `## Code Review Summary
 
-⚠️ Continue configuration error. Please verify that the assistant exists in Continue Hub.
+⚠️ Smart AI configuration error. Please verify that the assistant exists in Smart AI Hub.
 `,
   auth_error: `## Code Review Summary
 
-⚠️ Continue API authentication failed. Please check your CONTINUE_API_KEY.
+⚠️ Smart AI API authentication failed. Please check your CONTINUE_API_KEY.
 `,
   generic_failure: `## Code Review Summary
 
-⚠️ AI review failed. Please check the Continue API key and configuration.
+⚠️ AI review failed. Please check the Smart AI API key and configuration.
 
 ### Troubleshooting
 - Verify the CONTINUE_API_KEY secret is set correctly
 - Check that the organization and config path are valid
-- Ensure the Continue service is accessible
+- Ensure the Smart AI service is accessible
 `,
 };
 

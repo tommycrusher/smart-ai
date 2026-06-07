@@ -48,7 +48,7 @@ export const SYSTEM_SLASH_COMMANDS: SystemCommand[] = [
   },
   {
     name: "update",
-    description: "Update the Continue CLI",
+    description: "Update the Smart AI CLI",
     category: "system",
   },
   {

@@ -111,7 +111,7 @@ export class VsCodeWebviewProtocol
             } else if (e.cause.code === "ECONNREFUSED") {
               message = `Connection was refused. This likely means that there is no server running at the specified URL. If you are running your own server you may need to set the "apiBase" parameter in config.json. For example, you can set up an OpenAI-compatible server like here: https://docs.smart-ai.dev/reference/Model%20Providers/openai#openai-compatible-servers--apis`;
             } else {
-              message = `The request failed with "${e.cause.name}": ${e.cause.message}. If you're having trouble setting up Continue, please see the troubleshooting guide for help.`;
+              message = `The request failed with "${e.cause.name}": ${e.cause.message}. If you're having trouble setting up Smart AI, please see the troubleshooting guide for help.`;
             }
           }
 
@@ -122,7 +122,7 @@ export class VsCodeWebviewProtocol
             } catch {}
             if (message.includes("exceeded")) {
               message +=
-                " To keep using Continue, you can set up a local model or use your own API key.";
+                " To keep using Smart AI, you can set up a local model or use your own API key.";
             }
 
             vscode.window

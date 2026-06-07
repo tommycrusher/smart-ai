@@ -373,7 +373,7 @@ async function pollForDeviceToken(
         }
 
         if (errorCode === "authorization_pending") {
-          // Continue polling
+          // Smart AI polling
           await new Promise((resolve) =>
             setTimeout(resolve, currentInterval * 1000),
           );
@@ -477,7 +477,7 @@ export async function login(): Promise<AuthConfig> {
     };
   }
 
-  console.info(chalk.white("\nSigning in with Continue..."));
+  console.info(chalk.white("\nSigning in with Smart AI..."));
 
   // Request device authorization
   const deviceAuth = await requestDeviceAuthorization();

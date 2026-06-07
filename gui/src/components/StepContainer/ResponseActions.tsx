@@ -98,7 +98,7 @@ export default function ResponseActions({
       {isTruncated && (
         <HeaderButtonWithToolTip
           tabIndex={-1}
-          text="Continue generation"
+          text="Smart AI generation"
           onClick={onContinueGeneration}
         >
           <BarsArrowDownIcon className="text-description-muted h-3.5 w-3.5" />

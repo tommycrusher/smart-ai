@@ -20,23 +20,23 @@ interface OpenAIClientOptions extends Record<string, any> {
   organizationId?: string | null;
 
   /**
-   * Whether to always use the Continue-managed proxy for model requests
+   * Whether to always use the Smart AI-managed proxy for model requests
    */
   alwaysUseProxy?: boolean;
 
   /**
-   * API key for Continue Hub
+   * API key for Smart AI Hub
    */
   apiKey?: string;
 
   /**
-   * Base URL for the Continue API
+   * Base URL for the Smart AI API
    */
   baseURL?: string;
 }
 
 /**
- * Create and configure an OpenAI client that uses Continue Hub for authentication
+ * Create and configure an OpenAI client that uses Smart AI Hub for authentication
  *
  * @param options - OpenAI client options with assistant models
  * @returns Configured OpenAI client

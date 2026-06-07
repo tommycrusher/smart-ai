@@ -77,9 +77,9 @@ export function validateLicenseKey(licenseKey: string): {
 
 const MACOS_MDM_PATHS = [
   // Organization-specific MDM plist
-  "/Library/Managed Preferences/dev.continue.app.plist",
+  "/Library/Managed Preferences/dev.smartai.app.plist",
   // User-specific MDM plist
-  path.join(os.homedir(), "Library/Managed Preferences/dev.continue.app.plist"),
+  path.join(os.homedir(), "Library/Managed Preferences/dev.smartai.app.plist"),
 ];
 
 function readMdmKeysMacOS(): MdmKeys | undefined {
@@ -125,8 +125,8 @@ function readMdmKeysWindows(): MdmKeys | undefined {
     const { execSync } = require("child_process");
 
     // Path to the registry where MDM configuration is stored
-    const regPath = "HKLM\\Software\\Continue\\MDM";
-    const userRegPath = "HKCU\\Software\\Continue\\MDM";
+    const regPath = "HKLM\\Software\\Smart AI\\MDM";
+    const userRegPath = "HKCU\\Software\\Smart AI\\MDM";
 
     // Try to read from HKEY_LOCAL_MACHINE first
     try {
@@ -264,7 +264,7 @@ function writeMdmKeysMacOS(licenseKey: string): boolean {
     // Write to user-specific MDM plist
     const userMdmPath = path.join(
       os.homedir(),
-      "Library/Managed Preferences/dev.continue.app.plist",
+      "Library/Managed Preferences/dev.smartai.app.plist",
     );
 
     const config = {
@@ -290,7 +290,7 @@ function writeMdmKeysWindows(licenseKey: string): boolean {
     const { execSync } = require("child_process");
 
     // Use HKEY_CURRENT_USER to avoid needing admin privileges
-    const userRegPath = "HKCU\\Software\\Continue\\MDM";
+    const userRegPath = "HKCU\\Software\\Smart AI\\MDM";
 
     // Create the registry key if it doesn't exist
     try {

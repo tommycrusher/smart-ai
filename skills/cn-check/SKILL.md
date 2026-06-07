@@ -1,6 +1,6 @@
 ---
 name: cn-check
-description: Install and run the Continue CLI (`cn`) to execute AI agent checks on local code changes. Use when asked to "run checks", "lint with AI", "review my changes with cn", or set up Continue CI locally.
+description: Install and run the Smart AI CLI (`cn`) to execute AI agent checks on local code changes. Use when asked to "run checks", "lint with AI", "review my changes with cn", or set up Smart AI CI locally.
 license: Apache-2.0
 metadata:
   author: continuedev
@@ -9,7 +9,7 @@ metadata:
 
 # cn check — Local AI Agent Checks
 
-Run AI-powered code checks locally against your working tree changes using the Continue CLI. Each check is an agent (defined in markdown) that reviews your diff, identifies issues, and optionally suggests fixes as a patch.
+Run AI-powered code checks locally against your working tree changes using the Smart AI CLI. Each check is an agent (defined in markdown) that reviews your diff, identifies issues, and optionally suggests fixes as a patch.
 
 ## When to Use
 
@@ -17,7 +17,7 @@ Run AI-powered code checks locally against your working tree changes using the C
 - User wants to set up `cn check` in a project
 - User needs to create custom check agents
 - User wants to apply AI-suggested fixes locally
-- User asks about Continue CI or agent-based code review
+- User asks about Smart AI CI or agent-based code review
 
 ## Installation
 
@@ -51,19 +51,19 @@ cn check
 This auto-detects checks from three sources (in priority order):
 
 1. Hub API — checks configured for your repo on smart-ai.dev
-2. Local agents — markdown files in `.continue/agents/*.md`
+2. Local agents — markdown files in `.smart-ai/agents/*.md`
 
 ### Specify agents explicitly
 
 ```bash
 # Run a single local agent
-cn check --agent .continue/agents/security-review.md
+cn check --agent .smart-ai/agents/security-review.md
 
 # Run a Hub-published agent
 cn check --agent myorg/code-style
 
 # Run multiple agents
-cn check --agent .continue/agents/security.md --agent .continue/agents/docs.md
+cn check --agent .smart-ai/agents/security.md --agent .smart-ai/agents/docs.md
 ```
 
 ### Compare against a specific base branch
@@ -97,7 +97,7 @@ Runs all checks, then applies any suggested patches directly to the working tree
 
 ## Creating a Check Agent
 
-Create a markdown file at `.continue/agents/<name>.md`:
+Create a markdown file at `.smart-ai/agents/<name>.md`:
 
 ```markdown
 # Security Review
@@ -155,7 +155,7 @@ When complete, a full report prints with pass/fail status, agent output, and sug
 {
   "checks": [
     {
-      "agent": ".continue/agents/security.md",
+      "agent": ".smart-ai/agents/security.md",
       "name": "security",
       "status": "pass",
       "patch": "",
@@ -194,7 +194,7 @@ Options:
 | Problem                      | Solution                                                                              |
 | ---------------------------- | ------------------------------------------------------------------------------------- |
 | "No changes detected"        | Make sure you have uncommitted changes or specify `--base`                            |
-| "No checks found"            | Create `.continue/agents/*.md` files or run `cn login` for Hub checks                 |
+| "No checks found"            | Create `.smart-ai/agents/*.md` files or run `cn login` for Hub checks                 |
 | Check times out (5 min)      | Reduce diff size or split into focused agents                                         |
 | "Worker exited with code 1"  | Run with `--verbose` to see worker stderr                                             |
 | Patch conflicts with `--fix` | Apply patches manually: `cn check --patch > changes.patch && git apply changes.patch` |

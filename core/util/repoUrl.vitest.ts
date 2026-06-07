@@ -104,7 +104,7 @@ describe("normalizeRepoUrl", () => {
     });
 
     it("should handle mixed case in shorthand format", () => {
-      expect(normalizeRepoUrl("ContinueDev/Continue")).toBe(
+      expect(normalizeRepoUrl("ContinueDev/Smart AI")).toBe(
         "https://github.com/continuedev/continue",
       );
     });
@@ -180,32 +180,32 @@ describe("normalizeRepoUrl", () => {
   });
 
   describe("real-world examples", () => {
-    it("should normalize Continue's repository from SSH", () => {
-      expect(normalizeRepoUrl("git@github.com:continuedev/continue.git")).toBe(
+    it("should normalize Smart AI's repository from SSH", () => {
+      expect(normalizeRepoUrl("git@github.com:tommycrusher/smart-ai.git")).toBe(
         "https://github.com/continuedev/continue",
       );
     });
 
-    it("should normalize Continue's repository from shorthand", () => {
+    it("should normalize Smart AI's repository from shorthand", () => {
       expect(normalizeRepoUrl("continuedev/continue")).toBe(
         "https://github.com/continuedev/continue",
       );
     });
 
-    it("should normalize Continue's repository from HTTPS", () => {
+    it("should normalize Smart AI's repository from HTTPS", () => {
       expect(
-        normalizeRepoUrl("https://github.com/continuedev/continue.git"),
+        normalizeRepoUrl("https://github.com/tommycrusher/smart-ai.git"),
       ).toBe("https://github.com/continuedev/continue");
     });
 
     it("should match repositories regardless of input format", () => {
       const formats = [
-        "git@github.com:continuedev/continue.git",
+        "git@github.com:tommycrusher/smart-ai.git",
         "continuedev/continue",
         "https://github.com/continuedev/continue",
-        "https://github.com/continuedev/continue.git",
-        "ssh://git@github.com/continuedev/continue.git",
-        "ContinueDev/Continue",
+        "https://github.com/tommycrusher/smart-ai.git",
+        "ssh://git@github.com/tommycrusher/smart-ai.git",
+        "ContinueDev/Smart AI",
       ];
 
       const expected = "https://github.com/continuedev/continue";

@@ -33,7 +33,7 @@ let downloadYamlExtensionCodeLensDisposable: vscode.Disposable | undefined =
  *
  * If a previous provider was registered, it is disposed of before the new one is created.
  *
- * @param config - The Continue configuration object
+ * @param config - The Smart AI configuration object
  * @param context - The VS Code extension context
  */
 function registerQuickActionsProvider(
@@ -57,7 +57,7 @@ function registerQuickActionsProvider(
 }
 
 /**
- * Registers all CodeLens providers for the Continue extension.
+ * Registers all CodeLens providers for the Smart AI extension.
  *
  * This function disposes of any existing CodeLens providers and registers new ones for:
  * - Vertical per-line diffs
@@ -71,7 +71,7 @@ function registerQuickActionsProvider(
  *
  * @param context - The VS Code extension context
  * @param editorToVerticalDiffCodeLens - A Map of editor IDs to VerticalDiffCodeLens arrays
- * @param config - The Continue configuration object
+ * @param config - The Smart AI configuration object
  *
  * @returns An object containing the verticalDiffCodeLens provider
  */

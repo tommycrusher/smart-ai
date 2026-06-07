@@ -31,7 +31,7 @@ describe("E2E: Basic Commands", () => {
       const result = await runCLI(context, { args: ["--help"] });
 
       expect(result.exitCode).toBe(0);
-      expect(result.stdout).toContain("Continue CLI");
+      expect(result.stdout).toContain("Smart AI CLI");
       expect(result.stdout).toContain("AI-powered development assistant");
       expect(result.stdout).toContain("Options:");
       expect(result.stdout).toContain("-p, --print");
@@ -57,14 +57,14 @@ describe("E2E: Basic Commands", () => {
       const result = await runCLI(context, { args: ["login", "--help"] });
 
       expect(result.exitCode).toBe(0);
-      expect(result.stdout).toContain("Authenticate with Continue");
+      expect(result.stdout).toContain("Authenticate with Smart AI");
     });
 
     it("should show help for logout command", async () => {
       const result = await runCLI(context, { args: ["logout", "--help"] });
 
       expect(result.exitCode).toBe(0);
-      expect(result.stdout).toContain("Log out from Continue");
+      expect(result.stdout).toContain("Log out from Smart AI");
     });
   });
 

@@ -145,7 +145,7 @@ describe("hookConfig", () => {
       fs.mkdirSync(fakeHome, { recursive: true });
       fs.mkdirSync(projectDir, { recursive: true });
       // Override CONTINUE_GLOBAL_DIR so that user-global settings
-      // from the real ~/.continue/settings.json don't leak into tests
+      // from the real ~/.smart-ai/settings.json don't leak into tests
       originalContinueGlobalDir = process.env.CONTINUE_GLOBAL_DIR;
       process.env.CONTINUE_GLOBAL_DIR = path.join(fakeHome, ".continue");
     });
@@ -170,7 +170,7 @@ describe("hookConfig", () => {
       expect(result.disabled).toBe(false);
     });
 
-    it("loads hooks from .continue/settings.json", () => {
+    it("loads hooks from .smart-ai/settings.json", () => {
       const settingsDir = path.join(projectDir, ".continue");
       fs.mkdirSync(settingsDir, { recursive: true });
       fs.writeFileSync(
@@ -227,7 +227,7 @@ describe("hookConfig", () => {
         }),
       );
 
-      // .continue/settings.json (project-level)
+      // .smart-ai/settings.json (project-level)
       const continueDir = path.join(projectDir, ".continue");
       fs.mkdirSync(continueDir, { recursive: true });
       fs.writeFileSync(

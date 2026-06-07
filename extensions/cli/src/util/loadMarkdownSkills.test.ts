@@ -47,7 +47,7 @@ describe("loadMarkdownSkills", () => {
     expect(result.errors).toEqual([]);
   });
 
-  it("loads a valid skill with files from .continue/skills", async () => {
+  it("loads a valid skill with files from .smart-ai/skills", async () => {
     const skillDir = path.join(tmpDir, ".continue", "skills", "my-skill");
     fs.mkdirSync(skillDir, { recursive: true });
     fs.writeFileSync(

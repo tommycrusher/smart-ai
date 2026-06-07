@@ -7,7 +7,7 @@ import { createOpenAIClient } from "./createOpenAIClient.js";
 export interface ContinueClientOptions {
   /**
    * The assistant identifier in the format owner-slug/package-slug
-   * If not provided, only the Continue API client will be returned
+   * If not provided, only the Smart AI API client will be returned
    */
   assistant?: string;
 
@@ -17,7 +17,7 @@ export interface ContinueClientOptions {
    * API keys must be prefixed with "con_" and provided in the Authorization header.
    * Example: `Authorization: Bearer con_your_api_key_here`
    *
-   * API keys can be generated in the Continue Hub web interface under account settings.
+   * API keys can be generated in the Smart AI Hub web interface under account settings.
    */
   apiKey: string;
 
@@ -29,19 +29,19 @@ export interface ContinueClientOptions {
   organizationId?: string;
 
   /**
-   * Base URL for the Continue API
+   * Base URL for the Smart AI API
    */
   baseURL?: string;
 }
 
 export type ContinueClient = {
   /**
-   * The Continue API client
+   * The Smart AI API client
    */
   api: DefaultApi;
 
   /**
-   * The OpenAI client configured to use the Continue API
+   * The OpenAI client configured to use the Smart AI API
    */
   client: OpenAI;
 
@@ -54,35 +54,35 @@ export type ContinueClient = {
 
 export type ContinueClientBase = {
   /**
-   * The Continue API client
+   * The Smart AI API client
    */
   api: DefaultApi;
 };
 
-export class Continue {
+export class Smart AI {
   /**
-   * Create a Continue instance with a specific assistant
+   * Create a Smart AI instance with a specific assistant
    *
    * When you provide an assistant name, this returns a full client with:
-   * - Continue API access
+   * - Smart AI API access
    * - A configured OpenAI-compatible client
    * - Assistant configuration and helper methods
    *
    * @param options - Configuration including your API key and assistant name
-   * @returns Full Continue environment with API client, LLM client, and assistant config
+   * @returns Full Smart AI environment with API client, LLM client, and assistant config
    */
   static async from(
     options: ContinueClientOptions & { assistant: string },
   ): Promise<ContinueClient>;
 
   /**
-   * Create a simple Continue API client
+   * Create a simple Smart AI API client
    *
-   * When you don't specify an assistant, this returns just the Continue API client
+   * When you don't specify an assistant, this returns just the Smart AI API client
    * for making direct API calls.
    *
    * @param options - Configuration including your API key
-   * @returns Just the Continue API client
+   * @returns Just the Smart AI API client
    */
   static async from(
     options: ContinueClientOptions & { assistant?: undefined },

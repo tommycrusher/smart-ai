@@ -1,6 +1,6 @@
-# Continue PR Review Actions
+# Smart AI PR Review Actions
 
-GitHub Actions that provide automated code reviews for pull requests using Continue CLI.
+GitHub Actions that provide automated code reviews for pull requests using Smart AI CLI.
 
 ## Available Actions
 

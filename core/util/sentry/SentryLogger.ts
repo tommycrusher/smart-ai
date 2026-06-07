@@ -110,7 +110,7 @@ export class SentryLogger {
     ideInfo: IdeInfo,
     userEmail?: string,
   ) {
-    // TODO: Remove Continue team member check once Sentry is ready for all users
+    // TODO: Remove Smart AI team member check once Sentry is ready for all users
     SentryLogger.allowTelemetry =
       allowAnonymousTelemetry && isContinueTeamMember(userEmail);
     SentryLogger.uniqueId = uniqueId;

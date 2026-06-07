@@ -57,7 +57,7 @@ describe("PosthogService", () => {
   });
 
   describe("uniqueId generation", () => {
-    it("should use Continue user id when signed in", () => {
+    it("should use Smart AI user id when signed in", () => {
       const mockUserId = "user123";
 
       vi.mocked(loadAuthConfig).mockReturnValue({ userId: mockUserId } as any);

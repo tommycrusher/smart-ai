@@ -53,7 +53,7 @@ export class ApiRequestError extends Error implements ApiError {
 }
 
 /**
- * Make an authenticated API request to the Continue API
+ * Make an authenticated API request to the Smart AI API
  * Handles authentication, error handling, and response parsing
  */
 export async function makeAuthenticatedRequest<T = any>(

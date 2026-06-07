@@ -1,2 +1,2 @@
 export * from "./Assistant.js";
-export * from "./Continue.js";
+export * from "./SmartAi.js";

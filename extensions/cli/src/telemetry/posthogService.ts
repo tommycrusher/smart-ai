@@ -102,8 +102,8 @@ export class PosthogService {
   }
 
   /**
-   * - Continue user id from environment (when running as agent)
-   * - Continue user id if signed in locally
+   * - Smart AI user id from environment (when running as agent)
+   * - Smart AI user id if signed in locally
    * - Unique machine id if not signed in
    */
   private getEventUserId(): string {

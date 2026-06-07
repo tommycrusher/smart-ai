@@ -29,7 +29,7 @@ describe("processPromptOrRule (loadRuleFromHub integration)", () => {
   });
 
   describe("loadRuleFromHub", () => {
-    it("should successfully load a rule from the Continue Hub", async () => {
+    it("should successfully load a rule from the Smart AI Hub", async () => {
       // Create a mock zip file containing a markdown rule
       const JSZip = (await import("jszip")).default;
       const zip = new JSZip();
@@ -51,7 +51,7 @@ describe("processPromptOrRule (loadRuleFromHub integration)", () => {
       expect(mockFetch).toHaveBeenCalledWith(
         new URL(
           "v0/continuedev/sentry-nextjs/latest/download",
-          "https://api.continue.dev/",
+          "https://api.smart-ai.dev/",
         ),
         { headers: {} },
       );

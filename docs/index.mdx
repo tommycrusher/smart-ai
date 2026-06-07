@@ -1,20 +1,20 @@
 ---
-title: "What is Continue?"
+title: "What is Smart AI?"
 ---
 
-Continue runs AI checks on every pull request. Each check is a markdown file in your repo that shows up as a GitHub status check — green if the code looks good, red with a suggested fix if not.
+Smart AI runs AI checks on every pull request. Each check is a markdown file in your repo that shows up as a GitHub status check — green if the code looks good, red with a suggested fix if not.
 
-<video autoPlay muted loop playsInline className="rounded-xl" src="https://continue.dev/videos/demo.mp4" />
+<video autoPlay muted loop playsInline className="rounded-xl" src="https://smart-ai.dev/videos/demo.mp4" />
 
 ## Quickstart
 
-1. Go to [continue.dev/check](https://continue.dev/check) to run checks on a pull request.
+1. Go to [smart-ai.dev/check](https://smart-ai.dev/check) to run checks on a pull request.
 
 ## How it works
 
-You define checks as markdown files in `.continue/checks/`. Each file has a name, a description, and a prompt that tells the AI what to look for.
+You define checks as markdown files in `.smart-ai/checks/`. Each file has a name, a description, and a prompt that tells the AI what to look for.
 
-```markdown .continue/checks/security-review.md
+```markdown .smart-ai/checks/security-review.md
 ---
 name: Security Review
 description: Flag hardcoded secrets and missing input validation
@@ -32,4 +32,4 @@ Flag as failing if any of these are true:
 If none of these issues are found, pass the check.
 ```
 
-When a PR is opened, Continue runs each check against the diff and reports the result as a GitHub status check. If a check fails, it suggests a fix you can accept or reject directly from GitHub.
+When a PR is opened, Smart AI runs each check against the diff and reports the result as a GitHub status check. If a check fails, it suggests a fix you can accept or reject directly from GitHub.

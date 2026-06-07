@@ -145,12 +145,12 @@ name: Test
 version: 1.0.0
 data:
   apiKey: \${{ inputs.apiKey }}
-  environment: \${{ continue.environment }}
+  environment: \${{ smartai.environment }}
   customVar: \${{ other.variable }}
 `;
     const result = replaceInputsWithSecrets(yamlContent);
     expect(result).toContain("\${{ secrets.apiKey }}");
-    expect(result).toContain("\${{ continue.environment }}");
+    expect(result).toContain("\${{ smartai.environment }}");
     expect(result).toContain("\${{ other.variable }}");
     expect(result).not.toContain("\${{ inputs.apiKey }}");
   });

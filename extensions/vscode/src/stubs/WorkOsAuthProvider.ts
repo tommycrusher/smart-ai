@@ -29,7 +29,7 @@ import { PromiseAdapter, promiseFromEvent } from "./promiseUtils";
 import { SecretStorage } from "./SecretStorage";
 import { UriEventHandler } from "./uriHandler";
 
-const AUTH_NAME = "Continue";
+const AUTH_NAME = "Smart AI";
 
 const controlPlaneEnv = getControlPlaneEnvSync(true ? "production" : "none");
 
@@ -384,7 +384,7 @@ export class WorkOsAuthProvider implements AuthenticationProvider, Disposable {
 
       const token = await this.login(codeChallenge, controlPlaneEnv, scopes);
       if (!token) {
-        throw new Error(`Continue login failure`);
+        throw new Error(`Smart AI login failure`);
       }
 
       const userInfo = (await this.getUserInfo(
@@ -462,7 +462,7 @@ export class WorkOsAuthProvider implements AuthenticationProvider, Disposable {
   }
 
   /**
-   * Log in to Continue
+   * Log in to Smart AI
    */
   private async login(
     codeChallenge: string,
@@ -472,7 +472,7 @@ export class WorkOsAuthProvider implements AuthenticationProvider, Disposable {
     return await window.withProgress<string>(
       {
         location: ProgressLocation.Notification,
-        title: "Signing in to Continue...",
+        title: "Signing in to Smart AI...",
         cancellable: true,
       },
       async (_, token) => {
@@ -542,7 +542,7 @@ export class WorkOsAuthProvider implements AuthenticationProvider, Disposable {
   }
 
   /**
-   * Handle the redirect to VS Code (after sign in from Continue)
+   * Handle the redirect to VS Code (after sign in from Smart AI)
    * @param scopes
    * @returns
    */

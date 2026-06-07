@@ -51,7 +51,7 @@ vi.mock("../context/Auth", () => ({
   useAuth: () => ({
     session: {
       account: {
-        id: "test@continue.dev", // Mock Continue team member email
+        id: "test@smart-ai.dev", // Mock Smart AI team member email
       },
     },
   }),
@@ -59,7 +59,7 @@ vi.mock("../context/Auth", () => ({
 
 // Mock isContinueTeamMember utility
 vi.mock("../util/isContinueTeamMember", () => ({
-  isContinueTeamMember: vi.fn(() => true), // Mock as Continue team member
+  isContinueTeamMember: vi.fn(() => true), // Mock as Smart AI team member
 }));
 
 // Mock window.vscMachineId

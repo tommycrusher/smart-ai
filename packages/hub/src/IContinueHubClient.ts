@@ -7,7 +7,7 @@ import {
 } from "@smartai/config-yaml";
 
 /**
- * Interface for the Continue Hub client.
+ * Interface for the Smart AI Hub client.
  */
 export interface IContinueHubClient {
   resolveFQSNs(

@@ -110,7 +110,7 @@ export class VsCodeMessenger {
     });
 
     this.onWebview("toggleDevTools", (msg) => {
-      vscode.commands.executeCommand("continue.viewLogs");
+      vscode.commands.executeCommand("smartai.viewLogs");
     });
 
     this.onWebview("reloadWindow", (msg) => {
@@ -120,12 +120,12 @@ export class VsCodeMessenger {
       vscode.commands.executeCommand("workbench.action.focusActiveEditorGroup");
     });
     this.onWebview("toggleFullScreen", (msg) => {
-      vscode.commands.executeCommand("continue.openInNewWindow");
+      vscode.commands.executeCommand("smartai.openInNewWindow");
     });
 
     this.onWebview("acceptDiff", async ({ data: { filepath, streamId } }) => {
       await vscode.commands.executeCommand(
-        "continue.acceptDiff",
+        "smartai.acceptDiff",
         filepath,
         streamId,
       );
@@ -133,7 +133,7 @@ export class VsCodeMessenger {
 
     this.onWebview("rejectDiff", async ({ data: { filepath, streamId } }) => {
       await vscode.commands.executeCommand(
-        "continue.rejectDiff",
+        "smartai.rejectDiff",
         filepath,
         streamId,
       );
@@ -264,7 +264,7 @@ export class VsCodeMessenger {
 
     this.onWebview("session/share", async (msg) => {
       await vscode.commands.executeCommand(
-        "continue.shareSession",
+        "smartai.shareSession",
         msg.data.sessionId,
       );
     });
@@ -396,7 +396,7 @@ export class VsCodeMessenger {
           errorMessage.includes("GitHub App")
         ) {
           const selection = await vscode.window.showErrorMessage(
-            "Background agents need GitHub access. Please connect your GitHub account to Continue.",
+            "Background agents need GitHub access. Please connect your GitHub account to Smart AI.",
             "Connect GitHub",
             "Cancel",
           );
@@ -525,8 +525,8 @@ export class VsCodeMessenger {
 
           const choice = await vscode.window.showWarningMessage(
             `You have ${changeCount} uncommitted change(s). What would you like to do?`,
-            "Stash & Continue",
-            "Continue Without Stashing",
+            "Stash & Smart AI",
+            "Smart AI Without Stashing",
             "Cancel",
           );
 
@@ -534,7 +534,7 @@ export class VsCodeMessenger {
             return;
           }
 
-          if (choice === "Stash & Continue") {
+          if (choice === "Stash & Smart AI") {
             try {
               await vscode.window.withProgress(
                 {
@@ -546,7 +546,7 @@ export class VsCodeMessenger {
                   const workspacePath =
                     vscode.Uri.parse(matchingWorkspace).fsPath;
                   // Sanitize agentSessionId to prevent command injection
-                  const stashMessage = `Continue: Stashed before opening agent ${agentSessionId}`;
+                  const stashMessage = `Smart AI: Stashed before opening agent ${agentSessionId}`;
                   await this.ide.subprocess(
                     `git stash push -m ${sanitizeShellArgument(stashMessage)}`,
                     workspacePath,
@@ -565,7 +565,7 @@ export class VsCodeMessenger {
               return; // Stop on stash failure
             }
           }
-          // If "Continue Without Stashing" was chosen, just proceed
+          // If "Smart AI Without Stashing" was chosen, just proceed
         }
 
         // Check if we're already on the target branch
@@ -767,7 +767,7 @@ export class VsCodeMessenger {
       );
       vscode.commands.executeCommand(
         "setContext",
-        "continue.isSignedInToControlPlane",
+        "smartai.isSignedInToControlPlane",
         false,
       );
     });

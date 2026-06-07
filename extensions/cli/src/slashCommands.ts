@@ -289,7 +289,7 @@ function handleImport(args: string[]): SlashCommandResult {
       return {
         exit: false,
         output: chalk.red(
-          "Invalid session file: expected a valid Continue exported session (version 1).",
+          "Invalid session file: expected a valid Smart AI exported session (version 1).",
         ),
       };
     }

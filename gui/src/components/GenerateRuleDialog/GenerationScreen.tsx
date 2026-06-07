@@ -280,7 +280,7 @@ export function GenerationScreen({
                     !formData.name
                   }
                 >
-                  Continue
+                  Smart AI
                 </Button>
               </div>
               {formError && (

@@ -843,7 +843,7 @@ export function useChat({
             message: {
               role: "system",
               content:
-                "[Tool canceled - please tell Continue what to do differently]",
+                "[Tool canceled - please tell Smart AI what to do differently]",
             },
             contextItems: [],
           },

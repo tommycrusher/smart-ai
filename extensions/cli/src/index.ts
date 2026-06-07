@@ -181,7 +181,7 @@ const program = new Command();
 program
   .name("cn")
   .description(
-    "Continue CLI - AI-powered development assistant. Starts an interactive session by default, use -p/--print for non-interactive output.",
+    "Smart AI CLI - AI-powered development assistant. Starts an interactive session by default, use -p/--print for non-interactive output.",
   )
   .version(getVersion(), "-v, --version", "Display version number");
 
@@ -309,7 +309,7 @@ addCommonOptions(program)
 // Login subcommand
 program
   .command("login")
-  .description("Authenticate with Continue")
+  .description("Authenticate with Smart AI")
   .action(async () => {
     // Telemetry: record command invocation
     await posthogService.capture("cliCommand", { command: "login" });
@@ -319,7 +319,7 @@ program
 // Logout subcommand
 program
   .command("logout")
-  .description("Log out from Continue")
+  .description("Log out from Smart AI")
   .action(async () => {
     // Telemetry: record command invocation
     await posthogService.capture("cliCommand", { command: "logout" });
@@ -390,7 +390,7 @@ program
   .option("--port <port>", "Port to run the server on (default: 8000)", "8000")
   .option(
     "--id <storageId>",
-    "Upload session snapshots to Continue-managed storage using the provided identifier",
+    "Upload session snapshots to Smart AI-managed storage using the provided identifier",
   )
   .option(
     "--beta-upload-artifact-tool",

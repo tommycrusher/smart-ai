@@ -1,8 +1,8 @@
-# Continue CLI
+# Smart AI CLI
 
-The Continue CLI (`cn`) is a customizable command line coding agent.
+The Smart AI CLI (`cn`) is a customizable command line coding agent.
 
-![Continue CLI Demo](./media/demo.gif)
+![Smart AI CLI Demo](./media/demo.gif)
 
 ## Installation
 
@@ -80,14 +80,14 @@ cn ls --json
 
 ## Environment Variables
 
-- `CONTINUE_CLI_DISABLE_COMMIT_SIGNATURE`: Disable adding the Continue commit signature to generated commit messages
+- `CONTINUE_CLI_DISABLE_COMMIT_SIGNATURE`: Disable adding the Smart AI commit signature to generated commit messages
 - `FORCE_NO_TTY`: Force TTY-less mode, prevents stdin reading (useful for testing and automation)
 
 ## Commands
 
 - `cn`: Start an interactive chat session
 - `cn ls`: List recent sessions with TUI selector to choose one to resume
-- `cn login`: Authenticate with Continue
+- `cn login`: Authenticate with Smart AI
 - `cn logout`: Sign out of current session
 - `cn remote`: Launch a remote instance
 - `cn serve`: Start HTTP server mode

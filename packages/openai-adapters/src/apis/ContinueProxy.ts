@@ -79,7 +79,7 @@ export class ContinueProxyApi extends OpenAIApi {
   modifyChatBody<T extends ChatCompletionCreateParams>(body: T): T {
     // First apply OpenAI-specific modifications
     const modifiedBody = super.modifyChatBody(body);
-    // Then add Continue properties
+    // Then add Smart AI properties
     return this.modifyBodyWithContinueProperties(modifiedBody);
   }
 

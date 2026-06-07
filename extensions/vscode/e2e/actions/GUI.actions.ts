@@ -18,7 +18,7 @@ export class GUIActions {
       await new Workbench().executeCommand("View: Move View");
       await (
         await InputBox.create(DEFAULT_TIMEOUT.MD)
-      ).selectQuickPick("Continue");
+      ).selectQuickPick("Smart AI");
       await (
         await InputBox.create(DEFAULT_TIMEOUT.MD)
       ).selectQuickPick("New Secondary Side Bar Entry");
@@ -42,14 +42,14 @@ export class GUIActions {
     for (let i = 0; i < iframes.length; i++) {
       const iframe = iframes[i];
       const src = await iframe.getAttribute("src");
-      if (src.includes("extensionId=Continue.continue")) {
+      if (src.includes("extensionId=SmartAI.smartai")) {
         continueIFrame = iframe;
         break;
       }
     }
 
     if (!continueIFrame) {
-      throw new Error("Could not find Continue iframe");
+      throw new Error("Could not find Smart AI iframe");
     }
 
     await driver.switchTo().frame(continueIFrame);
@@ -73,7 +73,7 @@ export class GUIActions {
 
   public static toggleGui = async () => {
     return TestUtils.waitForSuccess(() =>
-      new Workbench().executeCommand("continue.focusContinueInput"),
+      new Workbench().executeCommand("smartai.focusContinueInput"),
     );
   };
 

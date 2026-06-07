@@ -1,8 +1,8 @@
 /* tslint:disable */
 /* eslint-disable */
 /**
- * Continue Hub IDE API
- * API for Continue IDE to fetch assistants and other related information. These endpoints are primarily used by the Continue IDE extensions for VS Code and JetBrains.
+ * Smart AI Hub IDE API
+ * API for Smart AI IDE to fetch assistants and other related information. These endpoints are primarily used by the Smart AI IDE extensions for VS Code and JetBrains.
  *
  * The version of the OpenAPI document: 1.0.0
  *
@@ -90,7 +90,7 @@ export interface DefaultApiInterface {
    * @summary Get a specific assistant by slug
    * @param {string} ownerSlug Slug of the user or organization that owns the assistant
    * @param {string} packageSlug Slug of the assistant package
-   * @param {'true' | 'false'} [alwaysUseProxy] Whether to always use the Continue-managed proxy for model requests
+   * @param {'true' | 'false'} [alwaysUseProxy] Whether to always use the Smart AI-managed proxy for model requests
    * @param {string} [organizationId] ID of the organization to scope assistants to. If not provided, personal assistants are returned.
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
@@ -193,7 +193,7 @@ export interface DefaultApiInterface {
   /**
    * Returns a complete list of assistants available to the user, with their full configurations, icons, and other metadata needed by the IDE to display and use them.  This endpoint performs a full refresh of the list of assistants, including unrolling configurations and resolving secrets.
    * @summary List assistants for IDE
-   * @param {'true' | 'false'} [alwaysUseProxy] Whether to always use the Continue-managed proxy for model requests
+   * @param {'true' | 'false'} [alwaysUseProxy] Whether to always use the Smart AI-managed proxy for model requests
    * @param {string} [organizationId] ID of the organization to scope assistants to. If not provided, personal assistants are returned.
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}

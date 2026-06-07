@@ -1,4 +1,4 @@
-// Cookie Banner Implementation for Continue Documentation
+// Cookie Banner Implementation for Smart AI Documentation
 // This script implements a cookie consent banner in offline mode
 
 (function () {

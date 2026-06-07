@@ -87,7 +87,7 @@ export async function runOnboardingFlow(
 
   // Step 4: Present user with two options
   console.log(chalk.yellow("How do you want to get started?"));
-  console.log(chalk.white("1. ⏩ Log in with Continue"));
+  console.log(chalk.white("1. ⏩ Log in with Smart AI"));
   console.log(chalk.white("2. 🔑 Enter your Anthropic API key"));
 
   const choice = await questionWithChoices(

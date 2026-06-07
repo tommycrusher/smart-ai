@@ -22,7 +22,7 @@ export class DownloadYamlExtensionCodeLensProvider
     const docCodeLens: vscode.CodeLens = {
       range: new vscode.Range(0, 0, 0, 0),
       command: {
-        title: "📖 View Continue Reference",
+        title: "📖 View Smart AI Reference",
         command: "vscode.open",
         arguments: [vscode.Uri.parse("https://docs.smart-ai.dev/reference")],
       },

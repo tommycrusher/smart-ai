@@ -603,7 +603,7 @@ class Ollama extends BaseLLM implements ModelInstaller {
         const chatMessage: ChatMessage = { role: "assistant", content };
 
         if (toolCalls?.length) {
-          // Continue handles the response as a tool call delta but
+          // Smart AI handles the response as a tool call delta but
           // But ollama returns the full object in one response with no streaming
           chatMessage.toolCalls = toolCalls.map((tc) => ({
             type: "function",

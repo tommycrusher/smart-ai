@@ -54,8 +54,8 @@ export class DataLogger {
     }
     if ("userAgent" in zodSchema.shape) {
       newBody.userAgent = ideInfo
-        ? `${ideInfo.name}/${ideInfo.version} (Continue/${ideInfo.extensionVersion})`
-        : "Unknown/Unknown (Continue/Unknown)";
+        ? `${ideInfo.name}/${ideInfo.version} (Smart AI/${ideInfo.extensionVersion})`
+        : "Unknown/Unknown (Smart AI/Unknown)";
     }
     if ("selectedProfileId" in zodSchema.shape) {
       newBody.selectedProfileId =
@@ -189,7 +189,7 @@ export class DataLogger {
           "Content-Type": "application/json",
         };
 
-        // If an API key is provided, use it, otherwise use the Continue access token
+        // If an API key is provided, use it, otherwise use the Smart AI access token
         if (dataConfig.apiKey) {
           headers["Authorization"] = `Bearer ${dataConfig.apiKey}`;
         } else {

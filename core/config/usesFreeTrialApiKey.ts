@@ -2,7 +2,7 @@ import { decodeSecretLocation, SecretType } from "@smartai/config-yaml";
 import { BrowserSerializedContinueConfig, ModelDescription } from "..";
 
 /**
- * Helper function to determine if the config uses an API key that relies on Continue credits (free trial or models add-on)
+ * Helper function to determine if the config uses an API key that relies on Smart AI credits (free trial or models add-on)
  * @param config The serialized config object
  * @returns true if the config is using any free trial models
  */

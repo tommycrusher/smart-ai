@@ -394,10 +394,10 @@ export default async function doLoadConfig(options: {
   );
 
   // Setup Sentry logger with same telemetry settings
-  // TODO: Remove Continue team member check once Sentry is ready for all users
+  // TODO: Remove Smart AI team member check once Sentry is ready for all users
   let userEmail: string | undefined;
   try {
-    // Access the session info to get user email for Continue team member check
+    // Access the session info to get user email for Smart AI team member check
     const sessionInfo = await (controlPlaneClient as any).sessionInfoPromise;
     userEmail = sessionInfo?.account?.id;
   } catch (error) {

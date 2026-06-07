@@ -21,7 +21,7 @@ export async function activateExtension(context: vscode.ExtensionContext) {
 
     globalContext.update("hasShownUnsupportedPlatformWarning", true);
     void vscode.window.showInformationMessage(
-      `Continue detected that you are using ${platformTarget}. Due to native dependencies, Continue may not be able to start`,
+      `Smart AI detected that you are using ${platformTarget}. Due to native dependencies, Smart AI may not be able to start`,
     );
 
     void Telemetry.capture(
@@ -44,7 +44,7 @@ export async function activateExtension(context: vscode.ExtensionContext) {
 
   const vscodeExtension = new VsCodeExtension(context);
 
-  // Load Continue configuration
+  // Load Smart AI configuration
   if (!context.globalState.get("hasBeenInstalled")) {
     void context.globalState.update("hasBeenInstalled", true);
     void Telemetry.capture(
@@ -77,7 +77,7 @@ export async function activateExtension(context: vscode.ExtensionContext) {
     );
   } catch (error) {
     console.error(
-      "Failed to register Continue config.yaml schema, most likely, YAML extension is not installed",
+      "Failed to register Smart AI config.yaml schema, most likely, YAML extension is not installed",
       error,
     );
   }

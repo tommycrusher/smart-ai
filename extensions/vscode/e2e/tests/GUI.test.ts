@@ -298,7 +298,7 @@ describe.skip("GUI Test", () => {
       );
 
       expect(await statusMessage.getText()).contain(
-        "Continue viewed the git diff",
+        "Smart AI viewed the git diff",
       );
     }).timeout(DEFAULT_TIMEOUT.MD * 100);
 
@@ -341,7 +341,7 @@ describe.skip("GUI Test", () => {
       );
 
       const text = await statusMessage.getText();
-      expect(text).contain("Continue tried to view the git diff");
+      expect(text).contain("Smart AI tried to view the git diff");
     }).timeout(DEFAULT_TIMEOUT.XL);
   });
 

@@ -231,13 +231,13 @@ You can also create a `.continuerules` file at your project root. Smart AI will 
 
 ### Reusable Slash Commands
 
-Create custom slash commands in `.continue/prompts/` as `.prompt` or `.md` files:
+Create custom slash commands in `.smart-ai/prompts/` as `.prompt` or `.md` files:
 
 ```bash
-mkdir -p .continue/prompts
+mkdir -p .smart-ai/prompts
 ```
 
-Example `.continue/prompts/review.prompt`:
+Example `.smart-ai/prompts/review.prompt`:
 
 ```
 name: Review Code
@@ -323,7 +323,7 @@ Smart AI can automatically collect high-quality training data from your real IDE
 
 ### Dataset Format
 
-Records are stored in JSONL format (`~/.continue/training/train.jsonl`) with fields:
+Records are stored in JSONL format (`~/.smart-ai/training/train.jsonl`) with fields:
 - `instruction` - The prompt or task description
 - `input` - Context or previous code
 - `output` - The generated response or new code

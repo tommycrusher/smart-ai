@@ -137,7 +137,7 @@ describe("DataLogger", () => {
         eventName: "testEvent",
         timestamp: expect.any(String),
         schema: SCHEMA,
-        userAgent: "VSCode/1.0.0 (Continue/0.1.0)",
+        userAgent: "VSCode/1.0.0 (Smart AI/0.1.0)",
         selectedProfileId: "test-profile-id",
         userId: "test-user-token",
       });

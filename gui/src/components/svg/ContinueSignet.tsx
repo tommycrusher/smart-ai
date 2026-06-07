@@ -8,7 +8,7 @@ interface ContinueSignetProps {
 }
 
 /**
- * The Continue signet/logo symbol without text
+ * The Smart AI signet/logo symbol without text
  */
 export default function ContinueSignet({
   height = 103,

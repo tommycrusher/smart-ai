@@ -153,9 +153,9 @@ name: glob pattern testing
         content,
         {
           uriType: "file",
-          fileUri: "file:///Documents/myproject/.continue/rules/rule1.md",
+          fileUri: "file:///Documents/myproject/.smart-ai/rules/rule1.md",
         },
-        "/Documents/myproject/.continue/",
+        "/Documents/myproject/.smart-ai/",
       );
       expect(result.globs).toBe(".git");
     });
