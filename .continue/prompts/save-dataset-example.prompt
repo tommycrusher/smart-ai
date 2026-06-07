@@ -1,0 +1,16 @@
+name: Save Dataset Example
+description: Generate a structured dataset example for Smarterp records
+---
+Generate a structured dataset example for the requested Smarterp model or workflow.
+
+Output should be:
+1. A JSON or CSV example (choose based on context)
+2. Realistic field values that make sense for the domain
+3. Comments explaining any non-obvious fields or relationships
+4. If XML demo data is more appropriate, provide valid Smarterp XML demo records
+
+Follow Smarterp data conventions:
+- Use proper XML IDs with module prefix
+- Reference existing demo data IDs where appropriate
+- Include necessary linked records if the example depends on them
+- Keep the example minimal but complete enough to be importable/testable

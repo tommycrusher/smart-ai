@@ -1,0 +1,18 @@
+name: Analyze Addon
+description: Analyze a Smarterp addon/module structure and conventions
+---
+Analyze the provided Smarterp addon/module.
+
+Smarterp is an independent ERP fork. Do NOT refer to it as Odoo or use Odoo-specific terminology.
+
+Provide:
+
+1. **Module purpose** - what business/domain problem it solves
+2. **Key models** - data structures and relationships
+3. **Key views** - UI/UX components (forms, lists, kanban, etc.)
+4. **Dependencies** - other Smarterp modules it depends on
+5. **Business logic** - controllers, wizards, reports, workflows
+6. **Conventions check** - does it follow Smarterp naming and structure conventions?
+7. **Security** - access rules, record rules, user groups
+
+Be practical. Flag any deviations from Smarterp conventions.

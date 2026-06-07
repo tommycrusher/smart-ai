@@ -1,0 +1,16 @@
+name: Summarize Roadmap Impact
+description: Summarize how a set of changes impacts the Smarterp roadmap
+---
+Summarize the impact of the provided changes on the Smarterp product roadmap.
+
+Consider:
+
+1. **Affected modules** - which parts of Smarterp are touched
+2. **User impact** - does this change end-user workflows or UI?
+3. **Migration effort** - will existing deployments need data migration or config changes?
+4. **Dependencies** - does this introduce new module or system dependencies?
+5. **Risk level** - low / medium / high, with reasoning
+6. **Documentation needs** - what should be documented for users or admins?
+7. **Testing needs** - what should be manually or automatically tested?
+
+Format as a concise executive summary with bullet points. Be honest about risks and open questions.

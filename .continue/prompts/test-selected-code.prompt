@@ -1,0 +1,15 @@
+name: Test Selected Code
+description: Generate unit tests for selected code following project conventions
+---
+Generate unit tests for the selected code. Follow the project's existing testing conventions.
+
+For Smart AI core code:
+- Use Jest ^29 with TypeScript
+- Place tests in an adjacent `.test.ts` file
+- Use ESM imports (`import` not `require`)
+- Use fixtures from `@core/test/fixtures.ts` if testing IDE/workspace operations
+- Do NOT mock `@core/test/fixtures.ts` helpers beyond `jest.spyOn`
+
+For other projects, match the existing test framework and style.
+
+Aim for clarity and meaningful coverage. Include edge cases and error paths where relevant.

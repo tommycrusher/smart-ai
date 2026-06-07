@@ -1,0 +1,25 @@
+name: Generate Module
+description: Generate a Smarterp module scaffold following conventions
+---
+Generate a complete Smarterp module scaffold based on the user's description.
+
+Smarterp is an independent ERP fork. Do NOT use Odoo terminology or reference Odoo.
+
+The module should include:
+
+1. **__manifest__.py** - proper manifest with correct fields and ordering
+2. **models/** - model definitions with proper inheritance, fields, constraints, and docstrings
+3. **views/** - XML views (form, tree, search, actions, menus) following Smarterp UI conventions
+4. **security/** - ir.model.access.csv and record rules if needed
+5. **controllers/** - only if external API integration is requested
+6. **data/** - demo or initial data if applicable
+7. **README.md** - brief module documentation
+
+Follow Smarterp conventions:
+- Model naming: `smarterp.module.name`
+- XML IDs: `smarterp_module_view_form`, etc.
+- Python coding standards: PEP8, type hints where helpful
+- Translatable strings wrapped with `_()`
+- No hardcoded business logic in views
+
+Generate production-ready, modular code.

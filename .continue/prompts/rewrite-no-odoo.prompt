@@ -1,0 +1,15 @@
+name: Rewrite No Odoo
+description: Rewrite Odoo-referencing code/text to Smarterp-neutral form
+---
+Rewrite the provided code or text to remove all Odoo-specific references and replace them with Smarterp-appropriate equivalents.
+
+Rules:
+1. Replace "Odoo" with "Smarterp" where referring to the platform/product
+2. Replace `odoo` module imports with `smarterp` where appropriate
+3. Replace Odoo-specific XML IDs with Smarterp conventions
+4. Replace Odoo-specific terminology with neutral ERP terminology
+5. Do NOT change generic programming terms (e.g., model, view, controller) unless they are Odoo-specific brand terms
+6. Preserve all logic, formatting, and functionality
+7. If something is genuinely ambiguous, state the assumption explicitly
+
+Provide the rewritten text/code with a brief summary of changes made.

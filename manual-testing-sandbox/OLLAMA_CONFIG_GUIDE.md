@@ -249,10 +249,66 @@ You are a senior code reviewer. Review the provided code for TypeScript correctn
 Available in chat by typing `/Review Code`.
 
 Smart AI ships with default project prompts when you clone the repo:
+
+**General coding commands:**
 - `/Review Code` - Code review with project standards
 - `/Refactor Code` - Refactor following project patterns
 - `/Explain Code` - Explain with architectural context
 - `/Fix Errors` - Fix problems using diagnostics context
+- `/Explain Current File` - Deep explanation of the open file
+- `/Analyze Workspace` - Workspace/repo orientation
+- `/Fix Selected Code` - Targeted bug fixes
+- `/Commit Message` - Conventional commit from diff
+- `/Test Selected Code` - Generate unit tests
+
+**Smarterp-specific commands (available when relevant):**
+- `/Analyze Addon` - Analyze a Smarterp module
+- `/Review Manifest` - Review `__manifest__.py`
+- `/Generate Module` - Scaffold a new Smarterp module
+- `/Rewrite No Odoo` - Remove Odoo references
+- `/Summarize Roadmap Impact` - Impact analysis for changes
+- `/Save Dataset Example` - Demo data for Smarterp models
+
+## Model Roles
+
+Smart AI uses role-based model selection to pick the right model for each task:
+
+| Role | Purpose | Default Model |
+|------|---------|---------------|
+| `chat` | General Q&A and conversation | smarterp-coder |
+| `edit` | Inline code editing (Cmd/Ctrl+I) | smarterp-coder |
+| `apply` | Applying code blocks from chat | smarterp-coder |
+| `autocomplete` | Tab completion | qwen2.5-coder:1.5b |
+| `embed` | Codebase indexing & retrieval | nomic-embed-text |
+
+You can inspect or override role mappings in your config:
+
+```yaml
+experimental:
+  modelRoles:
+    inlineEdit: "Smart AI Coder"
+    applyCodeBlock: "Smart AI Coder"
+    repoMapFileSelection: "Smart AI Coder"
+```
+
+## Using Smart AI Like Copilot
+
+Smart AI is designed as a Copilot-grade assistant:
+
+1. **Chat** (`Cmd/Ctrl+L`) - Ask questions about your code, repo, or general programming
+2. **Edit** (`Cmd/Ctrl+I`) - Select code and ask Smart AI to modify it inline
+3. **Autocomplete** (`Tab`) - Accept context-aware completions as you type
+4. **Apply** - Paste code from chat directly into files with diff preview
+5. **Agent** - Enable agent mode for multi-step tasks (terminal commands, file edits, etc.)
+
+### Pro Tips
+
+- Type `@Codebase` to ask questions about the entire repository
+- Type `@Git Diff` to review your current changes
+- Type `@Problems` to ask Smart AI to fix errors
+- Type `@Terminal` to debug a failed command
+- Use `@Folder` to get context from a specific directory
+- Smart AI remembers open files automatically via `@Open Files`
 
 ## Troubleshooting
 

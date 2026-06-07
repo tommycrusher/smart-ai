@@ -1,0 +1,19 @@
+name: Commit Message
+description: Generate a clear, conventional commit message from git diff
+---
+Generate a commit message for the current changes (git diff).
+
+Follow the Conventional Commits style:
+- `feat:` for new features
+- `fix:` for bug fixes
+- `refactor:` for code restructuring
+- `docs:` for documentation changes
+- `test:` for test changes
+- `chore:` for maintenance tasks
+
+Provide:
+1. A short subject line (max 50 chars)
+2. An optional body with bullet points describing the key changes
+3. If breaking changes exist, include a `BREAKING CHANGE:` footer
+
+Be concise and specific. Mention affected modules or areas when relevant.

@@ -1,0 +1,11 @@
+name: Fix Selected Code
+description: Fix bugs, type errors, or logical issues in selected code
+---
+The user has selected code that contains a bug, type error, or logical issue. Fix it with minimal changes.
+
+1. Identify the root cause
+2. Provide the corrected code
+3. Explain the fix briefly (one sentence if possible)
+4. If the fix requires changes to other files, mention them explicitly
+
+Preserve existing formatting, naming conventions, and style. Do not refactor beyond what is necessary to fix the issue.

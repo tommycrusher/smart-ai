@@ -1,0 +1,12 @@
+name: Explain Current File
+description: Explain the currently open file with architecture and project context
+---
+Explain the currently open file in depth. Include:
+
+1. **What it does** - high-level purpose and key operations
+2. **Architecture** - which package/module it belongs to and how it fits the project
+3. **Key patterns** - design patterns, abstractions, or conventions used
+4. **Dependencies** - important imports, upstream/downstream relationships
+5. **Gotchas** - non-obvious behavior, side effects, or important edge cases
+
+Keep the explanation concise but thorough. Use bullet points where helpful. If the file is part of a well-known framework or library, mention that briefly.

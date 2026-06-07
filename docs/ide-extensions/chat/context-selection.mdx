@@ -67,3 +67,23 @@ Smart AI enables the following providers by default for a Copilot-style experien
 | `@Terminal` | Last terminal command output |
 | `@Problems` | Diagnostics / errors |
 | `@Rules` | Custom rules from `.continuerules` |
+
+## Copilot-Style Workflow
+
+Smart AI is designed to feel like a GitHub Copilot alternative. Here is the recommended workflow:
+
+1. **Chat** (`Cmd/Ctrl+L`) - Ask questions about your code or general programming topics
+2. **Edit** (`Cmd/Ctrl+I`) - Select code and ask Smart AI to modify it inline
+3. **Autocomplete** (`Tab`) - Accept fast, context-aware completions as you type
+4. **Apply** - Paste code from chat into files with a diff preview
+5. **Agent** - Enable agent mode for multi-step coding tasks
+
+### Quick Context Tips
+
+- `@Codebase` - Ask "where is X defined?" or "how do I use Y?" without manually adding files
+- `@Git Diff` - "Review my changes" before committing
+- `@Problems` - "Fix these type errors" using diagnostics
+- `@Terminal` - "Why did this build command fail?"
+- `@Folder src/components` - "Refactor all components in this directory"
+
+Smart AI works best when you treat it as a pair programmer: describe what you want, provide context with `@` mentions, and iterate on the results.

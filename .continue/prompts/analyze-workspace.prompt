@@ -1,0 +1,13 @@
+name: Analyze Workspace
+description: Analyze the workspace structure and key architectural decisions
+---
+Analyze the current workspace / repository. Provide:
+
+1. **Project type** - language, framework, architecture (monorepo, microservices, etc.)
+2. **Key directories** - what lives where and why
+3. **Entry points** - main configs, build files, package manifests
+4. **Dependencies** - major external libraries and internal package relationships
+5. **Notable patterns** - testing strategy, CI/CD hints, code conventions
+6. **Quick orientation** - how a new developer should navigate this repo
+
+Be practical. Focus on what a developer needs to know to be productive in the first hour.

@@ -96,7 +96,7 @@
         "continue.showInlineTip": {
           "type": "boolean",
           "default": true,
-          "description": "Show inline suggestion to use the Continue keyboard shortcuts (e.g. \"Cmd/Ctrl L to select code, Cmd/Ctrl I to edit\")."
+          "description": "Show inline suggestion to use the Smart AI keyboard shortcuts (e.g. \"Cmd/Ctrl L to chat, Cmd/Ctrl I to edit\")."
         },
         "continue.disableQuickFix": {
           "type": "boolean",
@@ -121,12 +121,12 @@
         "continue.pauseTabAutocompleteOnBattery": {
           "type": "boolean",
           "default": false,
-          "markdownDescription": "Pause Continue's tab autocomplete feature when your battery is low."
+          "markdownDescription": "Pause Smart AI's tab autocomplete feature when your battery is low."
         },
         "continue.pauseCodebaseIndexOnStart": {
           "type": "boolean",
           "default": false,
-          "markdownDescription": "Pause Continue's codebase index on start."
+          "markdownDescription": "Pause Smart AI's codebase index on start."
         },
         "continue.enableConsole": {
           "type": "boolean",
@@ -153,234 +153,234 @@
     "commands": [
       {
         "command": "continue.applyCodeFromChat",
-        "category": "Continue",
+        "category": "Smart AI",
         "title": "Apply code from chat",
-        "group": "Continue"
+        "group": "Smart AI"
       },
       {
         "command": "continue.acceptDiff",
-        "category": "Continue",
+        "category": "Smart AI",
         "title": "Accept Diff",
-        "group": "Continue"
+        "group": "Smart AI"
       },
       {
         "command": "continue.rejectDiff",
-        "category": "Continue",
+        "category": "Smart AI",
         "title": "Reject Diff",
-        "group": "Continue",
+        "group": "Smart AI",
         "icon": "$(stop)"
       },
       {
         "command": "continue.acceptVerticalDiffBlock",
-        "category": "Continue",
+        "category": "Smart AI",
         "title": "Accept Vertical Diff Block",
-        "group": "Continue"
+        "group": "Smart AI"
       },
       {
         "command": "continue.rejectVerticalDiffBlock",
-        "category": "Continue",
+        "category": "Smart AI",
         "title": "Reject Vertical Diff Block",
-        "group": "Continue"
+        "group": "Smart AI"
       },
       {
         "command": "continue.focusEdit",
-        "category": "Continue",
+        "category": "Smart AI",
         "title": "Add to Edit",
-        "group": "Continue"
+        "group": "Smart AI"
       },
       {
         "command": "continue.focusContinueInput",
-        "category": "Continue",
+        "category": "Smart AI",
         "title": "Add Highlighted Code to Context and Clear Chat",
-        "group": "Continue"
+        "group": "Smart AI"
       },
       {
         "command": "continue.focusContinueInputWithoutClear",
-        "category": "Continue",
+        "category": "Smart AI",
         "title": "Add to Chat",
-        "group": "Continue"
+        "group": "Smart AI"
       },
       {
         "command": "continue.debugTerminal",
-        "category": "Continue",
+        "category": "Smart AI",
         "title": "Debug Terminal",
-        "group": "Continue"
+        "group": "Smart AI"
       },
       {
         "command": "continue.exitEditMode",
-        "category": "Continue",
+        "category": "Smart AI",
         "title": "Exit Edit Mode",
-        "group": "Continue"
+        "group": "Smart AI"
       },
       {
         "command": "continue.openConfigPage",
-        "category": "Continue",
+        "category": "Smart AI",
         "title": "Open Settings",
         "icon": "$(gear)",
-        "group": "Continue"
+        "group": "Smart AI"
       },
       {
         "command": "continue.toggleTabAutocompleteEnabled",
-        "category": "Continue",
+        "category": "Smart AI",
         "title": "Toggle Autocomplete Enabled",
-        "group": "Continue"
+        "group": "Smart AI"
       },
       {
         "command": "continue.forceAutocomplete",
-        "title": "Continue: Force Autocomplete",
-        "category": "Continue"
+        "title": "Smart AI: Force Autocomplete",
+        "category": "Smart AI"
       },
       {
         "command": "continue.selectFilesAsContext",
-        "category": "Continue",
+        "category": "Smart AI",
         "title": "Select Files as Context",
-        "group": "Continue"
+        "group": "Smart AI"
       },
       {
         "command": "continue.newSession",
-        "category": "Continue",
+        "category": "Smart AI",
         "title": "New Session",
         "icon": "$(add)",
-        "group": "Continue"
+        "group": "Smart AI"
       },
       {
         "command": "continue.shareSession",
-        "category": "Continue",
+        "category": "Smart AI",
         "title": "Share Current Chat Session as Markdown",
-        "group": "Continue"
+        "group": "Smart AI"
       },
       {
         "command": "continue.viewHistory",
-        "category": "Continue",
+        "category": "Smart AI",
         "title": "View History",
         "icon": "$(history)",
-        "group": "Continue"
+        "group": "Smart AI"
       },
       {
         "command": "continue.viewLogs",
-        "category": "Continue",
+        "category": "Smart AI",
         "title": "View Logs",
-        "group": "Continue"
+        "group": "Smart AI"
       },
       {
         "command": "continue.clearConsole",
-        "category": "Continue",
+        "category": "Smart AI",
         "title": "Clear Console",
         "icon": "$(clear-all)",
-        "group": "Continue"
+        "group": "Smart AI"
       },
       {
         "command": "continue.navigateTo",
-        "category": "Continue",
+        "category": "Smart AI",
         "title": "Navigate to a path",
-        "group": "Continue"
+        "group": "Smart AI"
       },
       {
         "command": "continue.writeCommentsForCode",
-        "category": "Continue",
+        "category": "Smart AI",
         "title": "Write Comments for this Code",
-        "group": "Continue"
+        "group": "Smart AI"
       },
       {
         "command": "continue.writeDocstringForCode",
-        "category": "Continue",
+        "category": "Smart AI",
         "title": "Write a Docstring for this Code",
-        "group": "Continue"
+        "group": "Smart AI"
       },
       {
         "command": "continue.fixCode",
-        "category": "Continue",
+        "category": "Smart AI",
         "title": "Fix this Code",
-        "group": "Continue"
+        "group": "Smart AI"
       },
       {
         "command": "continue.optimizeCode",
-        "category": "Continue",
+        "category": "Smart AI",
         "title": "Optimize this Code",
-        "group": "Continue"
+        "group": "Smart AI"
       },
       {
         "command": "continue.fixGrammar",
-        "category": "Continue",
+        "category": "Smart AI",
         "title": "Fix Grammar / Spelling",
-        "group": "Continue"
+        "group": "Smart AI"
       },
       {
         "command": "continue.codebaseForceReIndex",
-        "category": "Continue",
+        "category": "Smart AI",
         "title": "Codebase Force Re-Index",
-        "group": "Continue"
+        "group": "Smart AI"
       },
       {
         "command": "continue.rebuildCodebaseIndex",
-        "category": "Continue",
+        "category": "Smart AI",
         "title": "Rebuild codebase index",
-        "group": "Continue"
+        "group": "Smart AI"
       },
       {
         "command": "continue.docsIndex",
-        "category": "Continue",
+        "category": "Smart AI",
         "title": "Docs Index",
-        "group": "Continue"
+        "group": "Smart AI"
       },
       {
         "command": "continue.docsReIndex",
-        "category": "Continue",
+        "category": "Smart AI",
         "title": "Docs Force Re-Index",
-        "group": "Continue"
+        "group": "Smart AI"
       },
       {
         "command": "continue.focusContinueInput",
-        "category": "Continue",
-        "title": "Focus Continue Chat",
-        "group": "Continue"
+        "category": "Smart AI",
+        "title": "Focus Smart AI Chat",
+        "group": "Smart AI"
       },
       {
         "command": "continue.enterEnterpriseLicenseKey",
-        "category": "Continue",
+        "category": "Smart AI",
         "title": "Enter Enterprise License Key",
-        "group": "Continue"
+        "group": "Smart AI"
       },
       {
         "command": "continue.toggleNextEditEnabled",
-        "title": "Continue: Toggle Next Edit"
+        "title": "Smart AI: Toggle Next Edit"
       },
       {
         "command": "continue.nextEditWindow.hideNextEditSuggestion",
-        "category": "Continue",
+        "category": "Smart AI",
         "title": "Hide Next Edit Suggestion"
       },
       {
         "command": "continue.nextEditWindow.acceptNextEditSuggestion",
-        "category": "Continue",
+        "category": "Smart AI",
         "title": "Accept Next Edit Suggestion"
       },
       {
         "command": "continue.forceNextEdit",
-        "category": "Continue",
-        "title": "Continue: Force Next Edit"
+        "category": "Smart AI",
+        "title": "Smart AI: Force Next Edit"
       },
       {
         "command": "continue.acceptJump",
-        "category": "Continue",
-        "title": "Continue: Accept Jump Suggestion"
+        "category": "Smart AI",
+        "title": "Smart AI: Accept Jump Suggestion"
       },
       {
         "command": "continue.rejectJump",
-        "category": "Continue",
-        "title": "Continue: Reject Jump Suggestion"
+        "category": "Smart AI",
+        "title": "Smart AI: Reject Jump Suggestion"
       },
       {
         "command": "continue.generateRule",
-        "category": "Continue",
+        "category": "Smart AI",
         "title": "Generate Rule",
-        "group": "Continue"
+        "group": "Smart AI"
       },
       {
         "command": "continue.openInNewWindow",
-        "category": "Continue",
+        "category": "Smart AI",
         "title": "Open in new window",
-        "group": "Continue"
+        "group": "Smart AI"
       }
     ],
     "keybindings": [
@@ -540,18 +540,18 @@
       "editor/title/run": [
         {
           "command": "continue.rejectDiff",
-          "group": "Continue",
+          "group": "Smart AI",
           "when": "continue.streamingDiff"
         }
       ],
       "continue.continueSubMenu": [
         {
           "command": "continue.focusContinueInputWithoutClear",
-          "group": "Continue"
+          "group": "Smart AI"
         },
         {
           "command": "continue.focusEdit",
-          "group": "Continue",
+          "group": "Smart AI",
           "when": "!editorReadonly"
         }
       ],
@@ -606,14 +606,14 @@
       "activitybar": [
         {
           "id": "continue",
-          "title": "Continue",
+          "title": "Smart AI",
           "icon": "media/sidebar-icon.png"
         }
       ],
       "panel": [
         {
           "id": "continueConsole",
-          "title": "Continue Console",
+          "title": "Smart AI Console",
           "icon": "$(window)"
         }
       ]
@@ -632,7 +632,7 @@
         {
           "type": "webview",
           "id": "continue.continueConsoleView",
-          "name": "Continue Console",
+          "name": "Smart AI Console",
           "icon": "$(window)",
           "visibility": "visible",
           "when": "config.continue.enableConsole"

@@ -1,0 +1,18 @@
+name: Review Manifest
+description: Review a Smarterp module manifest (__manifest__.py) for quality
+---
+Review the provided Smarterp module manifest (__manifest__.py).
+
+Smarterp is an independent ERP fork. Do NOT use Odoo terminology.
+
+Check for:
+
+1. **Required fields** - name, version, category, depends, data, license
+2. **Version format** - correct semantic or Smarterp versioning
+3. **Dependencies** - are they correct, minimal, and ordered logically?
+4. **Data order** - security first, then views, then data/demo
+5. **License** - appropriate for the project
+6. **Author/website** - present and correct if required by project policy
+7. **Application vs module** - is `application: True` used correctly?
+
+Provide a concise review. Highlight issues and suggest fixes.
