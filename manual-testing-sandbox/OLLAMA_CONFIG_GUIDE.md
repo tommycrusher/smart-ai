@@ -110,15 +110,101 @@ models:
     ...
 ```
 
+## Model Profiles
+
+Smart AI supports a tiered profile system. **Default profiles are fully non-pay and local.** Optional advanced profiles are open cloud / open-weight and must be explicitly enabled.
+
+### A. Default Local Non-Pay Profiles (No API keys needed)
+
+These run entirely on your machine via Ollama. No network calls, no accounts, no costs.
+
+#### 1. Local Balanced (Default)
+
+| Role | Model | VRAM |
+|------|-------|------|
+| Chat | qwen2.5-coder:7b | ~6 GB |
+| Edit | qwen2.5-coder:7b | ~6 GB |
+| Apply | qwen2.5-coder:7b | ~6 GB |
+| Autocomplete | qwen2.5-coder:1.5b | ~1.5 GB |
+| Embeddings | nomic-embed-text | ~0.5 GB |
+
+**Recommended for:** Everyday coding, most laptops with 8 GB+ VRAM or 16 GB+ RAM.
+
+Pull the models:
+```bash
+ollama pull qwen2.5-coder:7b
+ollama pull qwen2.5-coder:1.5b
+ollama pull nomic-embed-text
+```
+
+#### 2. Local Pro
+
+| Role | Model | VRAM |
+|------|-------|------|
+| Chat | qwen3.6:27b | ~18 GB |
+| Edit | qwen3.6:27b | ~18 GB |
+| Apply | qwen3.6:27b | ~18 GB |
+| Agent | qwen3.6:27b | ~18 GB |
+| Autocomplete | qwen2.5-coder:1.5b | ~1.5 GB |
+| Embeddings | nomic-embed-text | ~0.5 GB |
+
+**Recommended for:** Power users with 24 GB+ VRAM (e.g., RTX 3090/4090).
+
+Pull the models:
+```bash
+ollama pull qwen3.6:27b
+ollama pull qwen2.5-coder:1.5b
+ollama pull nomic-embed-text
+```
+
+#### 3. Local Reasoning (Optional)
+
+| Role | Model | VRAM |
+|------|-------|------|
+| Reasoning | deepseek-r1:14b | ~10 GB |
+| Chat | deepseek-r1:14b | ~10 GB |
+
+**Recommended for:** Complex algorithms, math, logic puzzles, architecture design.
+
+Pull the model:
+```bash
+ollama pull deepseek-r1:14b
+```
+
+### B. Optional Open Cloud / Open-Weight Advanced Profiles
+
+**These are NOT defaults.** They require explicit opt-in and may use external API endpoints or very large local models.
+
+| Profile | Provider | Endpoint | Notes |
+|---------|----------|----------|-------|
+| **Kimi K2.6** | Moonshot AI | `https://api.moonshot.cn/v1` | 1M+ context, frontier coding |
+| **GLM 5.1** | Zhipu AI | `https://open.bigmodel.cn/api/paas/v4` | Bilingual, strong reasoning |
+| **MiniMax M3** | MiniMax | `https://api.minimaxi.chat/v1` | Agentic, tool use |
+| **DeepSeek V4** | DeepSeek | `https://api.deepseek.com/v1` | Top-tier benchmarks |
+
+**To enable an advanced profile**, set the environment variable:
+```bash
+export SMARTAI_MODEL_PROFILE=cloud-kimi-k2.6
+```
+
+Or add to your VS Code settings:
+```json
+{
+  "smartai.modelProfile": "cloud-deepseek-v4"
+}
+```
+
+**Important:** Advanced profiles keep local autocomplete (`qwen2.5-coder:1.5b`) and embeddings (`nomic-embed-text`) unchanged for low latency. Only chat/edit/apply/agent roles switch to the cloud model.
+
 ## Model Configuration Details
 
-### Default Models
+### Default Models (Local Balanced)
 
 | Role | Model | Purpose |
 |------|-------|---------|
-| Chat | smarterp-coder | General conversation and code discussion |
-| Edit | smarterp-coder | Inline code editing |
-| Apply | smarterp-coder | Apply code changes |
+| Chat | qwen2.5-coder:7b | General conversation and code discussion |
+| Edit | qwen2.5-coder:7b | Inline code editing |
+| Apply | qwen2.5-coder:7b | Apply code changes |
 | Autocomplete | qwen2.5-coder:1.5b | Tab autocomplete (FIM-optimized) |
 | Embeddings | nomic-embed-text | Context retrieval and similarity search |
 
@@ -126,7 +212,7 @@ models:
 
 If primary models are unavailable, Smart AI will try:
 
-- **Chat/Edit/Apply**: Fallback to `qwen2.5-coder:7b`
+- **Chat/Edit/Apply**: Fallback to `qwen3.6:27b` (if pulled) or `llama3.1:8b`
 - **Autocomplete**: Fallback to `qwen2.5-coder:7b` (slower but functional)
 - **Embeddings**: Fallback to `mistral-embed` if available
 
@@ -186,9 +272,9 @@ Edit your config file to customize model behavior:
 
 ```yaml
 models:
-  - name: "Smart AI Coder"
+  - name: "Qwen2.5-Coder 7B"
     provider: "ollama"
-    model: "smarterp-coder"
+    model: "qwen2.5-coder:7b"
     completionOptions:
       temperature: 0.3        # Lower = more deterministic code (0-1)
       maxTokens: 4096         # Maximum response length

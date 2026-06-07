@@ -4,20 +4,7 @@
   "schema": "v1",
   "models": [
     {
-      "title": "Smart AI Coder",
-      "provider": "ollama",
-      "model": "smarterp-coder",
-      "apiBase": "http://localhost:11434",
-      "completionOptions": {
-        "temperature": 0.3,
-        "maxTokens": 4096,
-        "topP": 0.9,
-        "topK": 20
-      },
-      "systemMessage": "You are Smart AI, a practical coding assistant. Write clean, modern code following the project's existing conventions. Prefer minimal, targeted changes. Explain reasoning briefly when asked, but default to concise answers."
-    },
-    {
-      "title": "Qwen2.5-Coder 7B",
+      "title": "Qwen2.5-Coder 7B (Default)",
       "provider": "ollama",
       "model": "qwen2.5-coder:7b",
       "apiBase": "http://localhost:11434",
@@ -41,7 +28,7 @@
       }
     },
     {
-      "title": "Nomic Embed",
+      "title": "Nomic Embed (Embeddings)",
       "provider": "ollama",
       "model": "nomic-embed-text",
       "apiBase": "http://localhost:11434"
@@ -91,9 +78,9 @@
   },
   "experimental": {
     "modelRoles": {
-      "inlineEdit": "Smart AI Coder",
-      "applyCodeBlock": "Smart AI Coder",
-      "repoMapFileSelection": "Smart AI Coder"
+      "inlineEdit": "Qwen2.5-Coder 7B (Default)",
+      "applyCodeBlock": "Qwen2.5-Coder 7B (Default)",
+      "repoMapFileSelection": "Qwen2.5-Coder 7B (Default)"
     }
   }
 }

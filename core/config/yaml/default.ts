@@ -2,6 +2,12 @@ import { AssistantUnrolled } from "@smartai/config-yaml";
 
 import { SMARTAI_OLLAMA_DEFAULTS } from "../ollama.js";
 
+/**
+ * Smart AI - Default YAML Configuration
+ *
+ * DEFAULT non-pay local setup (Local Balanced profile).
+ * Optional advanced profiles are available in modelProfiles.ts but NOT loaded here.
+ */
 const defaultOllamaModels: AssistantUnrolled["models"] = [
   {
     name: SMARTAI_OLLAMA_DEFAULTS.titles.chat,

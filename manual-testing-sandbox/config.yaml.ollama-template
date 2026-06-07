@@ -1,22 +1,38 @@
 # Smart AI - Ollama Configuration Template
 #
-# This is a template configuration for Smart AI with Ollama provider.
-# Use this to set up your local development environment with Ollama models.
+# DEFAULT: Local Balanced profile (fully non-pay, self-hosted)
+#   Chat/Edit/Apply: qwen2.5-coder:7b
+#   Autocomplete:    qwen2.5-coder:1.5b
+#   Embeddings:      nomic-embed-text
 #
 # To use this configuration:
-# 1. Copy to: ~/.continue/config.yaml or PROJECT_DIR/.continue/config.yaml
+# 1. Copy to: ~/.smart-ai/config.yaml or PROJECT_DIR/.smart-ai/config.yaml
 # 2. Ensure Ollama is running with the specified models
 # 3. To switch between local/remote mode, set SMARTAI_OLLAMA_MODE=local|remote
 #
 # Model Setup:
-# - Chat/Edit/Apply: smarterp-coder (custom model)
-#   Fallback: qwen2.5-coder:7b (run: ollama pull qwen2.5-coder:7b)
-# - Autocomplete: qwen2.5-coder:1.5b (run: ollama pull qwen2.5-coder:1.5b)
-# - Embeddings: nomic-embed-text (run: ollama pull nomic-embed-text)
+#   Default (Local Balanced):
+#     ollama pull qwen2.5-coder:7b
+#     ollama pull qwen2.5-coder:1.5b
+#     ollama pull nomic-embed-text
+#
+#   Optional Local Pro:
+#     ollama pull qwen3.6:27b
+#
+#   Optional Local Reasoning:
+#     ollama pull deepseek-r1:14b
 #
 # Mode Switching (no file edits required):
-# - Local mode (default):  export SMARTAI_OLLAMA_MODE=local  -> http://localhost:11434
-# - Remote tunnel mode:    export SMARTAI_OLLAMA_MODE=remote -> http://localhost:11435
+#   Local mode (default):  export SMARTAI_OLLAMA_MODE=local  -> http://localhost:11434
+#   Remote tunnel mode:  export SMARTAI_OLLAMA_MODE=remote -> http://localhost:11435
+#
+# Optional Advanced Profiles (open cloud / open-weight):
+#   Set SMARTAI_MODEL_PROFILE to one of:
+#     - cloud-kimi-k2.6
+#     - cloud-glm-5.1
+#     - cloud-minimax-m3
+#     - cloud-deepseek-v4
+#   These keep local autocomplete and embeddings unchanged.
 
 name: "Smart AI - Ollama"
 version: "1.0.0"
@@ -24,23 +40,7 @@ schema: "v1"
 
 # Models configuration
 models:
-  # Primary chat/code model (chat, edit, apply roles)
-  - name: "Smart AI Coder"
-    provider: "ollama"
-    model: "smarterp-coder"
-    roles:
-      - chat
-      - edit
-      - apply
-    defaultCompletionOptions:
-      temperature: 0.3
-      maxTokens: 4096
-      topP: 0.9
-      topK: 20
-    chatOptions:
-      baseSystemMessage: "You are Smart AI, a practical coding assistant. Write clean, modern code following the project's existing conventions. Prefer minimal, targeted changes. Explain reasoning briefly when asked, but default to concise answers."
-
-  # Fallback chat model (if smarterp-coder not available)
+  # Default chat/code model (Local Balanced)
   - name: "Qwen2.5-Coder 7B"
     provider: "ollama"
     model: "qwen2.5-coder:7b"
@@ -55,6 +55,22 @@ models:
       topK: 20
     chatOptions:
       baseSystemMessage: "You are Smart AI, a practical coding assistant. Write clean, modern code following the project's existing conventions. Prefer minimal, targeted changes. Explain reasoning briefly when asked, but default to concise answers."
+
+  # Local Pro upgrade (optional, requires ~18 GB VRAM)
+  # Uncomment if you have the GPU memory:
+  # - name: "Qwen 3.6 27B"
+  #   provider: "ollama"
+  #   model: "qwen3.6:27b"
+  #   roles:
+  #     - chat
+  #     - edit
+  #     - apply
+  #     - agent
+  #   defaultCompletionOptions:
+  #     temperature: 0.3
+  #     maxTokens: 8192
+  #     topP: 0.9
+  #     topK: 20
 
   # Tab autocomplete model (lightweight FIM)
   - name: "Qwen2.5-Coder 1.5B (Autocomplete)"
@@ -116,6 +132,6 @@ analytics:
 # Model roles (experimental)
 experimental:
   modelRoles:
-    inlineEdit: "Smart AI Coder"
-    applyCodeBlock: "Smart AI Coder"
-    repoMapFileSelection: "Smart AI Coder"
+    inlineEdit: "Qwen2.5-Coder 7B"
+    applyCodeBlock: "Qwen2.5-Coder 7B"
+    repoMapFileSelection: "Qwen2.5-Coder 7B"

@@ -223,6 +223,20 @@
           "type": "string",
           "default": "http://localhost:11434",
           "description": "Ollama API base URL to record in training metadata. Use http://localhost:11435 for remote tunnel mode."
+        },
+        "smartai.modelProfile": {
+          "type": "string",
+          "enum": [
+            "local-balanced",
+            "local-pro",
+            "local-reasoning",
+            "cloud-kimi-k2.6",
+            "cloud-glm-5.1",
+            "cloud-minimax-m3",
+            "cloud-deepseek-v4"
+          ],
+          "default": "local-balanced",
+          "description": "Active model profile. Default profiles are fully non-pay and local. Optional cloud profiles require explicit opt-in and external API credentials."
         }
       }
     },

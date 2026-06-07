@@ -2,6 +2,17 @@ import { ConfigYaml } from "@smartai/config-yaml";
 
 import { SMARTAI_OLLAMA_DEFAULTS } from "./ollama.js";
 
+/**
+ * Smart AI - Default Configuration
+ *
+ * This is the DEFAULT non-pay local setup (Local Balanced profile).
+ * - chat/edit/apply: qwen2.5-coder:7b via Ollama
+ * - autocomplete:    qwen2.5-coder:1.5b via Ollama
+ * - embeddings:      nomic-embed-text via Ollama
+ *
+ * Optional advanced profiles (open cloud / open-weight) are available in
+ * modelProfiles.ts but are NOT loaded by default. Users must opt-in.
+ */
 export const defaultConfig: ConfigYaml = {
   name: "Smart AI - Ollama",
   version: "1.0.0",
