@@ -2,9 +2,9 @@
  * Hook configuration loader.
  *
  * Loads hooks from settings files in the same locations as Claude Code:
- * - ~/.continue/settings.json  (user-global)
- * - .continue/settings.json    (project, committable)
- * - .continue/settings.local.json (project-local, gitignored)
+ * - ~/.smart-ai/settings.json  (user-global)
+ * - .smart-ai/settings.json    (project, committable)
+ * - .smart-ai/settings.local.json (project-local, gitignored)
  *
  * Also supports Claude Code's native locations for cross-compatibility:
  * - ~/.claude/settings.json

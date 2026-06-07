@@ -86,64 +86,64 @@
     "configuration": {
       "title": "Smart AI",
       "properties": {
-        "continue.telemetryEnabled": {
+        "smartai.telemetryEnabled": {
           "type": "boolean",
           "default": true,
           "markdownDescription": "Smart AI collects anonymous usage data, cleaned of PII, to help us improve the product for our users. Read more  at [smart-ai.dev › Telemetry](https://docs.smart-ai.dev/telemetry).",
           "markdownDeprecationMessage": "This setting is deprecated and will be removed in a later version. Please use the _Telemetry > Allow Anonymous Telemetry_ setting in the extension's User Settings page.",
           "deprecationMessage": "Please use the _Telemetry > Allow Anonymous Telemetry_ setting in the extension's User Settings page."
         },
-        "continue.showInlineTip": {
+        "smartai.showInlineTip": {
           "type": "boolean",
           "default": true,
           "description": "Show inline suggestion to use the Smart AI keyboard shortcuts (e.g. \"Cmd/Ctrl L to chat, Cmd/Ctrl I to edit\")."
         },
-        "continue.disableQuickFix": {
+        "smartai.disableQuickFix": {
           "type": "boolean",
           "default": false,
           "description": "Disable the quick fix feature."
         },
-        "continue.enableQuickActions": {
+        "smartai.enableQuickActions": {
           "type": "boolean",
           "default": false,
           "markdownDescription": "Enable the experimental Quick Actions feature. Read our walkthrough to learn about configuration and how to share feedback: [smart-ai.dev › Walkthrough: Quick Actions (experimental)](https://docs.smart-ai.dev/customize/deep-dives/vscode-actions#quick-actions)"
         },
-        "continue.enableTabAutocomplete": {
+        "smartai.enableTabAutocomplete": {
           "type": "boolean",
           "default": true,
           "markdownDescription": "Enable Smart AI's tab autocomplete feature. Read our walkthrough to learn about configuration and how to share feedback: [smart-ai.dev › Walkthrough: Tab Autocomplete (beta)](https://docs.smart-ai.dev/features/tab-autocomplete)"
         },
-        "continue.enableNextEdit": {
+        "smartai.enableNextEdit": {
           "type": "boolean",
           "default": true,
           "markdownDescription": "Enable Smart AI's next edit feature. Read our docs to learn about configuration and how to share feedback: [smart-ai.dev › Features › Autocomplete › Next Edit (experimental)](https://docs.smart-ai.dev/features/autocomplete/next-edit)"
         },
-        "continue.pauseTabAutocompleteOnBattery": {
+        "smartai.pauseTabAutocompleteOnBattery": {
           "type": "boolean",
           "default": false,
           "markdownDescription": "Pause Smart AI's tab autocomplete feature when your battery is low."
         },
-        "continue.pauseCodebaseIndexOnStart": {
+        "smartai.pauseCodebaseIndexOnStart": {
           "type": "boolean",
           "default": false,
           "markdownDescription": "Pause Smart AI's codebase index on start."
         },
-        "continue.enableConsole": {
+        "smartai.enableConsole": {
           "type": "boolean",
           "default": false,
           "markdownDescription": "Enable a console to log and explore model inputs and outputs. It can be found in the bottom panel."
         },
-        "continue.remoteConfigServerUrl": {
+        "smartai.remoteConfigServerUrl": {
           "type": "string",
           "default": null,
           "markdownDescription": "If your team is set up to use shared configuration, enter the server URL here and your user token below to enable automatic syncing."
         },
-        "continue.userToken": {
+        "smartai.userToken": {
           "type": "string",
           "default": null,
           "markdownDescription": "If your team is set up to use shared configuration, enter your user token here and your server URL above to enable automatic syncing."
         },
-        "continue.remoteConfigSyncPeriod": {
+        "smartai.remoteConfigSyncPeriod": {
           "type": "number",
           "default": 60,
           "description": "The period of time in minutes between automatic syncs."
@@ -459,43 +459,43 @@
         "group": "Smart AI"
       },
       {
-        "command": "smartai.toggleTrainingCapture",
+        "command": "continue.toggleTrainingCapture",
         "category": "Smart AI",
         "title": "Toggle Training Capture",
         "group": "Smart AI Training"
       },
       {
-        "command": "smartai.saveLastExchange",
+        "command": "continue.saveLastExchange",
         "category": "Smart AI",
         "title": "Save Last Exchange as Training Example",
         "group": "Smart AI Training"
       },
       {
-        "command": "smartai.saveLastPatch",
+        "command": "continue.saveLastPatch",
         "category": "Smart AI",
         "title": "Save Last Patch as Training Example",
         "group": "Smart AI Training"
       },
       {
-        "command": "smartai.exportTrainingBundle",
+        "command": "continue.exportTrainingBundle",
         "category": "Smart AI",
         "title": "Export Training Bundle",
         "group": "Smart AI Training"
       },
       {
-        "command": "smartai.openTrainingFolder",
+        "command": "continue.openTrainingFolder",
         "category": "Smart AI",
         "title": "Open Training Storage Folder",
         "group": "Smart AI Training"
       },
       {
-        "command": "smartai.markHighQuality",
+        "command": "continue.markHighQuality",
         "category": "Smart AI",
         "title": "Mark Last Response as High Quality",
         "group": "Smart AI Training"
       },
       {
-        "command": "smartai.markReject",
+        "command": "continue.markReject",
         "category": "Smart AI",
         "title": "Mark Last Response as Reject / Do Not Train",
         "group": "Smart AI Training"
@@ -516,19 +516,19 @@
         "command": "continue.acceptDiff",
         "mac": "shift+cmd+enter",
         "key": "shift+ctrl+enter",
-        "when": "continue.diffVisible"
+        "when": "smartai.diffVisible"
       },
       {
         "command": "continue.rejectDiff",
         "mac": "shift+cmd+backspace",
         "key": "shift+ctrl+backspace",
-        "when": "continue.diffVisible"
+        "when": "smartai.diffVisible"
       },
       {
         "command": "continue.rejectDiff",
         "mac": "cmd+z",
         "key": "ctrl+z",
-        "when": "continue.diffVisible"
+        "when": "smartai.diffVisible"
       },
       {
         "command": "continue.quickEditHistoryUp",
@@ -562,7 +562,7 @@
         "command": "continue.exitEditMode",
         "mac": "escape",
         "key": "escape",
-        "when": "continue.inEditMode && editorFocus"
+        "when": "smartai.inEditMode && editorFocus"
       },
       {
         "command": "continue.debugTerminal",
@@ -649,25 +649,25 @@
           "command": "continue.openInNewWindow"
         },
         {
-          "command": "smartai.toggleTrainingCapture"
+          "command": "continue.toggleTrainingCapture"
         },
         {
-          "command": "smartai.saveLastExchange"
+          "command": "continue.saveLastExchange"
         },
         {
-          "command": "smartai.saveLastPatch"
+          "command": "continue.saveLastPatch"
         },
         {
-          "command": "smartai.exportTrainingBundle"
+          "command": "continue.exportTrainingBundle"
         },
         {
-          "command": "smartai.openTrainingFolder"
+          "command": "continue.openTrainingFolder"
         },
         {
-          "command": "smartai.markHighQuality"
+          "command": "continue.markHighQuality"
         },
         {
-          "command": "smartai.markReject"
+          "command": "continue.markReject"
         }
       ],
       "editor/context": [
@@ -680,7 +680,7 @@
         {
           "command": "continue.rejectDiff",
           "group": "Smart AI",
-          "when": "continue.streamingDiff"
+          "when": "smartai.streamingDiff"
         }
       ],
       "continue.continueSubMenu": [

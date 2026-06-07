@@ -84,7 +84,7 @@ function getRuleNameFromPath(filePath: string): string {
 }
 
 /**
- * Scan .continue/rules/ directories for markdown rule files and return the rules with metadata that should be always-applied
+ * Scan .smart-ai/rules/ directories for markdown rule files and return the rules with metadata that should be always-applied
  */
 export function loadMarkdownRulesWithMetadata(): RuleObject[] {
   const cwd = process.cwd();
@@ -200,7 +200,7 @@ export async function constructSystemMessage(
   const configYamlRules = await getConfigYamlRules();
   processedRules.push(...configYamlRules);
 
-  // Load markdown rules from .continue/rules/ directories
+  // Load markdown rules from .smart-ai/rules/ directories
   const markdownRules = loadMarkdownRulesWithMetadata();
   // Deduplicate against already-loaded rules
   const existingRulesSet = new Set(processedRules);
@@ -222,9 +222,9 @@ export async function constructSystemMessage(
     // Check if commit signature is disabled via environment variable
     if (!process.env.CONTINUE_CLI_DISABLE_COMMIT_SIGNATURE) {
       systemMessage += `\n<context name="commitSignature">When creating commits using any CLI or tool, include the following in the commit message:
-Generated with [Continue](https://continue.dev)
+Generated with [Continue](https://smart-ai.dev)
 
-Co-Authored-By: Continue <noreply@continue.dev>
+Co-Authored-By: Continue <noreply@smart-ai.dev>
 </context>\n`;
     }
   }

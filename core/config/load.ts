@@ -710,7 +710,7 @@ async function handleEsbuildInstallation(
     await import("esbuild");
     return true; // available
   } catch {
-    // Try resolving from ~/.continue/node_modules as a courtesy
+    // Try resolving from ~/.smart-ai/node_modules as a courtesy
     try {
       const userEsbuild = path.join(
         os.homedir(),
@@ -747,7 +747,7 @@ async function tryBuildConfigTs() {
     }
   } catch (e) {
     console.log(
-      `Build error. Please check your ~/.continue/config.ts file: ${e}`,
+      `Build error. Please check your ~/.smart-ai/config.ts file: ${e}`,
     );
   }
 }

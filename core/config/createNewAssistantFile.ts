@@ -2,14 +2,14 @@ import { IDE } from "..";
 import { joinPathsToUri } from "../util/uri";
 
 const DEFAULT_ASSISTANT_FILE = `# This is an example configuration file
-# To learn more, see the full config.yaml reference: https://docs.continue.dev/reference
+# To learn more, see the full config.yaml reference: https://docs.smart-ai.dev/reference
 
 name: Example Config
 version: 1.0.0
 schema: v1
 
 # Define which models can be used
-# https://docs.continue.dev/customization/models
+# https://docs.smart-ai.dev/customization/models
 models:
   - name: my gpt-5
     provider: openai
@@ -21,7 +21,7 @@ models:
       ANTHROPIC_API_KEY: \${{ secrets.ANTHROPIC_API_KEY }}
 
 # MCP Servers that Continue can access
-# https://docs.continue.dev/customization/mcp-tools
+# https://docs.smart-ai.dev/customization/mcp-tools
 mcpServers:
   - uses: anthropic/memory-mcp
 `;
@@ -39,7 +39,7 @@ export async function createNewAssistantFile(
 
   const baseDirUri = joinPathsToUri(
     workspaceDirs[0],
-    assistantPath ?? ".continue/agents",
+    assistantPath ?? ".smart-ai/agents",
   );
 
   // Find the first available filename

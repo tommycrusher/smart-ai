@@ -52,7 +52,7 @@ export class ContinueCompletionProvider
       if (val === "Documentation") {
         vscode.env.openExternal(
           vscode.Uri.parse(
-            "https://docs.continue.dev/features/tab-autocomplete",
+            "https://docs.smart-ai.dev/features/tab-autocomplete",
           ),
         );
       }

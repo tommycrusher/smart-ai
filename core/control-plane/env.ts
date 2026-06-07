@@ -1,23 +1,23 @@
 import * as fs from "node:fs";
 import { IdeSettings } from "..";
 import {
-  getLocalEnvironmentDotFilePath,
-  getStagingEnvironmentDotFilePath,
+    getLocalEnvironmentDotFilePath,
+    getStagingEnvironmentDotFilePath,
 } from "../util/paths";
 import { AuthType, ControlPlaneEnv } from "./AuthTypes";
 import { getLicenseKeyData } from "./mdm/mdm";
 
-export const EXTENSION_NAME = "continue";
+export const EXTENSION_NAME = "smartai";
 
 const WORKOS_CLIENT_ID_PRODUCTION = "client_01J0FW6XN8N2XJAECF7NE0Y65J";
 const WORKOS_CLIENT_ID_STAGING = "client_01J0FW6XCPMJMQ3CG51RB4HBZQ";
 
 const PRODUCTION_HUB_ENV: ControlPlaneEnv = {
-  DEFAULT_CONTROL_PLANE_PROXY_URL: "https://api.continue.dev/",
-  CONTROL_PLANE_URL: "https://api.continue.dev/",
+  DEFAULT_CONTROL_PLANE_PROXY_URL: "https://api.smart-ai.dev/",
+  CONTROL_PLANE_URL: "https://api.smart-ai.dev/",
   AUTH_TYPE: AuthType.WorkOsProd,
   WORKOS_CLIENT_ID: WORKOS_CLIENT_ID_PRODUCTION,
-  APP_URL: "https://continue.dev/",
+  APP_URL: "https://smart-ai.dev/",
 };
 
 const STAGING_ENV: ControlPlaneEnv = {
@@ -29,11 +29,11 @@ const STAGING_ENV: ControlPlaneEnv = {
 };
 
 const TEST_ENV: ControlPlaneEnv = {
-  DEFAULT_CONTROL_PLANE_PROXY_URL: "https://api-test.continue.dev/",
-  CONTROL_PLANE_URL: "https://api-test.continue.dev/",
+  DEFAULT_CONTROL_PLANE_PROXY_URL: "https://api-test.smart-ai.dev/",
+  CONTROL_PLANE_URL: "https://api-test.smart-ai.dev/",
   AUTH_TYPE: AuthType.WorkOsStaging,
   WORKOS_CLIENT_ID: WORKOS_CLIENT_ID_STAGING,
-  APP_URL: "https://app-test.continue.dev/",
+  APP_URL: "https://app-test.smart-ai.dev/",
 };
 
 const LOCAL_ENV: ControlPlaneEnv = {
@@ -66,7 +66,7 @@ export function getControlPlaneEnvSync(
       AUTH_TYPE: AuthType.OnPrem,
       DEFAULT_CONTROL_PLANE_PROXY_URL: apiUrl,
       CONTROL_PLANE_URL: apiUrl,
-      APP_URL: "https://continue.dev/",
+      APP_URL: "https://smart-ai.dev/",
     };
   }
 

@@ -61,7 +61,7 @@ export class CLIPlatformClient implements PlatformClient {
       return processEnvSecret;
     }
 
-    // Then check in priority order: ~/.continue/.env, <workspace>/.continue/.env, <workspace>/.env
+    // Then check in priority order: ~/.smart-ai/.env, <workspace>/.smart-ai/.env, <workspace>/.env
     const workspaceDir = process.cwd();
     const envPaths = [
       path.join(env.continueHome, ".env"),

@@ -24,7 +24,7 @@ export function isContinueConfigRelatedUri(uri: string): boolean {
         uri.endsWith(".yml") ||
         uri.endsWith(".json"))) ||
     [...BLOCK_TYPES, "agents", "assistants", "configs"].some((blockType) =>
-      uri.includes(`.continue/${blockType}`),
+      uri.includes(`.smart-ai/${blockType}`),
     )
   );
 }
@@ -37,9 +37,9 @@ export function isContinueAgentConfigFile(uri: string): boolean {
 
   const normalizedUri = URI.normalize(uri);
   return (
-    normalizedUri.includes(`/.continue/agents/`) ||
-    normalizedUri.includes(`/.continue/assistants/`) ||
-    normalizedUri.includes(`/.continue/configs/`)
+    normalizedUri.includes(`/.smart-ai/agents/`) ||
+    normalizedUri.includes(`/.smart-ai/assistants/`) ||
+    normalizedUri.includes(`/.smart-ai/configs/`)
   );
 }
 
@@ -109,14 +109,14 @@ export function getDotContinueSubDirs(
 ): string[] {
   let fullDirs: string[] = [];
 
-  // Workspace .continue/<subDirName>
+  // Workspace .smart-ai/<subDirName>
   if (options.includeWorkspace) {
     fullDirs = workspaceDirs.map((dir) =>
       joinPathsToUri(dir, ".continue", subDirName),
     );
   }
 
-  // ~/.continue/<subDirName>
+  // ~/.smart-ai/<subDirName>
   if (options.includeGlobal) {
     fullDirs.push(localPathToUri(getGlobalFolderWithName(subDirName)));
   }
@@ -126,7 +126,7 @@ export function getDotContinueSubDirs(
 
 /**
  * This method searches in both ~/.continue and workspace .continue
- * for all YAML/Markdown files in the specified subdirectory, for example .continue/assistants or .continue/prompts
+ * for all YAML/Markdown files in the specified subdirectory, for example .smart-ai/assistants or .smart-ai/prompts
  */
 export async function getAllDotContinueDefinitionFiles(
   ide: IDE,
