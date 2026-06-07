@@ -1,4 +1,4 @@
-import { parseMarkdownRule } from "@continuedev/config-yaml";
+import { parseMarkdownRule } from "@smartai/config-yaml";
 import { jest } from "@jest/globals";
 import { createRuleBlockImpl } from "./createRuleBlock";
 

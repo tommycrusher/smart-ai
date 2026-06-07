@@ -1,4 +1,4 @@
-import { AssistantUnrolled } from "@continuedev/config-yaml";
+import { AssistantUnrolled } from "@smartai/config-yaml";
 
 export type AssistantConfig = AssistantUnrolled;
 

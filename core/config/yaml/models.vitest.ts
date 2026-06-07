@@ -1,4 +1,4 @@
-import { ModelConfig } from "@continuedev/config-yaml";
+import { ModelConfig } from "@smartai/config-yaml";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { ContinueConfig, ILLMLogger } from "../..";

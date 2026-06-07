@@ -3,7 +3,7 @@ import {
   PlatformClient,
   SecretResult,
   SecretType,
-} from "@continuedev/config-yaml";
+} from "@smartai/config-yaml";
 import * as dotenv from "dotenv";
 import { IDE } from "../..";
 import { ControlPlaneClient } from "../../control-plane/client";

@@ -6,8 +6,8 @@ import {
   PlatformClient,
   SecretResult,
   SecretType,
-} from "@continuedev/config-yaml";
-import { DefaultApiInterface } from "@continuedev/sdk/dist/api";
+} from "@smartai/config-yaml";
+import { DefaultApiInterface } from "@smartai/sdk/dist/api";
 import * as dotenv from "dotenv";
 
 import { env } from "./env.js";

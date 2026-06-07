@@ -1,4 +1,4 @@
-import { createRuleMarkdown } from "@continuedev/config-yaml";
+import { createRuleMarkdown } from "@smartai/config-yaml";
 import { ToolImpl } from ".";
 import { RuleWithSource } from "../..";
 import { createRuleFilePath } from "../../config/markdown/utils";

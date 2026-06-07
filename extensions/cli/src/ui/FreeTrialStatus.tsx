@@ -1,8 +1,8 @@
-import { ModelConfig } from "@continuedev/config-yaml";
+import { ModelConfig } from "@smartai/config-yaml";
 import {
   DefaultApiInterface,
   GetFreeTrialStatus200Response,
-} from "@continuedev/sdk/dist/api/dist/index.js";
+} from "@smartai/sdk/dist/api/dist/index.js";
 import { Text } from "ink";
 import React, { useEffect, useState } from "react";
 

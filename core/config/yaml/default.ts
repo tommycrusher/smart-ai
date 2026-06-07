@@ -1,4 +1,4 @@
-import { AssistantUnrolled } from "@continuedev/config-yaml";
+import { AssistantUnrolled } from "@smartai/config-yaml";
 
 import { SMARTAI_OLLAMA_DEFAULTS } from "../ollama.js";
 

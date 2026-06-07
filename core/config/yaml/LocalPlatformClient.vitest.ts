@@ -1,4 +1,4 @@
-import { FQSN, SecretResult, SecretType } from "@continuedev/config-yaml";
+import { FQSN, SecretResult, SecretType } from "@smartai/config-yaml";
 import {
   afterEach,
   beforeEach,

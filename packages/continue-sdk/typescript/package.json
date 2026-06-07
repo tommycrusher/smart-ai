@@ -1,5 +1,5 @@
 {
-  "name": "@continuedev/sdk",
+  "name": "@smartai/sdk",
   "version": "0.0.13",
   "description": "SDK for Continue.dev",
   "main": "dist/src/index.js",

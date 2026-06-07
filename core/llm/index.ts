@@ -1,11 +1,11 @@
-import { ModelRole } from "@continuedev/config-yaml";
-import { fetchwithRequestOptions } from "@continuedev/fetch";
-import { findLlmInfo } from "@continuedev/llm-info";
+import { ModelRole } from "@smartai/config-yaml";
+import { fetchwithRequestOptions } from "@smartai/fetch";
+import { findLlmInfo } from "@smartai/llm-info";
 import {
   BaseLlmApi,
   ChatCompletionCreateParams,
   constructLlmApi,
-} from "@continuedev/openai-adapters";
+} from "@smartai/openai-adapters";
 import Handlebars from "handlebars";
 
 import { DevDataSqliteDb } from "../data/devdataSqlite.js";
@@ -222,7 +222,7 @@ export abstract class BaseLLM implements ILLM {
     };
 
     this.model = options.model;
-    // Use @continuedev/llm-info package to autodetect certain parameters
+    // Use @smartai/llm-info package to autodetect certain parameters
     const modelSearchString =
       this.providerName === "continue-proxy"
         ? this.model?.split("/").pop() || this.model

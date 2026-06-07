@@ -1,4 +1,4 @@
-import { Analytics } from "@continuedev/config-types";
+import { Analytics } from "@smartai/config-types";
 
 import {
   ControlPlaneProxyInfo,

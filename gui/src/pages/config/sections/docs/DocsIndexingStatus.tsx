@@ -1,4 +1,4 @@
-import { ConfigYaml } from "@continuedev/config-yaml";
+import { ConfigYaml } from "@smartai/config-yaml";
 import {
   ArrowPathIcon,
   PencilIcon,

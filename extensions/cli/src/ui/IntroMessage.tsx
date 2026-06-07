@@ -1,4 +1,4 @@
-import { AssistantUnrolled, ModelConfig } from "@continuedev/config-yaml";
+import { AssistantUnrolled, ModelConfig } from "@smartai/config-yaml";
 import { Box, Text } from "ink";
 import React, { useMemo } from "react";
 

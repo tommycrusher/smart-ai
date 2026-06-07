@@ -1,7 +1,7 @@
 import fs from "fs";
 import os from "os";
 
-import { ModelConfig } from "@continuedev/config-yaml";
+import { ModelConfig } from "@smartai/config-yaml";
 import {
   ContinueConfig,
   ExperimentalModelRoles,

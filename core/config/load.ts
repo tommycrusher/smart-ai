@@ -8,7 +8,7 @@ import {
   ConfigValidationError,
   mergeConfigYamlRequestOptions,
   ModelRole,
-} from "@continuedev/config-yaml";
+} from "@smartai/config-yaml";
 import * as JSONC from "comment-json";
 
 import {

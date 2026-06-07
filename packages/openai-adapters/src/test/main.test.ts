@@ -1,4 +1,4 @@
-import { ModelConfig } from "@continuedev/config-yaml";
+import { ModelConfig } from "@smartai/config-yaml";
 import * as dotenv from "dotenv";
 import { vi } from "vitest";
 import { BedrockApi } from "../apis/Bedrock.js";

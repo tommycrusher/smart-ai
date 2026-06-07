@@ -1,4 +1,4 @@
-import type { AssistantUnrolled } from "@continuedev/config-yaml";
+import type { AssistantUnrolled } from "@smartai/config-yaml";
 import {
   beforeEach,
   describe,

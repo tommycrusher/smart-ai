@@ -3,8 +3,8 @@ import {
   ConfigResult,
   DevDataLogEvent,
   ModelRole,
-} from "@continuedev/config-yaml";
-import { ToolPolicy } from "@continuedev/terminal-security";
+} from "@smartai/config-yaml";
+import { ToolPolicy } from "@smartai/terminal-security";
 
 import {
   AutocompleteInput,

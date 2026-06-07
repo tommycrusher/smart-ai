@@ -1,4 +1,4 @@
-import { fetchwithRequestOptions } from "@continuedev/fetch";
+import { fetchwithRequestOptions } from "@smartai/fetch";
 import { ContinueConfig, IDE } from "core";
 import { QuickPickItem, window } from "vscode";
 
