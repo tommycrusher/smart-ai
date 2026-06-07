@@ -10,8 +10,7 @@ import { InProcessMessenger } from "core/protocol/messenger";
 import {
     getConfigJsonPath,
     getConfigTsPath,
-    getConfigYamlPath,
-    getContinueGlobalPath,
+    getConfigYamlPath
 } from "core/util/paths";
 import { v4 as uuidv4 } from "uuid";
 import * as vscode from "vscode";
@@ -473,7 +472,7 @@ export class VsCodeExtension {
     });
 
     // watch global rules directory for changes
-    const globalRulesDir = path.join(getContinueGlobalPath(), "rules");
+    const globalRulesDir = path.join(getSmartAiGlobalPath(), "rules");
     if (fs.existsSync(globalRulesDir)) {
       fs.watch(globalRulesDir, { recursive: true }, (eventType, filename) => {
         if (filename && filename.endsWith(".md")) {

@@ -1,13 +1,13 @@
 import path from "path";
 import {
-  DEFAULT_PROMPTS_FOLDER_V1,
-  DEFAULT_PROMPTS_FOLDER_V2,
-  DEFAULT_RULES_FOLDER,
-  RULES_DIR_NAME,
+    DEFAULT_PROMPTS_FOLDER_V1,
+    DEFAULT_PROMPTS_FOLDER_V2,
+    DEFAULT_RULES_FOLDER,
+    RULES_DIR_NAME,
 } from ".";
 import { IDE } from "..";
 import { walkDir } from "../indexing/walkDir";
-import { getContinueGlobalPath, readAllGlobalPromptFiles } from "../util/paths";
+import { readAllGlobalPromptFiles } from "../util/paths";
 import { joinPathsToUri } from "../util/uri";
 
 export async function getPromptFilesFromDir(
@@ -66,7 +66,7 @@ export async function getAllPromptFiles(
   promptFiles.push(...readAllGlobalPromptFiles());
 
   const promptFilesFromRulesDirectory = readAllGlobalPromptFiles(
-    path.join(getContinueGlobalPath(), RULES_DIR_NAME),
+    path.join(getSmartAiGlobalPath(), RULES_DIR_NAME),
   );
   promptFiles.push(...promptFilesFromRulesDirectory);
 
