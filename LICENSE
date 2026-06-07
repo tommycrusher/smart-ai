@@ -199,3 +199,15 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
+
+Smart AI includes modified code derived from Continue (https://github.com/continuedev/continue),
+licensed under Apache License 2.0.
+
+Modifications:
+- repository renamed and rebranded to Smart AI
+- VS Code extension metadata changed
+- publisher and marketplace identity changed
+- Smarterp-specific customizations will be added
+
+Original upstream copyright and license notices are preserved.
+
