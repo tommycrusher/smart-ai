@@ -6,8 +6,8 @@ import {
   DataLogLevel,
   DevDataLogEvent,
   devDataVersionedSchemas,
-} from "@continuedev/config-yaml";
-import { fetchwithRequestOptions } from "@continuedev/fetch";
+} from "@smartai/config-yaml";
+import { fetchwithRequestOptions } from "@smartai/fetch";
 import * as URI from "uri-js";
 import { fileURLToPath } from "url";
 import { AnyZodObject } from "zod";

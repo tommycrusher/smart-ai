@@ -1,15 +1,15 @@
 openapi: 3.0.0
 info:
-  title: Continue Hub IDE API
+  title: Smart AI Hub IDE API
   description: |
-    API for Continue IDE to fetch assistants and other related information.
-    These endpoints are primarily used by the Continue IDE extensions for VS Code and JetBrains.
+    API for Smart AI IDE to fetch assistants and other related information.
+    These endpoints are primarily used by the Smart AI IDE extensions for VS Code and JetBrains.
   version: 1.0.0
   contact:
-    name: Continue Dev Team
-    url: https://continue.dev
+    name: Smart AI Team
+    url: https://smart-ai.dev
 servers:
-  - url: https://api.continue.dev
+  - url: https://api.smart-ai.dev
     description: Production server
   - url: http://localhost:3001
     description: Local development server

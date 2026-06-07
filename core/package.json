@@ -1,5 +1,5 @@
 {
-  "name": "@continuedev/core",
+  "name": "@smartai/core",
   "version": "1.1.0",
   "description": "The Continue Core contains functionality that can be shared across web, VS Code, or Node.js",
   "scripts": {
@@ -14,7 +14,7 @@
     "sentry:sourcemaps": "sentry-cli sourcemaps inject --org continue-xd --project continue ./dist && sentry-cli sourcemaps upload --org continue-xd --project continue ./dist"
   },
   "type": "module",
-  "author": "Continue Dev, Inc",
+  "author": "Smart AI",
   "license": "Apache-2.0",
   "devDependencies": {
     "@babel/preset-env": "^7.24.7",

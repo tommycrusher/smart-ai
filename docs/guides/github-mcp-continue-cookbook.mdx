@@ -274,7 +274,7 @@ jobs:
         with:
           node-version: "18"
       - name: Install Continue CLI
-        run: npm i -g @continuedev/cli
+        run: npm i -g @smartai/cli
 
       - name: Weekly Issue Triage Summary
         if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'

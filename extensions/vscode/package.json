@@ -1,27 +1,27 @@
 {
-  "name": "continue",
+  "name": "smart-ai",
   "icon": "media/icon.png",
-  "author": "Continue Dev, Inc",
+  "author": "Smart AI",
   "version": "1.3.39",
   "repository": {
     "type": "git",
-    "url": "https://github.com/continuedev/continue"
+    "url": "https://github.com/tommycrusher/smart-ai"
   },
   "extensionKind": [
     "ui",
     "workspace"
   ],
   "bugs": {
-    "url": "https://github.com/continuedev/continue/issues",
-    "email": "nate@continue.dev"
+    "url": "https://github.com/tommycrusher/smart-ai/issues",
+    "email": "support@smart-ai.dev"
   },
-  "homepage": "https://continue.dev",
-  "qna": "https://github.com/continuedev/continue/issues/new/choose",
+  "homepage": "https://smart-ai.dev",
+  "qna": "https://github.com/tommycrusher/smart-ai/issues/new/choose",
   "license": "Apache-2.0",
-  "displayName": "Continue - open-source AI code agent",
+  "displayName": "Smart AI - AI code agent",
   "pricing": "Free",
-  "description": "The leading open-source AI code agent",
-  "publisher": "Continue",
+  "description": "AI code agent for smart development",
+  "publisher": "Smart AI",
   "engines": {
     "vscode": "^1.70.0",
     "node": ">=20.20.1"
@@ -84,12 +84,12 @@
       }
     ],
     "configuration": {
-      "title": "Continue",
+      "title": "Smart AI",
       "properties": {
         "continue.telemetryEnabled": {
           "type": "boolean",
           "default": true,
-          "markdownDescription": "Continue collects anonymous usage data, cleaned of PII, to help us improve the product for our users. Read more  at [continue.dev › Telemetry](https://docs.continue.dev/telemetry).",
+          "markdownDescription": "Smart AI collects anonymous usage data, cleaned of PII, to help us improve the product for our users. Read more  at [smart-ai.dev › Telemetry](https://docs.smart-ai.dev/telemetry).",
           "markdownDeprecationMessage": "This setting is deprecated and will be removed in a later version. Please use the _Telemetry > Allow Anonymous Telemetry_ setting in the extension's User Settings page.",
           "deprecationMessage": "Please use the _Telemetry > Allow Anonymous Telemetry_ setting in the extension's User Settings page."
         },
@@ -106,17 +106,17 @@
         "continue.enableQuickActions": {
           "type": "boolean",
           "default": false,
-          "markdownDescription": "Enable the experimental Quick Actions feature. Read our walkthrough to learn about configuration and how to share feedback: [continue.dev › Walkthrough: Quick Actions (experimental)](https://docs.continue.dev/customize/deep-dives/vscode-actions#quick-actions)"
+          "markdownDescription": "Enable the experimental Quick Actions feature. Read our walkthrough to learn about configuration and how to share feedback: [smart-ai.dev › Walkthrough: Quick Actions (experimental)](https://docs.smart-ai.dev/customize/deep-dives/vscode-actions#quick-actions)"
         },
         "continue.enableTabAutocomplete": {
           "type": "boolean",
           "default": true,
-          "markdownDescription": "Enable Continue's tab autocomplete feature. Read our walkthrough to learn about configuration and how to share feedback: [continue.dev › Walkthrough: Tab Autocomplete (beta)](https://docs.continue.dev/features/tab-autocomplete)"
+          "markdownDescription": "Enable Smart AI's tab autocomplete feature. Read our walkthrough to learn about configuration and how to share feedback: [smart-ai.dev › Walkthrough: Tab Autocomplete (beta)](https://docs.smart-ai.dev/features/tab-autocomplete)"
         },
         "continue.enableNextEdit": {
           "type": "boolean",
           "default": true,
-          "markdownDescription": "Enable Continue's next edit feature. Read our docs to learn about configuration and how to share feedback: [continue.dev › Features › Autocomplete › Next Edit (experimental)](https://docs.continue.dev/features/autocomplete/next-edit)"
+          "markdownDescription": "Enable Smart AI's next edit feature. Read our docs to learn about configuration and how to share feedback: [smart-ai.dev › Features › Autocomplete › Next Edit (experimental)](https://docs.smart-ai.dev/features/autocomplete/next-edit)"
         },
         "continue.pauseTabAutocompleteOnBattery": {
           "type": "boolean",

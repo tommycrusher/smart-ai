@@ -142,7 +142,7 @@ continue_server.dist
 Icon
 Icon?
 
-.continuerc.json
+.smartairc.json
 .aider*
 
 *.notes.md
@@ -150,7 +150,7 @@ notes.md
 *.notes.md
 
 manual-testing-sandbox/.idea/**
-manual-testing-sandbox/.continue/**
+manual-testing-sandbox/.smartai/**
 extensions/intellij/.idea/**
 
 **/.idea/workspace.xml
@@ -162,15 +162,15 @@ extensions/intellij/.idea/**
 
 
 extensions/intellij/bin
-extensions/.continue-debug/
+extensions/.smartai-debug/
 
 *.vsix
 
 # intellij module library files
 *.iml
 
-.continuerules
-**/.continue/assistants/
+.smartairules
+**/.smartai/assistants/
 keys
 
 .channels_cache.json

@@ -1,5 +1,5 @@
 {
-  "name": "@continuedev/cli",
+  "name": "@smartai/cli",
   "version": "0.0.0-dev",
   "description": "Continue CLI",
   "main": "dist/index.js",
@@ -34,16 +34,16 @@
     "semantic-release": "semantic-release",
     "semantic-release:dry-run": "semantic-release --dry-run"
   },
-  "author": "Continue Dev, Inc.",
+  "author": "Smart AI",
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/continuedev/continue.git"
+    "url": "https://github.com/tommycrusher/smart-ai.git"
   },
   "bugs": {
-    "url": "https://github.com/continuedev/continue/issues"
+    "url": "https://github.com/tommycrusher/smart-ai/issues"
   },
-  "homepage": "https://continue.dev",
+  "homepage": "https://smart-ai.dev",
   "dependencies": {
     "@sentry/profiling-node": "^9.47.1",
     "fdir": "^6.4.2",
