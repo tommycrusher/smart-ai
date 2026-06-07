@@ -1,6 +1,6 @@
 import os from "node:os";
 
-import ContinueProxyAnalyticsProvider from "./analytics/ContinueProxyAnalyticsProvider.js";
+import SmartAiProxyAnalyticsProvider from "./analytics/SmartAiProxyAnalyticsProvider.js";
 import {
   ControlPlaneProxyInfo,
   IAnalyticsProvider,
@@ -20,7 +20,7 @@ function createAnalyticsProvider(
     case "logstash":
       return new LogStashAnalyticsProvider();
     case "continue-proxy":
-      return new ContinueProxyAnalyticsProvider();
+      return new SmartAiProxyAnalyticsProvider();
     default:
       return undefined;
   }
@@ -60,7 +60,7 @@ export class TeamAnalytics {
 
     if (config.provider === "continue-proxy") {
       (
-        TeamAnalytics.provider as ContinueProxyAnalyticsProvider
+        TeamAnalytics.provider as SmartAiProxyAnalyticsProvider
       ).controlPlaneClient = controlPlaneClient;
     }
   }

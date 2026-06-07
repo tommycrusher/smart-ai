@@ -1923,7 +1923,7 @@ export type RuleSource =
   | "rules-block"
   | "colocated-markdown"
   | "json-systemMessage"
-  | ".continuerules"
+  | ".smartairules"
   | "agentFile";
 
 export interface RuleMetadata {

@@ -463,7 +463,7 @@ void (async () => {
 
     // Tutorial
     "media/move-chat-panel-right.md",
-    "continue_tutorial.py",
+    "smartai_tutorial.py",
     "config_schema.json",
 
     // Embeddings model

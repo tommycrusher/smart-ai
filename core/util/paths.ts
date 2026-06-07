@@ -58,7 +58,7 @@ export function getContinueUtilsPath(): string {
 export function getGlobalContinueIgnorePath(): string {
   const continueIgnorePath = path.join(
     getContinueGlobalPath(),
-    ".continueignore",
+    ".smartaiignore",
   );
   if (!fs.existsSync(continueIgnorePath)) {
     fs.writeFileSync(continueIgnorePath, "");

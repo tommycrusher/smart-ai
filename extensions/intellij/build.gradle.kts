@@ -127,7 +127,7 @@ tasks {
 
     test {
         useJUnitPlatform()
-        environment("CONTINUE_GLOBAL_DIR", "${rootProject.projectDir}/src/test/kotlin/com/github/continuedev/continueintellijextension/test-continue")
+        environment("CONTINUE_GLOBAL_DIR", "${rootProject.projectDir}/src/test/kotlin/com/github/smartai/smartaiintellijextension/test-continue")
         jvmArgumentProviders += CommandLineArgumentProvider { listOf("-Dide.browser.jcef.sandbox.enable=false") }
     }
 }
@@ -137,7 +137,7 @@ val testIntegration = task<Test>("testIntegration") {
     testClassesDirs = integrationTestSourceSet.output.classesDirs
     classpath = integrationTestSourceSet.runtimeClasspath
     systemProperty("CONTINUE_PLUGIN_DIR", tasks.prepareSandbox.get().pluginDirectory.get().asFile)
-    environment("CONTINUE_GLOBAL_DIR", "${rootProject.projectDir}/src/testIntegration/kotlin/com/github/continuedev/continueintellijextension/test-continue")
+    environment("CONTINUE_GLOBAL_DIR", "${rootProject.projectDir}/src/testIntegration/kotlin/com/github/smartai/smartaiintellijextension/test-continue")
     useJUnitPlatform()
     dependsOn(tasks.prepareSandbox)
 }

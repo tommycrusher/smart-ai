@@ -20,7 +20,7 @@ import { useFindWidget } from "../../components/find/FindWidget";
 import TimelineItem from "../../components/gui/TimelineItem";
 import { NewSessionButton } from "../../components/mainInput/belowMainInput/NewSessionButton";
 import ThinkingBlockPeek from "../../components/mainInput/belowMainInput/ThinkingBlockPeek";
-import ContinueInputBox from "../../components/mainInput/ContinueInputBox";
+import SmartAiInputBox from "../../components/mainInput/SmartAiInputBox";
 import { useOnboardingCard } from "../../components/OnboardingCard";
 import StepContainer from "../../components/StepContainer";
 import { TabBar } from "../../components/TabBar/TabBar";
@@ -338,7 +338,7 @@ export function Chat() {
 
       if (message.role === "user") {
         return (
-          <ContinueInputBox
+          <SmartAiInputBox
             onEnter={(editorState, modifiers) =>
               sendInput(editorState, modifiers, index)
             }
@@ -469,7 +469,7 @@ export function Chat() {
           ))}
       </StepsDiv>
       <div className={"relative"}>
-        <ContinueInputBox
+        <SmartAiInputBox
           isMainInput
           isLastUserInput={false}
           onEnter={(editorState, modifiers, editor) =>

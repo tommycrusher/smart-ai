@@ -1,6 +1,6 @@
 import { KeyIcon } from "@heroicons/react/24/outline";
 import { OnboardingModes } from "core/protocol/core";
-import ContinueSignet from "../../svg/ContinueSignet";
+import SmartAiSignet from "../../svg/SmartAiSignet";
 import OllamaLogo from "../../svg/OllamaLogo";
 
 interface OnboardingCardTabsProps {
@@ -52,7 +52,7 @@ const renderTabButton = (
         onClick={() => onTabClick(tabTitle as OnboardingModes)}
         data-testid={`onboarding-tab-${tabTitle}`}
       >
-        <ContinueSignet width={32} height={32} className="-mb-2.5" />
+        <SmartAiSignet width={32} height={32} className="-mb-2.5" />
         Credits
       </button>
     );

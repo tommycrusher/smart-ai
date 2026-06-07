@@ -37,7 +37,7 @@ interface VsCodeCompletionInput {
   context: vscode.InlineCompletionContext;
 }
 
-export class ContinueCompletionProvider
+export class SmartAiCompletionProvider
   implements vscode.InlineCompletionItemProvider
 {
   private async onError(e: unknown) {

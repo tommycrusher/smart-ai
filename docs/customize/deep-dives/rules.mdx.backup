@@ -1,7 +1,7 @@
 ---
 title: "Rules"
 description: Rules are used to provide instructions to the model for Agent mode, Chat mode, and Edit requests.
-keywords: [rules, .continuerules, system, prompt, message]
+keywords: [rules, .smartairules, system, prompt, message]
 ---
 
 Rules provide instructions to the model for [Agent mode](../../features/agent/quick-start), [Chat](../../features/chat/quick-start), and [Edit](../../features/edit/quick-start) requests.
@@ -172,10 +172,10 @@ This can be viewed in the rules section of the toolbar (see above), or in the so
 
 Advanced users can override this system message for a specific model if needed by using `chatOptions.baseSystemMessage`. See the [`config.yaml` reference](/reference#models).
 
-### `.continuerules`
+### `.smartairules`
 
 <Warning>
-`.continuerules` will be deprecated in a future release. Please use the `.continue/rules` folder instead.
+`.smartairules` will be deprecated in a future release. Please use the `.continue/rules` folder instead.
 </Warning>
 
-You can create project-specific rules by adding a `.continuerules` file to the root of your project. This file is raw text and its full contents will be used as rules.
+You can create project-specific rules by adding a `.smartairules` file to the root of your project. This file is raw text and its full contents will be used as rules.

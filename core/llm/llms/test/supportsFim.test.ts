@@ -4,7 +4,7 @@ import Deepseek from "../Deepseek.js";
 import FunctionNetwork from "../FunctionNetwork.js";
 import Mistral from "../Mistral.js";
 import OpenAI from "../OpenAI.js";
-import ContinueProxy from "../stubs/ContinueProxy.js";
+import SmartAiProxy from "../stubs/ContinueProxy.js";
 import Vllm from "../Vllm.js";
 
 // Mock the parseProxyModelName function
@@ -17,22 +17,22 @@ jest.mock("@smartai/config-yaml", () => ({
 
 // Test cases: [LLM class, model, expected supportsFim result, description]
 const testCases: [any, string, boolean, string][] = [
-  [ContinueProxy, "owner/package/vllm/some-model", false, "vllm provider"],
-  [ContinueProxy, "owner/package/openai/gpt-4", true, "openai provider"],
+  [SmartAiProxy, "owner/package/vllm/some-model", false, "vllm provider"],
+  [SmartAiProxy, "owner/package/openai/gpt-4", true, "openai provider"],
   [
-    ContinueProxy,
+    SmartAiProxy,
     "owner/package/anthropic/claude-3",
     true,
     "anthropic provider",
   ],
-  [ContinueProxy, "owner/package/cohere/command-r", true, "cohere provider"],
+  [SmartAiProxy, "owner/package/cohere/command-r", true, "cohere provider"],
   [
-    ContinueProxy,
+    SmartAiProxy,
     "owner/package/unknown-provider/some-model",
     true,
     "unknown provider",
   ],
-  [ContinueProxy, "owner/package/groq/llama-model", true, "groq provider"],
+  [SmartAiProxy, "owner/package/groq/llama-model", true, "groq provider"],
   [Vllm, "any-model", false, "Vllm"],
   [Anthropic, "claude-3-5-sonnet-latest", false, "Anthropic"],
   [FunctionNetwork, "any-model", false, "FunctionNetwork"],

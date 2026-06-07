@@ -111,9 +111,9 @@ Whether to use re-ranking, which will allow initial selection of `nRetrieve` res
 
 ## How to Ignore Files During Indexing
 
-Smart AI respects `.gitignore` files in order to determine which files should not be indexed. If you'd like to exclude additional files, you can add them to a `.continueignore` file, which follows the exact same rules as `.gitignore`.
+Smart AI respects `.gitignore` files in order to determine which files should not be indexed. If you'd like to exclude additional files, you can add them to a `.smartaiignore` file, which follows the exact same rules as `.gitignore`.
 
-Smart AI also supports a **global** `.continueignore` file that will be respected for all workspaces, which can be created at `~/.smart-ai/.continueignore`.
+Smart AI also supports a **global** `.smartaiignore` file that will be respected for all workspaces, which can be created at `~/.smart-ai/.smartaiignore`.
 
 If you want to see exactly what files Smart AI has indexed, the metadata is stored in `~/.smart-ai/index/index.sqlite`. You can use a tool like [DB Browser for SQLite](https://sqlitebrowser.org/) to view the `tag_catalog` table within this file.
 

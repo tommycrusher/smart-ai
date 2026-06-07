@@ -59,7 +59,7 @@ import SambaNova from "./SambaNova";
 import Scaleway from "./Scaleway";
 import SiliconFlow from "./SiliconFlow";
 import Tensorix from "./Tensorix";
-import ContinueProxy from "./stubs/ContinueProxy";
+import SmartAiProxy from "./stubs/SmartAiProxy";
 import TARS from "./TARS";
 import TestLLM from "./Test";
 import TextGenWebUI from "./TextGenWebUI";
@@ -104,7 +104,7 @@ export const LLMClasses = [
   Groq,
   Fireworks,
   NCompass,
-  ContinueProxy,
+  SmartAiProxy,
   Cloudflare,
   Deepseek,
   Docker,

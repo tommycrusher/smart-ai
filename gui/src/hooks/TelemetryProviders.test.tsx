@@ -57,9 +57,9 @@ vi.mock("../context/Auth", () => ({
   }),
 }));
 
-// Mock isContinueTeamMember utility
-vi.mock("../util/isContinueTeamMember", () => ({
-  isContinueTeamMember: vi.fn(() => true), // Mock as Smart AI team member
+// Mock isSmartAiTeamMember utility
+vi.mock("../util/isSmartAiTeamMember", () => ({
+  isSmartAiTeamMember: vi.fn(() => true), // Mock as Smart AI team member
 }));
 
 // Mock window.vscMachineId

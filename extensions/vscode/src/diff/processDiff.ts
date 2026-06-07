@@ -3,7 +3,7 @@ import { DataLogger } from "core/data/log";
 import { myersDiff } from "core/diff/myers";
 import { TrainingCaptureService } from "core/training";
 
-import { ContinueGUIWebviewViewProvider } from "../ContinueGUIWebviewViewProvider";
+import { SmartAiGUIWebviewViewProvider } from "../SmartAiGUIWebviewViewProvider";
 import { editOutcomeTracker } from "../extension/EditOutcomeTracker";
 import { VsCodeIde } from "../VsCodeIde";
 
@@ -11,7 +11,7 @@ import { VerticalDiffManager } from "./vertical/manager";
 
 export async function processDiff(
   action: "accept" | "reject",
-  sidebar: ContinueGUIWebviewViewProvider,
+  sidebar: SmartAiGUIWebviewViewProvider,
   ide: VsCodeIde,
   core: Core,
   verticalDiffManager: VerticalDiffManager,

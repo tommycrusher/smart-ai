@@ -1,4 +1,4 @@
-package com.github.continuedev.continueintellijextension
+package com.github.smartai.smartaiintellijextension
 
 import com.automation.remarks.junit5.Video
 import com.intellij.driver.sdk.ui.components.*

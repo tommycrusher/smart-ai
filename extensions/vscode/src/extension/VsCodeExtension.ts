@@ -15,15 +15,15 @@ import {
 import { v4 as uuidv4 } from "uuid";
 import * as vscode from "vscode";
 
-import { ContinueCompletionProvider } from "../autocomplete/completionProvider";
+import { SmartAiCompletionProvider } from "../autocomplete/completionProvider";
 import {
     monitorBatteryChanges,
     setupStatusBar,
     StatusBarStatus,
 } from "../autocomplete/statusBar";
 import { registerAllCommands } from "../commands";
-import { ContinueConsoleWebviewViewProvider } from "../ContinueConsoleWebviewViewProvider";
-import { ContinueGUIWebviewViewProvider } from "../ContinueGUIWebviewViewProvider";
+import { SmartAiConsoleWebviewViewProvider } from "../SmartAiConsoleWebviewViewProvider";
+import { SmartAiGUIWebviewViewProvider } from "../SmartAiGUIWebviewViewProvider";
 import { VerticalDiffManager } from "../diff/vertical/manager";
 import { registerAllCodeLensProviders } from "../lang-server/codeLens";
 import { registerAllPromptFilesCompletionProviders } from "../lang-server/promptFileCompletions";
@@ -72,8 +72,8 @@ export class VsCodeExtension {
   private extensionContext: vscode.ExtensionContext;
   private ide: VsCodeIde;
   private ideUtils: VsCodeIdeUtils;
-  private consoleView: ContinueConsoleWebviewViewProvider;
-  private sidebar: ContinueGUIWebviewViewProvider;
+  private consoleView: SmartAiConsoleWebviewViewProvider;
+  private sidebar: SmartAiGUIWebviewViewProvider;
   private windowId: string;
   private editDecorationManager: EditDecorationManager;
   private verticalDiffManager: VerticalDiffManager;
@@ -83,7 +83,7 @@ export class VsCodeExtension {
   private workOsAuthProvider: WorkOsAuthProvider;
   private fileSearch: FileSearch;
   private uriHandler = new UriEventHandler();
-  private completionProvider: ContinueCompletionProvider;
+  private completionProvider: SmartAiCompletionProvider;
 
   private ARBITRARY_TYPING_DELAY = 2000;
 
@@ -257,7 +257,7 @@ export class VsCodeExtension {
     const configHandlerPromise = new Promise<ConfigHandler>((resolve) => {
       resolveConfigHandler = resolve;
     });
-    this.sidebar = new ContinueGUIWebviewViewProvider(
+    this.sidebar = new SmartAiGUIWebviewViewProvider(
       this.windowId,
       this.extensionContext,
     );
@@ -356,7 +356,7 @@ export class VsCodeExtension {
     setupStatusBar(
       enabled ? StatusBarStatus.Enabled : StatusBarStatus.Disabled,
     );
-    this.completionProvider = new ContinueCompletionProvider(
+    this.completionProvider = new SmartAiCompletionProvider(
       this.configHandler,
       this.ide,
       this.sidebar.webviewProtocol,
@@ -406,7 +406,7 @@ export class VsCodeExtension {
     );
 
     // LLM Log view
-    this.consoleView = new ContinueConsoleWebviewViewProvider(
+    this.consoleView = new SmartAiConsoleWebviewViewProvider(
       this.windowId,
       this.extensionContext,
       this.core.llmLogger,

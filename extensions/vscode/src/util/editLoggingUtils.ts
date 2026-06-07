@@ -4,7 +4,7 @@ import { GetLspDefinitionsFunction } from "core/autocomplete/types";
 import { ConfigHandler } from "core/config/ConfigHandler";
 import { RecentlyEditedRange } from "core/nextEdit/types";
 import * as vscode from "vscode";
-import { ContinueCompletionProvider } from "../autocomplete/completionProvider";
+import { SmartAiCompletionProvider } from "../autocomplete/completionProvider";
 
 // Cache to store the last known content for each file (before edits)
 const documentContentCache = new Map<string, string>();
@@ -79,7 +79,7 @@ export const handleTextDocumentChange = async (
   event: vscode.TextDocumentChangeEvent,
   configHandler: ConfigHandler,
   ide: IDE,
-  completionProvider: ContinueCompletionProvider,
+  completionProvider: SmartAiCompletionProvider,
   getDefinitionsFromLsp: GetLspDefinitionsFunction,
 ) => {
   const changes = event.contentChanges;

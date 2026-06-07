@@ -2,7 +2,7 @@ import { Extras, type Integration, type Event } from "@sentry/core";
 import * as Sentry from "@sentry/node";
 import os from "node:os";
 import { IdeInfo } from "../../index.js";
-import { isContinueTeamMember } from "../isContinueTeamMember.js";
+import { isSmartAiTeamMember } from "../isSmartAiTeamMember.js";
 import { anonymizeSentryEvent } from "./anonymization.js";
 import { SENTRY_DSN } from "./constants.js";
 
@@ -112,7 +112,7 @@ export class SentryLogger {
   ) {
     // TODO: Remove Smart AI team member check once Sentry is ready for all users
     SentryLogger.allowTelemetry =
-      allowAnonymousTelemetry && isContinueTeamMember(userEmail);
+      allowAnonymousTelemetry && isSmartAiTeamMember(userEmail);
     SentryLogger.uniqueId = uniqueId;
     SentryLogger.ideInfo = ideInfo;
     SentryLogger.os = os.platform();

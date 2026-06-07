@@ -1,2 +1,2 @@
-export * from "./ContinueHubClient.js";
-export * from "./IContinueHubClient.js";
+export * from "./SmartAiHubClient.js";
+export * from "./ISmartAiHubClient.js";

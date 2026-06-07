@@ -1380,7 +1380,7 @@ export class Core {
             "Local config-related file updated",
           );
         } else if (
-          uri.endsWith(".continueignore") ||
+          uri.endsWith(".smartaiignore") ||
           uri.endsWith(".gitignore")
         ) {
           // Reindex the workspaces

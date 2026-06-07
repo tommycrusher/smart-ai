@@ -44,7 +44,7 @@ import { llmsFromModelConfig } from "./models";
 import {
   convertYamlMcpConfigToInternalMcpOptions,
   convertYamlRuleToContinueRule,
-} from "./yamlToContinueConfig";
+} from "./yamlToSmartAiConfig";
 
 async function loadConfigYaml(options: {
   overrideConfigYaml: AssistantUnrolled | undefined;

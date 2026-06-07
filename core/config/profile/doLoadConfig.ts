@@ -20,14 +20,14 @@ import {
 import { stringifyMcpPrompt } from "../../commands/slash/mcpSlashCommand";
 import { convertRuleBlockToSlashCommand } from "../../commands/slash/ruleBlockSlashCommand";
 import { MCPManagerSingleton } from "../../context/mcp/MCPManagerSingleton";
-import ContinueProxyContextProvider from "../../context/providers/ContinueProxyContextProvider";
+import SmartAiProxyContextProvider from "../../context/providers/SmartAiProxyContextProvider";
 import MCPContextProvider from "../../context/providers/MCPContextProvider";
 import { ControlPlaneProxyInfo } from "../../control-plane/analytics/IAnalyticsProvider.js";
 import { ControlPlaneClient } from "../../control-plane/client.js";
 import { getControlPlaneEnv } from "../../control-plane/env.js";
 import { PolicySingleton } from "../../control-plane/PolicySingleton";
 import { TeamAnalytics } from "../../control-plane/TeamAnalytics.js";
-import ContinueProxy from "../../llm/llms/stubs/ContinueProxy";
+import SmartAiProxy from "../../llm/llms/stubs/SmartAiProxy";
 import { initSlashCommand } from "../../promptFiles/initPrompt";
 import { getConfigDependentToolDefinitions } from "../../tools";
 import { encodeMCPToolUri } from "../../tools/callTool";
@@ -38,7 +38,7 @@ import { localPathOrUriToPath } from "../../util/pathToUri";
 import { Telemetry } from "../../util/posthog";
 import { SentryLogger } from "../../util/sentry/SentryLogger";
 import { TTS } from "../../util/tts";
-import { getWorkspaceContinueRuleDotFiles } from "../getWorkspaceContinueRuleDotFiles";
+import { getWorkspaceSmartAiRuleDotFiles } from "../getWorkspaceSmartAiRuleDotFiles";
 import { loadContinueConfigFromJson } from "../load";
 import { CodebaseRulesCache } from "../markdown/loadCodebaseRules";
 import { loadMarkdownRules } from "../markdown/loadMarkdownRules";
@@ -50,9 +50,9 @@ async function loadRules(ide: IDE) {
   const rules: RuleWithSource[] = [];
   const errors = [];
 
-  // Add rules from .continuerules files
+  // Add rules from .smartairules files
   const { rules: yamlRules, errors: continueRulesErrors } =
-    await getWorkspaceContinueRuleDotFiles(ide);
+    await getWorkspaceSmartAiRuleDotFiles(ide);
   rules.unshift(...yamlRules);
   errors.push(...continueRulesErrors);
 
@@ -194,7 +194,7 @@ export default async function doLoadConfig(options: {
     (cp) => cp.description.title === "continue-proxy",
   );
   if (proxyContextProvider) {
-    (proxyContextProvider as ContinueProxyContextProvider).workOsAccessToken =
+    (proxyContextProvider as SmartAiProxyContextProvider).workOsAccessToken =
       workOsAccessToken;
   }
 
@@ -469,7 +469,7 @@ async function injectControlPlaneProxyInfo(
   Object.keys(config.modelsByRole).forEach((key) => {
     config.modelsByRole[key as ModelRole].forEach((model) => {
       if (model.providerName === "continue-proxy") {
-        (model as ContinueProxy).controlPlaneProxyInfo = info;
+        (model as SmartAiProxy).controlPlaneProxyInfo = info;
       }
     });
   });
@@ -477,13 +477,13 @@ async function injectControlPlaneProxyInfo(
   Object.keys(config.selectedModelByRole).forEach((key) => {
     const model = config.selectedModelByRole[key as ModelRole];
     if (model?.providerName === "continue-proxy") {
-      (model as ContinueProxy).controlPlaneProxyInfo = info;
+      (model as SmartAiProxy).controlPlaneProxyInfo = info;
     }
   });
 
   config.modelsByRole.chat.forEach((model) => {
     if (model.providerName === "continue-proxy") {
-      (model as ContinueProxy).controlPlaneProxyInfo = info;
+      (model as SmartAiProxy).controlPlaneProxyInfo = info;
     }
   });
 

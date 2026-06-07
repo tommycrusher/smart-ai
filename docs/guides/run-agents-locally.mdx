@@ -138,7 +138,7 @@ You are reviewing a pull request to format its title according to conventional c
 
 ## GitHub Actions Integration
 
-Smart AI provides a [reusable workflow](https://github.com/tommycrusher/smart-ai/blob/main/.github/workflows/continue-agents.yml) that handles agent discovery, parallel execution, and GitHub Check reporting.
+Smart AI provides a [reusable workflow](https://github.com/tommycrusher/smart-ai/blob/main/.github/workflows/smartai-agents.yml) that handles agent discovery, parallel execution, and GitHub Check reporting.
 
 ### Using the Reusable Workflow
 
@@ -155,7 +155,7 @@ on:
 
 jobs:
   agents:
-    uses: continuedev/continue/.github/workflows/continue-agents.yml@main
+    uses: continuedev/continue/.github/workflows/smartai-agents.yml@main
     secrets:
       ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
 ```
@@ -172,7 +172,7 @@ The reusable workflow automatically:
 ```yaml
 jobs:
   agents:
-    uses: continuedev/continue/.github/workflows/continue-agents.yml@main
+    uses: continuedev/continue/.github/workflows/smartai-agents.yml@main
     with:
       agents-path: '.smart-ai/agents'  # Custom agents directory (optional)
     secrets:
@@ -283,7 +283,7 @@ your-repo/
 │       └── security-scan.md
 ├── .github/
 │   └── workflows/
-│       └── continue-agents.yml
+│       └── smartai-agents.yml
 └── ...
 ```
 

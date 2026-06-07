@@ -1,7 +1,7 @@
 import ignore from "ignore";
 
 import type { FileType, IDE, SlashCommand } from "../../..";
-import { getGlobalContinueIgArray } from "../../../indexing/continueignore";
+import { getGlobalContinueIgArray } from "../../../indexing/smartaiignore";
 import { DEFAULT_IGNORE, gitIgArrayFromFile } from "../../../indexing/ignore";
 import { renderChatMessage } from "../../../util/messageContent";
 import {

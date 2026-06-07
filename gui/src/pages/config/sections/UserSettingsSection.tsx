@@ -3,7 +3,7 @@ import {
   modifyAnyConfigWithSharedConfig,
 } from "core/config/sharedConfig";
 import { HubSessionInfo } from "core/control-plane/AuthTypes";
-import { isContinueTeamMember } from "core/util/isContinueTeamMember";
+import { isSmartAiTeamMember } from "core/util/isSmartAiTeamMember";
 import { useContext, useEffect, useState } from "react";
 import { Card, Toggle, useFontSize } from "../../../components/ui";
 import { useAuth } from "../../../context/Auth";
@@ -13,7 +13,7 @@ import { updateConfig } from "../../../redux/slices/configSlice";
 import { selectCurrentOrg } from "../../../redux/slices/profilesSlice";
 import { setLocalStorage } from "../../../util/localStorage";
 import { ConfigHeader } from "../components/ConfigHeader";
-import { ContinueFeaturesMenu } from "../components/ContinueFeaturesMenu";
+import { SmartAiFeaturesMenu } from "../components/SmartAiFeaturesMenu";
 import { UserSetting } from "../components/UserSetting";
 
 export function UserSettingsSection() {
@@ -97,7 +97,7 @@ export function UserSettingsSection() {
     });
   };
 
-  const hasContinueEmail = isContinueTeamMember(
+  const hasContinueEmail = isSmartAiTeamMember(
     (session as HubSessionInfo)?.account?.id,
   );
 
@@ -323,7 +323,7 @@ export function UserSettingsSection() {
                   />
 
                   {hasContinueEmail && (
-                    <ContinueFeaturesMenu
+                    <SmartAiFeaturesMenu
                       enableStaticContextualization={
                         enableStaticContextualization
                       }

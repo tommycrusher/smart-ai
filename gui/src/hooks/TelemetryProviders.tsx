@@ -11,7 +11,7 @@ import { PropsWithChildren, useEffect } from "react";
 import { useAuth } from "../context/Auth";
 import { useAppSelector } from "../redux/hooks";
 import { isPrerelease } from "../util/index";
-import { isContinueTeamMember } from "../util/isContinueTeamMember";
+import { isSmartAiTeamMember } from "../util/isSmartAiTeamMember";
 import { getLocalStorage } from "../util/localStorage";
 
 const SAMPLE_REATE = 0.1;
@@ -24,7 +24,7 @@ const TelemetryProviders = ({ children }: PropsWithChildren) => {
   const { session } = useAuth();
 
   // TODO: Remove Smart AI team member check once Sentry is ready for all users
-  const hasContinueEmail = isContinueTeamMember(
+  const hasContinueEmail = isSmartAiTeamMember(
     (session as HubSessionInfo)?.account?.id,
   );
 

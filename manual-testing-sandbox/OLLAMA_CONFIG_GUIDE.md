@@ -144,7 +144,7 @@ Smart AI ships with a set of default context providers that give it strong repo 
 | `diff` | `@Git Diff` | Current git diff (staged + unstaged) |
 | `terminal` | `@Terminal` | Last terminal command output |
 | `problems` | `@Problems` | Diagnostics / errors in the current file |
-| `rules` | `@Rules` | Custom rules from `.continuerules` files |
+| `rules` | `@Rules` | Custom rules from `.smartairules` files |
 | `docs` | `@Docs` | Indexed documentation (if configured) |
 
 These providers are enabled by default when using the Ollama template or when no explicit context configuration is provided.
@@ -227,7 +227,7 @@ rules:
     alwaysApply: true
 ```
 
-You can also create a `.continuerules` file at your project root. Smart AI will automatically load it as an always-active rule.
+You can also create a `.smartairules` file at your project root. Smart AI will automatically load it as an always-active rule.
 
 ### Reusable Slash Commands
 

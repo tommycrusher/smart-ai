@@ -10,7 +10,7 @@ jobs:
   run-cn-task:
     # Only run this workflow on the main repository (tommycrusher/smart-ai)
     if: github.repository == 'tommycrusher/smart-ai'
-    uses: ./.github/workflows/run-continue-agent.yml
+    uses: ./.github/workflows/run-smartai-agent.yml
     with:
       agent: continuedev/tidy-up-markdown-agent
       branch_name: main
