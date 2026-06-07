@@ -1,4 +1,4 @@
-# @continuedev/sdk
+# @smartai/sdk
 
 > **⚠️ EXPERIMENTAL: This package is in early development and subject to frequent breaking changes without notice.**
 
@@ -7,7 +7,7 @@ This SDK provides a drop-in replacement for OpenAI libraries to easily integrate
 ## Installation
 
 ```bash
-npm install @continuedev/sdk
+npm install @smartai/sdk
 ```
 
 ## Usage
@@ -15,7 +15,7 @@ npm install @continuedev/sdk
 The SDK provides a `Smart AI.from()` method that initializes an assistant and returns a client you can use as a drop-in replacement for the OpenAI SDK:
 
 ```typescript
-import { Smart AI } from "@continuedev/sdk";
+import { Smart AI } from "@smartai/sdk";
 
 // Initialize the Smart AI client with your API key and assistant
 const { client, assistant } = await Smart AI.from({
@@ -38,7 +38,7 @@ console.log(response.choices[0].message.content);
 You can also use the SDK without specifying an assistant to just get the Smart AI API client:
 
 ```typescript
-import { Smart AI } from "@continuedev/sdk";
+import { Smart AI } from "@smartai/sdk";
 
 // Initialize just the Smart AI API client
 const { api } = await Smart AI.from({

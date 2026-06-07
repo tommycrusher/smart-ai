@@ -21,7 +21,7 @@ irm https://raw.githubusercontent.com/tommycrusher/smart-ai/main/extensions/cli/
 Or install with npm if you have Node.js 20+:
 
 ```bash
-npm i -g @continuedev/cli
+npm i -g @smartai/cli
 ```
 
 ## Usage
