@@ -2,12 +2,12 @@ import { BaseSessionMetadata } from "core";
 import type { RemoteSessionMetadata } from "core/control-plane/client";
 import MiniSearch from "minisearch";
 import React, {
-  Fragment,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
+    Fragment,
+    useContext,
+    useEffect,
+    useMemo,
+    useRef,
+    useState,
 } from "react";
 import Shortcut from "../gui/Shortcut";
 
@@ -16,8 +16,8 @@ import { useNavigate } from "react-router-dom";
 import { IdeMessengerContext } from "../../context/IdeMessenger";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import {
-  newSession,
-  setAllSessionMetadata,
+    newSession,
+    setAllSessionMetadata,
 } from "../../redux/slices/sessionSlice";
 import { setDialogMessage, setShowDialog } from "../../redux/slices/uiSlice";
 import { refreshSessionMetadata } from "../../redux/thunks/session";
@@ -224,8 +224,8 @@ export function History() {
           Chat history is saved to{" "}
           <span className="italic">
             {platform === "windows"
-              ? "%USERPROFILE%/.continue"
-              : "~/.continue/sessions"}
+              ? "%USERPROFILE%/.smart-ai"
+              : "~/.smart-ai/sessions"}
           </span>
         </span>
       </div>
