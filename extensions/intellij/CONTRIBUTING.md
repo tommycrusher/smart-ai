@@ -87,7 +87,7 @@ Select the `Run Smart AI` task in the top right corner of the IDE and then selec
 > a
 > different environment that supports debugging, such as VS Code (Launch "Core Binary").
 
-![run-extension-screenshot](../../media/run-continue-intellij.png)
+![run-extension-screenshot](../../media/run-smartai-intellij.png)
 
 This should open a new instance on IntelliJ with the extension installed.
 
