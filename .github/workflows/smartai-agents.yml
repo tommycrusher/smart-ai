@@ -6,7 +6,7 @@ on:
       agents-path:
         description: 'Path to agents folder'
         required: false
-        default: '.continue/agents'
+        default: '.smart-ai/agents'
         type: string
     secrets:
       ANTHROPIC_API_KEY:
@@ -82,7 +82,7 @@ jobs:
             const { data: check } = await github.rest.checks.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              name: `Continue: ${process.env.AGENT_NAME}`,
+              name: `Smart AI: ${process.env.AGENT_NAME}`,
               head_sha: context.sha,
               status: 'in_progress',
               started_at: new Date().toISOString(),

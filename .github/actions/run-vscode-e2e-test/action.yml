@@ -104,11 +104,11 @@ runs:
       env:
         DISPLAY: :99
 
-    - name: Delete continue from test extensions
+    - name: Delete smartai from test extensions
       shell: bash
       run: |
         cd extensions/vscode
-        rm -rf e2e/.test-extensions/continue*
+        rm -rf e2e/.test-extensions/smartai*
 
     - name: Sanitize test file name
       id: sanitize_filename
