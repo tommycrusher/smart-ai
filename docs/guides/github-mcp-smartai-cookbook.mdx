@@ -245,7 +245,7 @@ Run headless commands on a schedule or in PRs to keep teams informed.
 
 Repository Settings → Secrets and variables → Actions:
 
-- `CONTINUE_API_KEY`: From [smart-ai.dev/settings/api-keys](https://smart-ai.dev/settings/api-keys)
+- `SMARTAI_API_KEY`: From [smart-ai.dev/settings/api-keys](https://smart-ai.dev/settings/api-keys)
 - `GITHUB_TOKEN`: A token with permissions to read issues/PRs and post comments
 
 ### Example Workflow
@@ -266,7 +266,7 @@ jobs:
   report:
     runs-on: ubuntu-latest
     env:
-      CONTINUE_API_KEY: ${{ secrets.CONTINUE_API_KEY }}
+      SMARTAI_API_KEY: ${{ secrets.SMARTAI_API_KEY }}
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - uses: actions/checkout@v4

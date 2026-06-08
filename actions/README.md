@@ -38,7 +38,7 @@ jobs:
     steps:
       - uses: tommycrusher/smart-ai/actions/general-review@main
         with:
-          continue-api-key: ${{ secrets.CONTINUE_API_KEY }}
+          continue-api-key: ${{ secrets.SMARTAI_API_KEY }}
           continue-org: "your-org-name"
           continue-config: "your-org-name/review-bot"
 ```
@@ -57,12 +57,12 @@ The action accepts the following inputs:
 
 ### 1. Smart AI API Key
 
-Add your Smart AI API key as a secret named `CONTINUE_API_KEY` in your repository:
+Add your Smart AI API key as a secret named `SMARTAI_API_KEY` in your repository:
 
 1. Go to your repository's Settings
 2. Navigate to Secrets and variables → Actions
 3. Click "New repository secret"
-4. Name: `CONTINUE_API_KEY`
+4. Name: `SMARTAI_API_KEY`
 5. Value: Your Smart AI API key
 
 ### 2. Smart AI Configuration

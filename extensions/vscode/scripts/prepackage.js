@@ -37,8 +37,8 @@ if (args[2] === "--target") {
 }
 if (!target) {
   const envTarget =
-    process.env.CONTINUE_VSCODE_TARGET ||
-    process.env.CONTINUE_BUILD_TARGET ||
+    process.env.SMARTAI_VSCODE_TARGET ||
+    process.env.SMARTAI_BUILD_TARGET ||
     process.env.VSCODE_TARGET;
   if (envTarget && typeof envTarget === "string") {
     target = envTarget.trim();

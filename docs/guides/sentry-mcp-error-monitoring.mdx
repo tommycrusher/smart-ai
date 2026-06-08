@@ -396,7 +396,7 @@ jobs:
 
       - name: Analyze Sentry Errors and Create Issues
         env:
-          CONTINUE_API_KEY: ${{ secrets.CONTINUE_API_KEY }}
+          SMARTAI_API_KEY: ${{ secrets.SMARTAI_API_KEY }}
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
           SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
@@ -445,7 +445,7 @@ jobs:
 
 <Warning>
   **Required GitHub Secrets**:
-  - `CONTINUE_API_KEY`: Your Smart AI API key from [smart-ai.dev/settings/api-keys](https://smart-ai.dev/settings/api-keys)
+  - `SMARTAI_API_KEY`: Your Smart AI API key from [smart-ai.dev/settings/api-keys](https://smart-ai.dev/settings/api-keys)
   - `SENTRY_AUTH_TOKEN`: Your Sentry User Auth Token (needs scopes: `org:read`, `project:read`, `project:releases`, `event:read`)
   - `SENTRY_ORG`: Your Sentry organization slug
   - `SENTRY_PROJECT`: Your Sentry project slug

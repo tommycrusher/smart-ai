@@ -369,7 +369,7 @@ jobs:
       - name: Analyze Changes for Documentation Needs
         id: analyze
         env:
-          CONTINUE_API_KEY: ${{ secrets.CONTINUE_API_KEY }}
+          SMARTAI_API_KEY: ${{ secrets.SMARTAI_API_KEY }}
         run: |
           echo "🔍 Analyzing code changes for documentation needs..."
 

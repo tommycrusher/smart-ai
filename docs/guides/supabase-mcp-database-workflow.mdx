@@ -383,7 +383,7 @@ jobs:
 
       - name: Analyze Database Security
         env:
-          CONTINUE_API_KEY: ${{ secrets.CONTINUE_API_KEY }}
+          SMARTAI_API_KEY: ${{ secrets.SMARTAI_API_KEY }}
         run: |
           echo "🔍 Performing security audit..."
           
@@ -428,7 +428,7 @@ jobs:
 
 <Warning>
   **Required GitHub Secrets**:
-  - `CONTINUE_API_KEY`: Your Smart AI API key from [smart-ai.dev/settings/api-keys](https://smart-ai.dev/settings/api-keys)
+  - `SMARTAI_API_KEY`: Your Smart AI API key from [smart-ai.dev/settings/api-keys](https://smart-ai.dev/settings/api-keys)
 
   Add this at: **Repository Settings → Secrets and variables → Actions**
 </Warning>

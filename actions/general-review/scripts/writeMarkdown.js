@@ -4,10 +4,10 @@ const path = require("path");
 const messages = {
   missing_api_key: `## Code Review Summary
 
-⚠️ AI review skipped: CONTINUE_API_KEY not configured.
+⚠️ AI review skipped: SMARTAI_API_KEY not configured.
 
 ### Configuration Required
-- Please set the CONTINUE_API_KEY secret in repository settings
+- Please set the SMARTAI_API_KEY secret in repository settings
 - Verify that the organization and config path are valid
 `,
   cli_install_failed: `## Code Review Summary
@@ -32,14 +32,14 @@ const messages = {
 `,
   auth_error: `## Code Review Summary
 
-⚠️ Smart AI API authentication failed. Please check your CONTINUE_API_KEY.
+⚠️ Smart AI API authentication failed. Please check your SMARTAI_API_KEY.
 `,
   generic_failure: `## Code Review Summary
 
 ⚠️ AI review failed. Please check the Smart AI API key and configuration.
 
 ### Troubleshooting
-- Verify the CONTINUE_API_KEY secret is set correctly
+- Verify the SMARTAI_API_KEY secret is set correctly
 - Check that the organization and config path are valid
 - Ensure the Smart AI service is accessible
 `,

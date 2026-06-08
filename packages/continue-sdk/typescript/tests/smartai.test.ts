@@ -11,10 +11,10 @@ dotenv.config();
  * The primary use case for now is to aid in local iteration on the SDK.
  */
 test.skip("should make a real API call to the Smart AI service", async () => {
-  const apiKey = process.env.CONTINUE_API_KEY;
+  const apiKey = process.env.SMARTAI_API_KEY;
 
   if (!apiKey) {
-    throw new Error("CONTINUE_API_KEY not found in environment variables");
+    throw new Error("SMARTAI_API_KEY not found in environment variables");
   }
 
   /*

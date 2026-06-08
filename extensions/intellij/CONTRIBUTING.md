@@ -158,7 +158,7 @@ A handful of the most relevant tasks are outlined below:
 ```shell
 build - Assembles and tests this project.
 clean - Deletes the build directory.
-dependencies - Displays all dependencies declared in root project 'continue-intellij-extension'
+dependencies - Displays all dependencies declared in root project 'smartai-intellij-extension'
 runIde - Runs the IDE instance with the developed plugin installed.
 verifyPluginConfiguration - Checks if Java and Kotlin compilers configuration meet IntelliJ SDK requirements
 ```

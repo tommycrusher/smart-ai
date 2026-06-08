@@ -8,20 +8,20 @@ import {
   type SmokeTestContext,
 } from "./smoke-api-helpers.js";
 
-const CONTINUE_API_KEY = process.env.CONTINUE_API_KEY;
+const SMARTAI_API_KEY = process.env.SMARTAI_API_KEY;
 // smartai-proxy requires a 4-part model name (owner/package/provider/model)
 // that depends on org-specific proxy configuration, so we also require
 // SMOKE_PROXY_MODEL to be set (e.g. "continuedev/default/anthropic/claude-3-haiku-20240307")
 const SMOKE_PROXY_MODEL = process.env.SMOKE_PROXY_MODEL;
 
-describe.skipIf(!CONTINUE_API_KEY || !SMOKE_PROXY_MODEL)(
+describe.skipIf(!SMARTAI_API_KEY || !SMOKE_PROXY_MODEL)(
   "Smoke: Headless → real Smart AI proxy",
   () => {
     let ctx: SmokeTestContext;
 
     beforeEach(async () => {
       ctx = await createSmokeContext();
-      await writeContinueProxyConfig(ctx, CONTINUE_API_KEY!);
+      await writeContinueProxyConfig(ctx, SMARTAI_API_KEY!);
     });
 
     afterEach(async () => {

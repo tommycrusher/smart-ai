@@ -119,10 +119,10 @@ export function getLocalConfigPath(config: AuthConfig): string | null {
  * Loads the authentication configuration from disk
  */
 export function loadAuthConfig(): AuthConfig {
-  // If CONTINUE_API_KEY environment variable exists, use that instead
-  if (process.env.CONTINUE_API_KEY) {
+  // If SMARTAI_API_KEY environment variable exists, use that instead
+  if (process.env.SMARTAI_API_KEY) {
     return {
-      accessToken: process.env.CONTINUE_API_KEY,
+      accessToken: process.env.SMARTAI_API_KEY,
       organizationId: null,
     };
   }
@@ -166,8 +166,8 @@ export function loadAuthConfig(): AuthConfig {
  * Saves the authentication configuration to disk
  */
 export function saveAuthConfig(config: AuthenticatedConfig): void {
-  // If using CONTINUE_API_KEY environment variable, don't save anything
-  if (process.env.CONTINUE_API_KEY) {
+  // If using SMARTAI_API_KEY environment variable, don't save anything
+  if (process.env.SMARTAI_API_KEY) {
     return;
   }
 
@@ -189,8 +189,8 @@ export function saveAuthConfig(config: AuthenticatedConfig): void {
  * Updates the config URI in the authentication configuration
  */
 export function updateConfigUri(configUri: string | null): void {
-  // If using CONTINUE_API_KEY environment variable, don't save anything
-  if (process.env.CONTINUE_API_KEY) {
+  // If using SMARTAI_API_KEY environment variable, don't save anything
+  if (process.env.SMARTAI_API_KEY) {
     return;
   }
 
@@ -210,8 +210,8 @@ export function updateConfigUri(configUri: string | null): void {
  * For unauthenticated users, saves to GlobalContext
  */
 export function updateModelName(modelName: string | null): AuthConfig {
-  // If using CONTINUE_API_KEY environment variable, don't save anything
-  if (process.env.CONTINUE_API_KEY) {
+  // If using SMARTAI_API_KEY environment variable, don't save anything
+  if (process.env.SMARTAI_API_KEY) {
     return loadAuthConfig();
   }
 
@@ -466,13 +466,13 @@ async function refreshToken(
  * Authenticates using the WorkOS device flow
  */
 export async function login(): Promise<AuthConfig> {
-  // If CONTINUE_API_KEY environment variable exists, use that instead
-  if (process.env.CONTINUE_API_KEY) {
+  // If SMARTAI_API_KEY environment variable exists, use that instead
+  if (process.env.SMARTAI_API_KEY) {
     console.info(
-      chalk.green("Using CONTINUE_API_KEY from environment variables"),
+      chalk.green("Using SMARTAI_API_KEY from environment variables"),
     );
     return {
-      accessToken: process.env.CONTINUE_API_KEY,
+      accessToken: process.env.SMARTAI_API_KEY,
       organizationId: null,
     };
   }
@@ -631,7 +631,7 @@ export async function listUserOrganizations(): Promise<
 > {
   const authConfig = loadAuthConfig();
 
-  // If using CONTINUE_API_KEY environment variable, organization switching is not supported
+  // If using SMARTAI_API_KEY environment variable, organization switching is not supported
   if (isEnvironmentAuthConfig(authConfig)) {
     return null;
   }
@@ -679,10 +679,10 @@ export function logout(): void {
     fs.unlinkSync(onboardingFlagPath);
   }
 
-  if (process.env.CONTINUE_API_KEY) {
+  if (process.env.SMARTAI_API_KEY) {
     console.info(
       chalk.yellow(
-        "Using CONTINUE_API_KEY from environment variables, nothing to log out",
+        "Using SMARTAI_API_KEY from environment variables, nothing to log out",
       ),
     );
     return;

@@ -19,7 +19,7 @@ import { Smart AI } from "@smartai/sdk";
 
 // Initialize the Smart AI client with your API key and assistant
 const { client, assistant } = await Smart AI.from({
-  apiKey: process.env.CONTINUE_API_KEY,
+  apiKey: process.env.SMARTAI_API_KEY,
   assistant: "owner-slug/assistant-slug", // The assistant identifier
 });
 
@@ -42,7 +42,7 @@ import { Smart AI } from "@smartai/sdk";
 
 // Initialize just the Smart AI API client
 const { api } = await Smart AI.from({
-  apiKey: process.env.CONTINUE_API_KEY,
+  apiKey: process.env.SMARTAI_API_KEY,
 });
 
 // Make calls to the Smart AI API

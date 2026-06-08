@@ -57,10 +57,10 @@ This process utilizes the **Smart AI CLI** (`cn`) in **headless mode** to analyz
   <Card title="Smart AI API Key" icon="key">
     Get your API key from [Smart AI Mission Control](https://smart-ai.dev/settings/api-keys) and set:
     ```bash
-    export CONTINUE_API_KEY=your_key_here
+    export SMARTAI_API_KEY=your_key_here
     ```
     <Info>
-    You can use the Smart AI CLI in headless mode without interactive login by setting the `CONTINUE_API_KEY` environment variable.
+    You can use the Smart AI CLI in headless mode without interactive login by setting the `SMARTAI_API_KEY` environment variable.
     </Info>
   </Card>
 
@@ -155,7 +155,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Write Documentation for Branch
     env:
-      CONTINUE_API_KEY: ${{ secrets.CONTINUE_API_KEY }}
+      SMARTAI_API_KEY: ${{ secrets.SMARTAI_API_KEY }}
       CONTINUE_ORG: ${{ github.event.inputs.continue_org }}
       CONTINUE_CONFIG: ${{ github.event.inputs.continue_config }}
 
@@ -249,7 +249,7 @@ jobs:
 ### Local Development Implementation
 
 <Warning>
-Make sure to set your `CONTINUE_API_KEY` environment variable before running local scripts to enable headless mode.
+Make sure to set your `SMARTAI_API_KEY` environment variable before running local scripts to enable headless mode.
 </Warning>
 
 When using the Smart AI CLI on your local machine, you can build workflows in various ways, one of which is by simply creating shell scripts that you can run, which call the CLI.

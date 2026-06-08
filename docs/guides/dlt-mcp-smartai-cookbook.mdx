@@ -264,7 +264,7 @@ Show me what columns were added or modified.
 
 Navigate to **Repository Settings → Secrets and variables → Actions** and add:
 
-- `CONTINUE_API_KEY`: Your Smart AI API key from [smart-ai.dev/settings/api-keys](https://smart-ai.dev/settings/api-keys)
+- `SMARTAI_API_KEY`: Your Smart AI API key from [smart-ai.dev/settings/api-keys](https://smart-ai.dev/settings/api-keys)
 - Any required database credentials for your destination
 
 <Info>
@@ -289,7 +289,7 @@ jobs:
   validate-pipeline:
     runs-on: ubuntu-latest
     env:
-      CONTINUE_API_KEY: ${{ secrets.CONTINUE_API_KEY }}
+      SMARTAI_API_KEY: ${{ secrets.SMARTAI_API_KEY }}
 
     steps:
       - uses: actions/checkout@v4
