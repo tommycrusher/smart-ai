@@ -5,7 +5,7 @@ import * as vscode from "vscode";
 import { QuickEditShowParams } from "../../../quickEdit/QuickEditQuickPick";
 import { isTutorialFile } from "../../../util/tutorial";
 import {
-  CONTINUE_WORKSPACE_KEY,
+  SMARTAI_WORKSPACE_KEY,
   getContinueWorkspaceConfig,
 } from "../../../util/workspaceConfig";
 
@@ -17,7 +17,7 @@ export function getQuickActionsConfig(config: ContinueConfig) {
 
 export function subscribeToVSCodeQuickActionsSettings(listener: Function) {
   vscode.workspace.onDidChangeConfiguration((e) => {
-    const configKey = `${CONTINUE_WORKSPACE_KEY}.${ENABLE_QUICK_ACTIONS_KEY}`;
+    const configKey = `${SMARTAI_WORKSPACE_KEY}.${ENABLE_QUICK_ACTIONS_KEY}`;
 
     if (e.affectsConfiguration(configKey)) {
       Telemetry.capture("VSCode Quick Actions Settings Changed", {

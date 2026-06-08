@@ -6,7 +6,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 export const env = {
-  apiBase: process.env.CONTINUE_API_BASE ?? "https://api.smart-ai.dev/",
+  apiBase: process.env.SMARTAI_API_BASE ?? "https://api.smart-ai.dev/",
   workOsClientId:
     process.env.WORKOS_CLIENT_ID ?? "client_01J0FW6XN8N2XJAECF7NE0Y65J",
   appUrl: process.env.HUB_URL || "https://smart-ai.dev",

@@ -19,8 +19,8 @@ The Smart AI CLI should emit metrics that provide insights into:
 
 | Environment Variable            | Description                                                     | Example Values                       |
 | ------------------------------- | --------------------------------------------------------------- | ------------------------------------ |
-| `CONTINUE_METRICS_ENABLED`      | Enables OTEL telemetry collection (preferred, takes precedence) | `0` to disable, `1` to enable        |
-| `CONTINUE_CLI_ENABLE_TELEMETRY` | Enables OTEL telemetry collection (legacy, lower precedence)    | `0` to disable, `1` to enable        |
+| `SMARTAI_METRICS_ENABLED`      | Enables OTEL telemetry collection (preferred, takes precedence) | `0` to disable, `1` to enable        |
+| `SMARTAI_CLI_ENABLE_TELEMETRY` | Enables OTEL telemetry collection (legacy, lower precedence)    | `0` to disable, `1` to enable        |
 | `OTEL_METRICS_EXPORTER`         | Metrics exporter type(s) (comma-separated)                      | `console`, `otlp`, `prometheus`      |
 | `OTEL_LOGS_EXPORTER`            | Logs/events exporter type(s) (comma-separated)                  | `console`, `otlp`                    |
 | `OTEL_EXPORTER_OTLP_PROTOCOL`   | Protocol for OTLP exporter (all signals)                        | `grpc`, `http/json`, `http/protobuf` |

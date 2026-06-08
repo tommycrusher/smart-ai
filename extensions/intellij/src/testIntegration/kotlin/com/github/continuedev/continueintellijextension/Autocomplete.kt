@@ -20,7 +20,7 @@ class Autocomplete {
     @Test
     fun testAutocomplete() {
         val starter = Starter.newContext("testExample", TestCase(IdeProductProvider.IC, NoProject).withVersion("2024.3"))
-        PluginConfigurator(starter).installPluginFromFolder(File(System.getProperty("CONTINUE_PLUGIN_DIR")))
+        PluginConfigurator(starter).installPluginFromFolder(File(System.getProperty("SMARTAI_PLUGIN_DIR")))
         starter.runIdeWithDriver().useDriverAndCloseIde {
             welcomeScreen {
                 createNewProjectButton.click()

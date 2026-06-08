@@ -125,7 +125,7 @@ export class VsCodeExtension {
       nextEditEnabled &&
       !modelSupportsNext &&
       !isNextEditTest() &&
-      process.env.CONTINUE_E2E_NON_NEXT_EDIT_TEST === "true"
+      process.env.SMARTAI_E2E_NON_NEXT_EDIT_TEST === "true"
     ) {
       vscode.window
         .showWarningMessage(

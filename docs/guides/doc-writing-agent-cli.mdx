@@ -156,8 +156,8 @@ jobs:
     name: Write Documentation for Branch
     env:
       SMARTAI_API_KEY: ${{ secrets.SMARTAI_API_KEY }}
-      CONTINUE_ORG: ${{ github.event.inputs.continue_org }}
-      CONTINUE_CONFIG: ${{ github.event.inputs.continue_config }}
+      SMARTAI_ORG: ${{ github.event.inputs.continue_org }}
+      SMARTAI_CONFIG: ${{ github.event.inputs.continue_config }}
 
     steps:
 
@@ -257,8 +257,8 @@ When using the Smart AI CLI on your local machine, you can build workflows in va
 The below shell script snippet shows the final part of a docs updating shell script that can be used to generate documentation for the code changes in a branch of a git repository.
 
 For the example snippet below to work you will need to set the following variables:
-- `CONTINUE_ORG`
-- `CONTINUE_CONFIG`
+- `SMARTAI_ORG`
+- `SMARTAI_CONFIG`
 - `BASE_BRANCH`
 - `COMPARE_BRANCH`
 - `DOCS_BRANCH_NAME`
@@ -285,7 +285,7 @@ git checkout -b "$DOCS_BRANCH_NAME"
 
 # Generate documentation with Smart AI CLI
 echo "Running Smart AI agent to generate documentation..."
-cn -config "$CONTINUE_ORG/$CONTINUE_CONFIG" \
+cn -config "$SMARTAI_ORG/$SMARTAI_CONFIG" \
    --auto \
    --allow Write \
    -p \

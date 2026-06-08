@@ -80,7 +80,7 @@ cn ls --json
 
 ## Environment Variables
 
-- `CONTINUE_CLI_DISABLE_COMMIT_SIGNATURE`: Disable adding the Smart AI commit signature to generated commit messages
+- `SMARTAI_CLI_DISABLE_COMMIT_SIGNATURE`: Disable adding the Smart AI commit signature to generated commit messages
 - `FORCE_NO_TTY`: Force TTY-less mode, prevents stdin reading (useful for testing and automation)
 
 ## Commands

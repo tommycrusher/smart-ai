@@ -207,7 +207,7 @@ results.forEach((result) => {
 The CLI requires these environment variables for artifact uploads:
 
 - `SMARTAI_API_KEY`: Bearer token for backend authentication
-- `CONTINUE_API_BASE`: API base URL (defaults to `https://api.smart-ai.dev/`)
+- `SMARTAI_API_BASE`: API base URL (defaults to `https://api.smart-ai.dev/`)
 - `AGENT_SESSION_ID`: The current agent session identifier
 
 These are automatically provided when running in Smart AI's devbox environment.

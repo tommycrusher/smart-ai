@@ -2,7 +2,7 @@ import { Box, Text } from "ink";
 import React, { useMemo } from "react";
 
 // Array of helpful tips for Smart AI CLI users
-const CONTINUE_CLI_TIPS = [
+const SMARTAI_CLI_TIPS = [
   "Use `/help` to learn keyboard shortcuts",
   "Press escape to pause cn, and press enter to continue",
   "Use arrow keys (↑/↓) to navigate through your input history",
@@ -17,14 +17,14 @@ interface TipsDisplayProps {
 }
 
 /**
- * Randomly selects and displays a tip from the CONTINUE_CLI_TIPS array.
+ * Randomly selects and displays a tip from the SMARTAI_CLI_TIPS array.
  * Should only be shown 1 in 5 times (20% chance).
  */
 const TipsDisplay: React.FC<TipsDisplayProps> = () => {
   // Randomly select a tip, memoized to prevent changing on re-renders
   const randomTip = useMemo(
     () =>
-      CONTINUE_CLI_TIPS[Math.floor(Math.random() * CONTINUE_CLI_TIPS.length)],
+      SMARTAI_CLI_TIPS[Math.floor(Math.random() * SMARTAI_CLI_TIPS.length)],
     [],
   );
 
@@ -49,4 +49,4 @@ export function shouldShowTip(): boolean {
   return Math.random() < 0.2; // 20% chance (1 in 5)
 }
 
-export { CONTINUE_CLI_TIPS, TipsDisplay };
+export { SMARTAI_CLI_TIPS, TipsDisplay };

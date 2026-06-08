@@ -5,7 +5,7 @@ import * as vscode from "vscode";
 import { Battery } from "../util/battery";
 import { getMetaKeyLabel } from "../util/util";
 import {
-  CONTINUE_WORKSPACE_KEY,
+  SMARTAI_WORKSPACE_KEY,
   getContinueWorkspaceConfig,
 } from "../util/workspaceConfig";
 
@@ -159,7 +159,7 @@ export function setupStatusBar(
   if (!configListenerRegistered) {
     configListenerRegistered = true;
     vscode.workspace.onDidChangeConfiguration((event) => {
-      if (event.affectsConfiguration(CONTINUE_WORKSPACE_KEY)) {
+      if (event.affectsConfiguration(SMARTAI_WORKSPACE_KEY)) {
         const enabled = getContinueWorkspaceConfig().get<boolean>(
           "enableTabAutocomplete",
         );

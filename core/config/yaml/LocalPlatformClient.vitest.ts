@@ -22,7 +22,7 @@ describe("LocalPlatformClient", () => {
         packageSlug: "test-package-slug",
       },
     ],
-    secretName: "TEST_CONTINUE_SECRET_KEY",
+    secretName: "TEST_SMARTAI_SECRET_KEY",
   };
   const testFQSN2: FQSN = {
     packageSlugs: [
@@ -63,7 +63,7 @@ describe("LocalPlatformClient", () => {
     () => {
       secretValue = Math.floor(Math.random() * 100) + "";
       envKeyValues = {
-        TEST_CONTINUE_SECRET_KEY: secretValue,
+        TEST_SMARTAI_SECRET_KEY: secretValue,
         TEST_WORKSPACE_SECRET_KEY: secretValue + "-workspace",
       };
       envKeyValuesString = Object.entries(envKeyValues)

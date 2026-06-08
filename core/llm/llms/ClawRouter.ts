@@ -4,7 +4,7 @@ import { osModelsEditPrompt } from "../templates/edit.js";
 import OpenAI from "./OpenAI.js";
 
 // Get Smart AI version from package.json at build time
-const CONTINUE_VERSION = process.env.npm_package_version || "unknown";
+const SMARTAI_VERSION = process.env.npm_package_version || "unknown";
 
 /**
  * ClawRouter LLM Provider
@@ -44,7 +44,7 @@ class ClawRouter extends OpenAI {
   protected _getHeaders() {
     return {
       ...super._getHeaders(),
-      "User-Agent": `Smart AI/${CONTINUE_VERSION}`,
+      "User-Agent": `Smart AI/${SMARTAI_VERSION}`,
       "X-Smart AI-Provider": "clawrouter",
     };
   }

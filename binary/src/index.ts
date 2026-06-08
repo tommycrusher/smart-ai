@@ -19,7 +19,7 @@ const program = new Command();
 program.action(async () => {
   try {
     let messenger: IMessenger<ToCoreProtocol, FromCoreProtocol>;
-    if (process.env.CONTINUE_DEVELOPMENT === "true") {
+    if (process.env.SMARTAI_DEVELOPMENT === "true") {
       messenger = new TcpMessenger<ToCoreProtocol, FromCoreProtocol>();
       console.log("[binary] Waiting for connection");
       await (

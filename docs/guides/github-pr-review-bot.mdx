@@ -348,15 +348,15 @@ The workflow will respond with a targeted review based on your request.
   - name: Run Smart AI Review
     env:
       SMARTAI_API_KEY: ${{ secrets.SMARTAI_API_KEY }}
-      CONTINUE_ORG: your-org-name      # Add your org
-      CONTINUE_CONFIG: username/config-name  # Add your config
+      SMARTAI_ORG: your-org-name      # Add your org
+      SMARTAI_CONFIG: username/config-name  # Add your config
     run: |
-      cn --config $CONTINUE_ORG/$CONTINUE_CONFIG \
+      cn --config $SMARTAI_ORG/$SMARTAI_CONFIG \
         -p "$PROMPT" \
         --auto > review_output.md
   ```
 
-  Store `CONTINUE_ORG` and `CONTINUE_CONFIG` as repository variables for easy updates.
+  Store `SMARTAI_ORG` and `SMARTAI_CONFIG` as repository variables for easy updates.
 </Tab>
 <Tab title="Filter by File Types">
 

@@ -40,7 +40,7 @@ export interface ExtendedSessionMetadata extends BaseSessionMetadata {
  */
 function getSessionDir(): string {
   // For tests, use the test directory if we're in test mode
-  if (process.env.CONTINUE_CLI_TEST && process.env.HOME) {
+  if (process.env.SMARTAI_CLI_TEST && process.env.HOME) {
     const sessionDir = path.join(process.env.HOME, ".continue", "sessions");
 
     // Create directory if it doesn't exist
@@ -99,8 +99,8 @@ class SessionManager {
   getCurrentSession(): Session {
     if (!this.currentSession) {
       // Use test session ID for testing consistency
-      const sessionId = process.env.CONTINUE_CLI_TEST_SESSION_ID
-        ? process.env.CONTINUE_CLI_TEST_SESSION_ID
+      const sessionId = process.env.SMARTAI_CLI_TEST_SESSION_ID
+        ? process.env.SMARTAI_CLI_TEST_SESSION_ID
         : uuidv4();
 
       this.currentSession = {

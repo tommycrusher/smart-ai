@@ -8,7 +8,7 @@ export interface MdmKeys {
   licenseKey: string;
 }
 
-const CONTINUE_PUBLIC_KEY = `-----BEGIN PUBLIC KEY-----
+const SMARTAI_PUBLIC_KEY = `-----BEGIN PUBLIC KEY-----
 MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAz1pFVzsW2UScSnaPAwFp
 93QU4+txtyJj8AOC3Kx7YkX1d48DGU2Fy1he7SXPHgcuhXYIqfWGn/Vy/4yJxXD7
 HlU8RM7LlWHRk7ecAvF4WtxZDjPE0OSG5T69w5f7tMCtQPQseInCKqleJuCjxrvA
@@ -48,7 +48,7 @@ export function validateLicenseKey(licenseKey: string): {
     verify.update(data);
     verify.end();
 
-    const isValid = verify.verify(CONTINUE_PUBLIC_KEY, signature, "base64");
+    const isValid = verify.verify(SMARTAI_PUBLIC_KEY, signature, "base64");
 
     if (!isValid) return { isValid: false };
 

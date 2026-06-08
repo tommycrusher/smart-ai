@@ -65,7 +65,7 @@ class VerticalDiffBlockTest : BasePlatformTestCase() {
         assertTrue("Expected at least one highlighter on the new line", highlighters.isNotEmpty())
 
         // Check the attributes of the highlighter
-        val expectedTextAttributesKey = TextAttributesKey.find("CONTINUE_DIFF_NEW_LINE")
+        val expectedTextAttributesKey = TextAttributesKey.find("SMARTAI_DIFF_NEW_LINE")
         val expectedAttributes = EditorColorsManager.getInstance().globalScheme.getAttributes(expectedTextAttributesKey)
         val highlighterAttributes = highlighters.first().textAttributes
 

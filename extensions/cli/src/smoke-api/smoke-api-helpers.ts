@@ -123,7 +123,7 @@ export async function runHeadless(
     cwd: ctx.testDir,
     env: {
       ...process.env,
-      CONTINUE_CLI_TEST: "true",
+      SMARTAI_CLI_TEST: "true",
       HOME: ctx.testDir,
       USERPROFILE: ctx.testDir,
       FORCE_NO_TTY: "true",
@@ -153,7 +153,7 @@ export function spawnServe(
     cwd: ctx.testDir,
     env: {
       ...process.env,
-      CONTINUE_CLI_TEST: "true",
+      SMARTAI_CLI_TEST: "true",
       HOME: ctx.testDir,
       USERPROFILE: ctx.testDir,
       ...opts.env,

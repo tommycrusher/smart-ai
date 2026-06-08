@@ -828,14 +828,14 @@ describeUnix("hookRunner", () => {
   });
 
   describe("runHooks - environment variables", () => {
-    it("sets CONTINUE_PROJECT_DIR and CLAUDE_PROJECT_DIR env vars", async () => {
+    it("sets SMARTAI_PROJECT_DIR and CLAUDE_PROJECT_DIR env vars", async () => {
       const config: HooksConfig = {
         PreToolUse: [
           {
             hooks: [
               {
                 type: "command",
-                command: 'echo "$CONTINUE_PROJECT_DIR|$CLAUDE_PROJECT_DIR"',
+                command: 'echo "$SMARTAI_PROJECT_DIR|$CLAUDE_PROJECT_DIR"',
               },
             ],
           },

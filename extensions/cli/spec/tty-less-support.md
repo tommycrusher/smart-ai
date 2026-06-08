@@ -137,7 +137,7 @@ cn -p "Generate commit message for current changes" --silent
 ## Environment Variables
 
 - `FORCE_NO_TTY`: Forces TTY-less mode, prevents stdin reading
-- `CONTINUE_CLI_TEST`: Marks test environment, prevents stdin reading
+- `SMARTAI_CLI_TEST`: Marks test environment, prevents stdin reading
 
 ## Testing
 

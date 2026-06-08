@@ -265,8 +265,8 @@ runs:
       shell: bash
       env:
         SMARTAI_API_KEY: ${{ inputs.continue-api-key }}
-        CONTINUE_ORG: ${{ inputs.continue-org }}
-        CONTINUE_AGENT: ${{ inputs.continue-agent }}
+        SMARTAI_ORG: ${{ inputs.continue-org }}
+        SMARTAI_AGENT: ${{ inputs.continue-agent }}
         GITHUB_TOKEN: ${{ github.token }}
       run: |
         echo "Running Continue CLI with prompt:"
@@ -287,12 +287,12 @@ runs:
         fi
 
         # Validate inputs to prevent command injection
-        if [[ ! "$CONTINUE_ORG" =~ ^[a-zA-Z0-9_-]+$ ]]; then
+        if [[ ! "$SMARTAI_ORG" =~ ^[a-zA-Z0-9_-]+$ ]]; then
           echo "Error: Invalid organization name. Must contain only alphanumeric characters, hyphens, and underscores."
           exit 1
         fi
 
-        if [[ ! "$CONTINUE_AGENT" =~ ^[a-zA-Z0-9_/-]+$ ]]; then
+        if [[ ! "$SMARTAI_AGENT" =~ ^[a-zA-Z0-9_/-]+$ ]]; then
           echo "Error: Invalid config path. Must contain only alphanumeric characters, hyphens, underscores, and forward slashes."
           exit 1
         fi
@@ -312,7 +312,7 @@ runs:
 
         # Run the CLI with validated config and error handling
         if [ "$SKIP_CLI" != "true" ]; then
-          echo "Executing Continue CLI with config: $CONTINUE_ORG/$CONTINUE_AGENT"
+          echo "Executing Continue CLI with config: $SMARTAI_ORG/$SMARTAI_AGENT"
           
           # Write prompt to temp file for headless mode
           PROMPT_FILE="/tmp/continue-review-$RANDOM.txt"
@@ -321,9 +321,9 @@ runs:
           echo "Prompt length: $(wc -c < "$PROMPT_FILE") characters"
           
           # Use timeout to prevent hanging (360 seconds = 6 minutes)
-          echo "Executing command: cn --agent $CONTINUE_ORG/$CONTINUE_AGENT -p @$PROMPT_FILE --allow Bash"
+          echo "Executing command: cn --agent $SMARTAI_ORG/$SMARTAI_AGENT -p @$PROMPT_FILE --allow Bash"
           
-          if timeout 360 cn --agent "$CONTINUE_ORG/$CONTINUE_AGENT" -p "@$PROMPT_FILE" --allow Bash > code_review_raw.md 2>cli_error.log; then
+          if timeout 360 cn --agent "$SMARTAI_ORG/$SMARTAI_AGENT" -p "@$PROMPT_FILE" --allow Bash > code_review_raw.md 2>cli_error.log; then
             echo "Continue CLI completed successfully"
             echo "Raw output length: $(wc -c < code_review_raw.md) characters"
             
