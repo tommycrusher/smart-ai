@@ -53,7 +53,7 @@
   "activationEvents": [
     "onUri",
     "onStartupFinished",
-    "onView:continueGUIView"
+    "onView:smartai.continueGUIView"
   ],
   "main": "./out/extension.js",
   "contributes": {
@@ -551,13 +551,13 @@
         "command": "smartai.quickEditHistoryUp",
         "mac": "up",
         "key": "up",
-        "when": "false && continue.quickEditHistoryFocused"
+        "when": "false && smartai.quickEditHistoryFocused"
       },
       {
         "command": "smartai.quickEditHistoryDown",
         "mac": "down",
         "key": "down",
-        "when": "false && continue.quickEditHistoryFocused"
+        "when": "false && smartai.quickEditHistoryFocused"
       },
       {
         "command": "smartai.acceptVerticalDiffBlock",
@@ -618,28 +618,28 @@
       {
         "command": "smartai.nextEditWindow.hideNextEditSuggestion",
         "key": "escape",
-        "when": "editorTextFocus && nextEditWindowActive && !continue.jumpDecorationVisible"
+        "when": "editorTextFocus && nextEditWindowActive && !smartai.jumpDecorationVisible"
       },
       {
         "command": "smartai.nextEditWindow.acceptNextEditSuggestion",
         "key": "tab",
-        "when": "editorTextFocus && nextEditWindowActive && !continue.jumpDecorationVisible"
+        "when": "editorTextFocus && nextEditWindowActive && !smartai.jumpDecorationVisible"
       },
       {
         "command": "smartai.acceptJump",
         "key": "tab",
-        "when": "editorTextFocus && continue.jumpDecorationVisible"
+        "when": "editorTextFocus && smartai.jumpDecorationVisible"
       },
       {
         "command": "smartai.rejectJump",
         "key": "escape",
-        "when": "editorTextFocus && continue.jumpDecorationVisible"
+        "when": "editorTextFocus && smartai.jumpDecorationVisible"
       }
     ],
     "submenus": [
       {
         "id": "smartai.continueSubMenu",
-        "label": "Continue"
+        "label": "Smart AI"
       }
     ],
     "menus": {
@@ -743,12 +743,12 @@
         {
           "command": "smartai.newSession",
           "group": "navigation@1",
-          "when": "activeWebviewPanelId == continue.continueGUIView"
+          "when": "activeWebviewPanelId == smartai.continueGUIView"
         },
         {
           "command": "smartai.viewHistory",
           "group": "navigation@2",
-          "when": "activeWebviewPanelId == continue.continueGUIView"
+          "when": "activeWebviewPanelId == smartai.continueGUIView"
         }
       ],
       "terminal/context": [
@@ -761,37 +761,37 @@
     "viewsContainers": {
       "activitybar": [
         {
-          "id": "continue",
+          "id": "smartai",
           "title": "Smart AI",
           "icon": "media/sidebar-icon.png"
         }
       ],
       "panel": [
         {
-          "id": "continueConsole",
+          "id": "smartaiConsole",
           "title": "Smart AI Console",
           "icon": "$(window)"
         }
       ]
     },
     "views": {
-      "continue": [
+      "smartai": [
         {
           "type": "webview",
           "id": "smartai.continueGUIView",
-          "name": "Continue",
+          "name": "Smart AI",
           "icon": "media/sidebar-icon.png",
           "visibility": "visible"
         }
       ],
-      "continueConsole": [
+      "smartaiConsole": [
         {
           "type": "webview",
           "id": "smartai.continueConsoleView",
           "name": "Smart AI Console",
           "icon": "$(window)",
           "visibility": "visible",
-          "when": "config.continue.enableConsole"
+          "when": "config.smartai.enableConsole"
         }
       ]
     },
