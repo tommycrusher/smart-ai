@@ -1,12 +1,10 @@
 name: PR Checks
 
 # PR Checks run on all PRs to the main branch and must pass before merging.
+# Note: push trigger disabled to avoid CI noise on every direct push to main.
+#       Reactivate if you want CI on every merge.
 on:
   pull_request:
-    branches:
-      - main
-
-  push:
     branches:
       - main
 
