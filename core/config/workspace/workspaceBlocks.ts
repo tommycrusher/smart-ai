@@ -7,6 +7,7 @@ import {
 } from "@smartai/config-yaml";
 import * as YAML from "yaml";
 import { IDE } from "../..";
+import { getSmartAiGlobalPath } from "../../util/paths";
 import { localPathToUri } from "../../util/pathToUri";
 import { joinPathsToUri } from "../../util/uri";
 

@@ -7,7 +7,7 @@ import {
 } from ".";
 import { IDE } from "..";
 import { walkDir } from "../indexing/walkDir";
-import { readAllGlobalPromptFiles } from "../util/paths";
+import { getSmartAiGlobalPath, readAllGlobalPromptFiles } from "../util/paths";
 import { joinPathsToUri } from "../util/uri";
 
 export async function getPromptFilesFromDir(

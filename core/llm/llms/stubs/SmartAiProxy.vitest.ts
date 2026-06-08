@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, test, vi } from "vitest";
 import { ILLM } from "../../../index.js";
-import SmartAiProxy from "./ContinueProxy.js";
+import SmartAiProxy from "./SmartAiProxy.js";
 
 vi.mock("@smartai/config-yaml", async (importOriginal) => {
   const mod = (await importOriginal()) as any;

@@ -10,7 +10,8 @@ import { InProcessMessenger } from "core/protocol/messenger";
 import {
     getConfigJsonPath,
     getConfigTsPath,
-    getConfigYamlPath
+    getConfigYamlPath,
+    getSmartAiGlobalPath,
 } from "core/util/paths";
 import { v4 as uuidv4 } from "uuid";
 import * as vscode from "vscode";
@@ -22,13 +23,13 @@ import {
     StatusBarStatus,
 } from "../autocomplete/statusBar";
 import { registerAllCommands } from "../commands";
-import { SmartAiConsoleWebviewViewProvider } from "../SmartAiConsoleWebviewViewProvider";
-import { SmartAiGUIWebviewViewProvider } from "../SmartAiGUIWebviewViewProvider";
 import { VerticalDiffManager } from "../diff/vertical/manager";
 import { registerAllCodeLensProviders } from "../lang-server/codeLens";
 import { registerAllPromptFilesCompletionProviders } from "../lang-server/promptFileCompletions";
 import EditDecorationManager from "../quickEdit/EditDecorationManager";
 import { QuickEdit } from "../quickEdit/QuickEditQuickPick";
+import { SmartAiConsoleWebviewViewProvider } from "../SmartAiConsoleWebviewViewProvider";
+import { SmartAiGUIWebviewViewProvider } from "../SmartAiGUIWebviewViewProvider";
 import { setupRemoteConfigSync } from "../stubs/activation";
 import { UriEventHandler } from "../stubs/uriHandler";
 import {
@@ -724,18 +725,10 @@ export class VsCodeExtension {
       patchDirPath: vscodeConfig.get<string>("trainingPatchDirPath") ?? undefined,
       exportDirPath: vscodeConfig.get<string>("trainingExportDirPath") ?? undefined,
       tempDirPath: vscodeConfig.get<string>("trainingTempDirPath") ?? undefined,
-      runtimeMode: runtimeMode === "remote-host" ? "remote-host" : "local",
+      runtimeMode: (runtimeMode === "remote-host" ? "remote-host" : "local") as any,
       ollamaApiBase,
     };
 
     trainingService.setConfig(config);
-
-    // Detect Smarterp workspace and pre-set the mode
-    void this.ide.getWorkspaceDirs().then((dirs) => {
-      const isSmarterp = detectSmarterpWorkspace(dirs.map((d) => d));
-      if (isSmarterp) {
-        (trainingService as any)._smarterpWorkspaceDetected = true;
-      }
-    });
   }
 }

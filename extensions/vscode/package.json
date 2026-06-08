@@ -21,7 +21,7 @@
   "displayName": "Smart AI - AI code agent",
   "pricing": "Free",
   "description": "AI code agent for smart development",
-  "publisher": "Smart AI",
+  "publisher": "smarttygg",
   "engines": {
     "vscode": "^1.70.0",
     "node": ">=20.20.1"
@@ -215,7 +215,10 @@
         },
         "smartai.trainingRuntimeMode": {
           "type": "string",
-          "enum": ["local", "remote-host"],
+          "enum": [
+            "local",
+            "remote-host"
+          ],
           "default": "local",
           "description": "Runtime mode for training data capture. 'local' for direct IDE usage, 'remote-host' for SSH tunnel / remote extension host setups."
         },
@@ -881,10 +884,10 @@
     "vscode-extension-tester": "^8.14.1"
   },
   "dependencies": {
-    "@smartai/config-types": "file:../../packages/config-types",
-    "@smartai/fetch": "file:../../packages/fetch",
     "@electron/rebuild": "^4.0.3",
     "@reduxjs/toolkit": "^1.9.3",
+    "@smartai/config-types": "file:../../packages/config-types",
+    "@smartai/fetch": "file:../../packages/fetch",
     "@vscode/ripgrep": "^1.15.9",
     "axios": "^1.13.1",
     "core": "file:../../core",
@@ -892,7 +895,9 @@
     "dbinfoz": "^0.14.0",
     "diff": "^8.0.4",
     "downshift": "^7.6.0",
+    "ecdsa-sig-formatter": "^1.0.11",
     "express": "^4.18.2",
+    "extend": "^3.0.2",
     "fkill": "^8.1.0",
     "follow-redirects": "^1.15.4",
     "handlebars": "^4.7.8",

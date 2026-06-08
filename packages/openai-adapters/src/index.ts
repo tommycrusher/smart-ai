@@ -5,9 +5,9 @@ import { AnthropicApi } from "./apis/Anthropic.js";
 import { AskSageApi } from "./apis/AskSage.js";
 import { AzureApi } from "./apis/Azure.js";
 import { BedrockApi } from "./apis/Bedrock.js";
+import { ClawRouterApi } from "./apis/ClawRouter.js";
 import { CohereApi } from "./apis/Cohere.js";
 import { CometAPIApi } from "./apis/CometAPI.js";
-import { ContinueProxyApi } from "./apis/ContinueProxy.js";
 import { DeepSeekApi } from "./apis/DeepSeek.js";
 import { GeminiApi } from "./apis/Gemini.js";
 import { InceptionApi } from "./apis/Inception.js";
@@ -18,8 +18,8 @@ import { MockApi } from "./apis/Mock.js";
 import { MoonshotApi } from "./apis/Moonshot.js";
 import { OpenAIApi } from "./apis/OpenAI.js";
 import { OpenRouterApi } from "./apis/OpenRouter.js";
-import { ClawRouterApi } from "./apis/ClawRouter.js";
 import { RelaceApi } from "./apis/Relace.js";
+import { ContinueProxyApi } from "./apis/SmartAiProxy.js";
 import { VertexAIApi } from "./apis/VertexAI.js";
 import { WatsonXApi } from "./apis/WatsonX.js";
 import { BaseLlmApi } from "./apis/base.js";
@@ -211,37 +211,38 @@ export function constructLlmApi(config: LLMConfig): BaseLlmApi | undefined {
 }
 
 export {
-  type ChatCompletion,
-  type ChatCompletionChunk,
-  type ChatCompletionCreateParams,
-  type ChatCompletionCreateParamsNonStreaming,
-  type ChatCompletionCreateParamsStreaming,
-  type Completion,
-  type CompletionCreateParams,
-  type CompletionCreateParamsNonStreaming,
-  type CompletionCreateParamsStreaming,
+    type ChatCompletion,
+    type ChatCompletionChunk,
+    type ChatCompletionCreateParams,
+    type ChatCompletionCreateParamsNonStreaming,
+    type ChatCompletionCreateParamsStreaming,
+    type Completion,
+    type CompletionCreateParams,
+    type CompletionCreateParamsNonStreaming,
+    type CompletionCreateParamsStreaming
 } from "openai/resources/index";
 
 // export
 export { AiSdkApi } from "./apis/AiSdk.js";
 export type { BaseLlmApi } from "./apis/base.js";
 export type {
-  AiSdkConfig,
-  AskSageResponse,
-  AskSageTokenResponse,
-  AskSageTool,
-  AskSageToolCall,
-  AskSageToolChoice,
-  LLMConfig,
+    AiSdkConfig,
+    AskSageResponse,
+    AskSageTokenResponse,
+    AskSageTool,
+    AskSageToolCall,
+    AskSageToolChoice,
+    LLMConfig
 } from "./types.js";
 
 export {
-  addCacheControlToLastTwoUserMessages,
-  getAnthropicErrorMessage,
-  getAnthropicHeaders,
-  getAnthropicMediaTypeFromDataUrl,
+    addCacheControlToLastTwoUserMessages,
+    getAnthropicErrorMessage,
+    getAnthropicHeaders,
+    getAnthropicMediaTypeFromDataUrl
 } from "./apis/AnthropicUtils.js";
 
-export { isResponsesModel } from "./apis/openaiResponses.js";
 export { OPENROUTER_HEADERS } from "./apis/OpenRouter.js";
+export { isResponsesModel } from "./apis/openaiResponses.js";
 export { extractBase64FromDataUrl, parseDataUrl } from "./util/url.js";
+

@@ -4,7 +4,7 @@ import Deepseek from "../Deepseek.js";
 import FunctionNetwork from "../FunctionNetwork.js";
 import Mistral from "../Mistral.js";
 import OpenAI from "../OpenAI.js";
-import SmartAiProxy from "../stubs/ContinueProxy.js";
+import SmartAiProxy from "../stubs/SmartAiProxy.js";
 import Vllm from "../Vllm.js";
 
 // Mock the parseProxyModelName function
