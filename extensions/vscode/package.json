@@ -21,7 +21,7 @@
   "displayName": "Smart AI - AI code agent",
   "pricing": "Free",
   "description": "AI code agent for smart development",
-  "publisher": "smarttygg",
+  "publisher": "smartbygg",
   "engines": {
     "vscode": "^1.70.0",
     "node": ">=20.20.1"
