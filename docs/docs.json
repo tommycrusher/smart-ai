@@ -282,17 +282,17 @@
       "anchors": [
         {
           "anchor": "About Us",
-          "href": "https://continue.dev/about-us",
+          "href": "https://smart-ai.dev/about-us",
           "icon": "book-open"
         },
         {
           "anchor": "Blog",
-          "href": "https://continue.dev/blog",
+          "href": "https://smart-ai.dev/blog",
           "icon": "newspaper"
         },
         {
           "anchor": "Changelog",
-          "href": "https://changelog.continue.dev/",
+          "href": "https://changelog.smart-ai.dev/",
           "icon": "bullhorn"
         }
       ]
@@ -301,7 +301,7 @@
   "logo": {
     "light": "/logo/light.svg",
     "dark": "/logo/dark.svg",
-    "href": "https://continue.dev"
+    "href": "https://smart-ai.dev"
   },
   "background": {
     "color": {
@@ -312,7 +312,7 @@
     "links": [
       {
         "label": "🚀 Get Started",
-        "href": "https://continue.dev/"
+        "href": "https://smart-ai.dev/"
       }
     ],
     "primary": {
@@ -359,7 +359,7 @@
     },
     {
       "source": "/changelog",
-      "destination": "https://changelog.continue.dev"
+      "destination": "https://changelog.smart-ai.dev"
     },
     {
       "source": "/hub",
@@ -1055,7 +1055,7 @@
     },
     {
       "source": "/about",
-      "destination": "https://continue.dev/about-us"
+      "destination": "https://smart-ai.dev/about-us"
     },
     {
       "source": "/autocomplete/model-setup",

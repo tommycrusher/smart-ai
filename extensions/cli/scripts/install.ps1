@@ -5,7 +5,7 @@
 .DESCRIPTION
     Installs Node.js (if needed) and the Continue CLI globally
 .EXAMPLE
-    irm https://continue.dev/install.ps1 | iex
+    irm https://smart-ai.dev/install.ps1 | iex
 .NOTES
     Supports Windows 10/11, Windows Server 2016+
     Requires internet connectivity
@@ -21,7 +21,7 @@ $ErrorActionPreference = 'Stop'
 $ProgressPreference = 'SilentlyContinue'  # Faster downloads
 
 $script:RequiredNodeVersion = [version]"20.20.1"
-$script:PackageName = "@continuedev/cli"
+$script:PackageName = "@smartai/cli"
 $script:CliCommand = "cn"
 $script:FnmInstalled = $false
 $script:FnmPath = "$env:LOCALAPPDATA\fnm"

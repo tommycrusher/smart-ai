@@ -2,10 +2,10 @@
 set -euo pipefail
 
 # Continue CLI Installer - Unix (macOS, Linux, WSL, Git Bash)
-# curl -fsSL https://continue.dev/install.sh | bash
+# curl -fsSL https://smart-ai.dev/install.sh | bash
 
 REQUIRED_NODE_VERSION="20.20.1"
-PACKAGE_NAME="@continuedev/cli"
+PACKAGE_NAME="@smartai/cli"
 CLI_COMMAND="cn"
 NETWORK_TIMEOUT=60
 FNM_INSTALL_DIR="$HOME/.local/share/fnm"

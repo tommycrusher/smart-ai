@@ -136,7 +136,7 @@ val testIntegration = task<Test>("testIntegration") {
     val integrationTestSourceSet = sourceSets.getByName("testIntegration")
     testClassesDirs = integrationTestSourceSet.output.classesDirs
     classpath = integrationTestSourceSet.runtimeClasspath
-    systemProperty("CONTINUE_PLUGIN_DIR", tasks.prepareSandbox.get().pluginDirectory.get().asFile)
+    systemProperty("SMARTAI_PLUGIN_DIR", tasks.prepareSandbox.get().pluginDirectory.get().asFile)
     environment("SMARTAI_GLOBAL_DIR", "${rootProject.projectDir}/src/testIntegration/kotlin/com/github/smartai/smartaiintellijextension/test-continue")
     useJUnitPlatform()
     dependsOn(tasks.prepareSandbox)
