@@ -156,7 +156,7 @@ export function getMetaKeyName() {
 }
 
 export function getExtensionVersion(): string {
-  const extension = vscode.extensions.getExtension("smartai.continue");
+  const extension = vscode.extensions.getExtension("smartbygg.smart-ai");
   return extension?.packageJSON.version || "0.1.0";
 }
 

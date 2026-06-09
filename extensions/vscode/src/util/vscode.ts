@@ -22,7 +22,7 @@ export function getNonce() {
 }
 
 export function getExtensionUri(): vscode.Uri {
-  return vscode.extensions.getExtension("SmartAI.smartai")!.extensionUri;
+  return vscode.extensions.getExtension("smartbygg.smart-ai")!.extensionUri;
 }
 
 export function getViewColumnOfFile(

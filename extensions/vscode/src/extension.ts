@@ -2,6 +2,9 @@
  * This is the entry point for the extension.
  */
 
+import * as fs from "fs";
+fs.writeFileSync("/tmp/smart_ai_loaded.txt", "Module loaded at " + new Date().toISOString() + "\n");
+
 import { setupCa } from "core/util/ca";
 import { extractMinimalStackTraceInfo } from "core/util/extractMinimalStackTraceInfo";
 import { Telemetry } from "core/util/posthog";
@@ -12,13 +15,24 @@ import { getExtensionVersion } from "./util/util";
 export { default as buildTimestamp } from "./.buildTimestamp";
 
 async function dynamicImportAndActivate(context: vscode.ExtensionContext) {
-  await setupCa();
-  const { activateExtension } = await import("./activation/activate");
-  return await activateExtension(context);
+  console.log("SMART_AI: dynamicImportAndActivate started");
+  try {
+    console.log("SMART_AI: calling setupCa");
+    await setupCa();
+    console.log("SMART_AI: setupCa completed");
+    const { activateExtension } = await import("./activation/activate");
+    console.log("SMART_AI: imported activateExtension");
+    return await activateExtension(context);
+  } catch (e) {
+    console.error("SMART_AI: Error in dynamicImportAndActivate:", e);
+    throw e;
+  }
 }
 
 export function activate(context: vscode.ExtensionContext) {
+  fs.writeFileSync("/tmp/smart_ai_activate.txt", "activate() called at " + new Date().toISOString() + "\n");
   return dynamicImportAndActivate(context).catch((e) => {
+    fs.writeFileSync("/tmp/smart_ai_error.txt", "ERROR: " + e.message + "\n" + e.stack + "\n");
     console.log("Error activating extension: ", e);
     Telemetry.capture(
       "vscode_extension_activation_error",

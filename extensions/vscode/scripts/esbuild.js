@@ -23,6 +23,12 @@ const esbuildConfig = {
   // https://github.com/evanw/esbuild/issues/1492#issuecomment-893144483
   inject: ["./scripts/importMetaUrl.js"],
   define: { "import.meta.url": "importMetaUrl" },
+  // Fix PendingMigrationError: navigator is now a global in nodejs (Node.js 22+)
+  // Dependencies like workerpool check navigator.hardwareConcurrency. In Node.js context
+  // navigator should not exist, but Node.js 22+ added it as a global. We undefine it.
+  banner: {
+    js: "if (typeof global !== 'undefined' && typeof navigator !== 'undefined') { delete global.navigator; }",
+  },
   supported: { "dynamic-import": false },
   metafile: true,
   plugins: [

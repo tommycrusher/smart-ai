@@ -10,6 +10,7 @@ import { VsCodeContinueApi } from "./api";
 import setupInlineTips from "./InlineTipManager";
 
 export async function activateExtension(context: vscode.ExtensionContext) {
+  console.log("SMART_AI: Starting activateExtension");
   const platformCheck = isUnsupportedPlatform();
   const globalContext = new GlobalContext();
   const hasShownUnsupportedPlatformWarning = globalContext.get(
@@ -36,13 +37,17 @@ export async function activateExtension(context: vscode.ExtensionContext) {
   }
 
   // Add necessary files
+  console.log("SMART_AI: Getting config paths");
   getTsConfigPath();
   getContinueRcPath();
 
   // Register commands and providers
+  console.log("SMART_AI: Setting up inline tips");
   setupInlineTips(context);
 
+  console.log("SMART_AI: Creating VsCodeExtension");
   const vscodeExtension = new VsCodeExtension(context);
+  console.log("SMART_AI: VsCodeExtension created successfully");
 
   // Load Smart AI configuration
   if (!context.globalState.get("hasBeenInstalled")) {

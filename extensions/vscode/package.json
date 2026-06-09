@@ -8,8 +8,8 @@
     "url": "https://github.com/tommycrusher/smart-ai"
   },
   "extensionKind": [
-    "ui",
-    "workspace"
+    "workspace",
+    "ui"
   ],
   "bugs": {
     "url": "https://github.com/tommycrusher/smart-ai/issues",
