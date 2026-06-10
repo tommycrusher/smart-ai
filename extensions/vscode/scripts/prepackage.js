@@ -294,39 +294,30 @@ void (async () => {
     console.log("[info] Skipping sqlite download because SKIP_INSTALLS=true");
   }
 
-  console.log("[info] Copying sqlite node binding from core");
-  await new Promise((resolve, reject) => {
-    ncp(
-      path.join(__dirname, "../node_modules/sqlite3/build"),
-      path.join(__dirname, "../out/build"),
-      { dereference: true },
-      (error) => {
-        if (error) {
-          console.warn("[error] Error copying sqlite3 files", error);
-          reject(error);
-        } else {
-          resolve();
-        }
-      },
-    );
-  });
-
-  // Copied here as well for the VS Code test suite
-  await new Promise((resolve, reject) => {
-    ncp(
-      path.join(__dirname, "../node_modules/sqlite3/build"),
-      path.join(__dirname, "../out"),
-      { dereference: true },
-      (error) => {
-        if (error) {
-          console.warn("[error] Error copying sqlite3 files", error);
-          reject(error);
-        } else {
-          resolve();
-        }
-      },
-    );
-  });
+  // Copy entire sqlite3 package to out/node_modules for runtime require
+  const sqlite3PkgPath = path.join(__dirname, "../node_modules/sqlite3");
+  const sqlite3OutPath = path.join(__dirname, "../out/node_modules/sqlite3");
+  if (fs.existsSync(sqlite3PkgPath)) {
+    console.log("[info] Copying sqlite3 package to out/node_modules");
+    fs.mkdirSync(sqlite3OutPath, { recursive: true });
+    await new Promise((resolve, reject) => {
+      ncp(
+        sqlite3PkgPath,
+        sqlite3OutPath,
+        { dereference: true },
+        (error) => {
+          if (error) {
+            console.warn("[error] Error copying sqlite3 files", error);
+            reject(error);
+          } else {
+            resolve();
+          }
+        },
+      );
+    });
+  } else {
+    console.warn("[warn] sqlite3 not found, skipping copy");
+  }
 
   // Copy node_modules for pre-built binaries
   const NODE_MODULES_TO_COPY = [
@@ -440,7 +431,6 @@ void (async () => {
     // Worker required by jsdom
     "out/xhr-sync-worker.js",
     // SQLite3 Node native module
-    "out/build/Release/node_sqlite3.node",
 
     // out/node_modules (to be accessed by extension.js)
     "out/node_modules/@vscode/ripgrep/bin/rg",
