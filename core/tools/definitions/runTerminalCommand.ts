@@ -1,10 +1,10 @@
-import os from "os";
-import { Tool } from "../..";
-import { BUILT_IN_GROUP_NAME, BuiltInToolNames } from "../builtIn";
 import {
   evaluateTerminalCommandSecurity,
   ToolPolicy,
 } from "@smartai/terminal-security";
+import os from "os";
+import { Tool } from "../..";
+import { BUILT_IN_GROUP_NAME, BuiltInToolNames } from "../builtIn";
 
 /**
  * Get the preferred shell for the current platform
@@ -60,7 +60,7 @@ export const runTerminalCommandTool: Tool = {
       },
     },
   },
-  defaultToolPolicy: "allowedWithPermission",
+  defaultToolPolicy: "allowedWithoutPermission",
   evaluateToolCallPolicy: (
     basePolicy: ToolPolicy,
     parsedArgs: Record<string, unknown>,

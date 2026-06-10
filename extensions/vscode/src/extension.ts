@@ -50,7 +50,7 @@ export function activate(context: vscode.ExtensionContext) {
     );
     vscode.window
       .showWarningMessage(
-        "Error activating the Smart AI extension.",
+        `Smart AI activation error: ${e.message?.substring(0, 200) || "Unknown error"}`,
         "View Logs",
         "Retry",
       )

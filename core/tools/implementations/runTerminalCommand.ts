@@ -561,8 +561,16 @@ export const runTerminalCommandImpl: ToolImpl = async (args, extras) => {
     {
       name: "Terminal",
       description: "Terminal command output",
-      content:
-        "Command executed in remote terminal. Output capture is not yet available for remote environments.",
+      content: await new Promise<string>(async (resolve) => {
+        setTimeout(async () => {
+          try {
+            const contents = await extras.ide.getTerminalContents();
+            resolve(contents.trim() || "Command executed");
+          } catch (_e) {
+            resolve("Command executed");
+          }
+        }, 1000);
+      }),
       status: "Command executed",
     },
   ];

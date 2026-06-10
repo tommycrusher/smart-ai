@@ -3,6 +3,7 @@ import { JSONSchema7, JSONSchema7Object } from "json-schema";
 import { v4 as uuidv4 } from "uuid";
 
 import { streamResponse } from "@smartai/fetch";
+import { getOllamaConfig } from "../../config/ollama.js";
 import {
   ChatMessage,
   ChatMessageRole,
@@ -14,7 +15,6 @@ import {
 import { renderChatMessage } from "../../util/messageContent.js";
 import { getRemoteModelInfo } from "../../util/ollamaHelper.js";
 import { extractBase64FromDataUrl } from "../../util/url.js";
-import { getOllamaConfig } from "../../config/ollama.js";
 import { BaseLLM } from "../index.js";
 
 type OllamaChatMessage = {
@@ -228,7 +228,12 @@ class Ollama extends BaseLLM implements ModelInstaller {
                   this.completionOptions.stop = [];
                 }
                 try {
-                  this.completionOptions.stop.push(JSON.parse(value));
+                  const stopValue = JSON.parse(value);
+                  // Skip very short/common stop tokens that cause premature truncation
+                  // (e.g. "Oh" is a common English word and stops generation mid-sentence)
+                  if (typeof stopValue === "string" && stopValue.length >= 3) {
+                    this.completionOptions.stop.push(stopValue);
+                  }
                 } catch (e) {
                   console.warn(
                     `Error parsing stop parameter value "{value}: ${e}`,
@@ -515,7 +520,7 @@ class Ollama extends BaseLLM implements ModelInstaller {
       options: this._getModelFileParams(options),
       think: options.reasoning,
       keep_alive: options.keepAlive ?? 60 * 30, // 30 minutes
-      stream: options.stream,
+      stream: options.tools?.length ? false : options.stream,
       // format: options.format, // Not currently in base completion options
     };
     if (options.tools?.length && ollamaMessages.at(-1)?.role === "user") {

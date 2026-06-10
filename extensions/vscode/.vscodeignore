@@ -23,8 +23,12 @@ scripts
 e2e
 
 server/exe/**
+!out/**
 !out/node_modules/**
+!out/node_modules/@lancedb/vectordb-win32-x64-msvc/**
 !node_modules/@vscode/ripgrep/bin/rg
+!bin/**
+!bin/napi-v3/**
 
 # Do not ship esbuild in VSIX
 out/node_modules/esbuild/**
