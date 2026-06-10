@@ -1,4 +1,5 @@
 const fs = require("fs");
+const os = require("os");
 const path = require("path");
 
 const ncp = require("ncp").ncp;
@@ -45,24 +46,24 @@ if (!target) {
   }
 }
 
-let os;
-let arch;
+let targetOs;
+let targetArch;
 if (target) {
-  [os, arch] = target.split("-");
+  [targetOs, targetArch] = target.split("-");
 } else {
-  [os, arch] = autodetectPlatformAndArch();
+  [targetOs, targetArch] = autodetectPlatformAndArch();
 }
 
-if (os === "alpine") {
-  os = "linux";
+if (targetOs === "alpine") {
+  targetOs = "linux";
 }
-if (arch === "armhf") {
-  arch = "arm64";
+if (targetArch === "armhf") {
+  targetArch = "arm64";
 }
-target = `${os}-${arch}`;
+target = `${targetOs}-${targetArch}`;
 console.log("[info] Using target: ", target);
 
-const exe = os === "win32" ? ".exe" : "";
+const exe = targetOs === "win32" ? ".exe" : "";
 
 const isWinTarget = target?.startsWith("win");
 const isLinuxTarget = target?.startsWith("linux");
@@ -286,10 +287,31 @@ void (async () => {
     console.log("[info] Skipping sqlite download because SKIP_INSTALLS=true");
   }
 
-  // Copy entire sqlite3 package to out/node_modules for runtime require
+  // Download correct sqlite3 prebuild for target platform, then copy
   const sqlite3PkgPath = path.join(__dirname, "../node_modules/sqlite3");
   const sqlite3OutPath = path.join(__dirname, "../out/node_modules/sqlite3");
   if (fs.existsSync(sqlite3PkgPath)) {
+    // If building for a different platform than host, download the correct prebuild
+    const hostPlatform = os.platform();
+    const targetPlatform = target ? target.split("-")[0] : hostPlatform;
+    if (target && targetPlatform !== hostPlatform) {
+      const targetArch = target.split("-")[1] || os.arch();
+      console.log(`[info] Downloading sqlite3 prebuild for ${targetPlatform}-${targetArch}`);
+      try {
+        const { execSync } = require("child_process");
+        execSync(
+          `npx prebuild-install -r napi --platform=${targetPlatform} --arch=${targetArch} --tag-prefix=v --verbose`,
+          {
+            cwd: sqlite3PkgPath,
+            stdio: "inherit",
+          }
+        );
+        console.log(`[info] Downloaded sqlite3 prebuild for ${targetPlatform}-${targetArch}`);
+      } catch (e) {
+        console.warn(`[warn] Failed to download sqlite3 prebuild for ${targetPlatform}-${targetArch}:`, e.message);
+      }
+    }
+
     console.log("[info] Copying sqlite3 package to out/node_modules");
     fs.mkdirSync(sqlite3OutPath, { recursive: true });
     await new Promise((resolve, reject) => {
