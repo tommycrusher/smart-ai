@@ -146,6 +146,30 @@ async function loadConfigYaml(options: {
   }
 
   if (config) {
+    // Auto-populate name/provider for models that only have "uses" (registry refs)
+    if (config.models && Array.isArray(config.models)) {
+      for (const model of config.models) {
+        const m = model as any;
+        if (m && m.uses && typeof m.uses === "string") {
+          if (!m.provider) {
+            const usesProvider = m.uses.split("/")[0];
+            if (usesProvider) {
+              m.provider = usesProvider;
+            }
+          }
+          if (!m.name) {
+            const usesName = m.uses.split("/").slice(1).join("/");
+            if (usesName) {
+              // Capitalize and format: gpt-4.1 -> GPT-4.1, o3 -> O3
+              m.name = usesName
+                .split("-")
+                .map((s: string) => s.charAt(0).toUpperCase() + s.slice(1))
+                .join(" ");
+            }
+          }
+        }
+      }
+    }
     errors.push(...validateConfigYaml(nonNullifyConfigYaml(config)));
   }
 
