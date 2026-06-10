@@ -343,6 +343,9 @@ void (async () => {
     "extend",
     "ecdsa-sig-formatter",
     "safe-buffer",
+    // Required by sqlite3 (which is external for per-platform prebuilds)
+    "bindings",
+    "file-uri-to-path",
   ];
 
   fs.mkdirSync("out/node_modules", { recursive: true });
