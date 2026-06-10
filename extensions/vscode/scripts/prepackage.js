@@ -191,8 +191,26 @@ void (async () => {
   console.log(
     `[timer] onnxruntime copy completed in ${Date.now() - onnxCopyStart}ms`,
   );
-  // Universal VSIX: keep all platform binaries
-  console.log("[info] Copied onnxruntime-node (all platforms)");
+  // Keep only target platform binaries to minimize VSIX size
+  if (target) {
+    try {
+      if (!target.startsWith("darwin")) { rimrafSync(path.join(__dirname, "../bin/napi-v3/darwin")); }
+      if (!target.startsWith("linux")) { rimrafSync(path.join(__dirname, "../bin/napi-v3/linux")); }
+      if (!target.startsWith("win")) { rimrafSync(path.join(__dirname, "../bin/napi-v3/win32")); }
+      if (target.startsWith("linux")) {
+        ["libonnxruntime_providers_cuda.so", "libonnxruntime_providers_shared.so", "libonnxruntime_providers_tensorrt.so"].forEach((file) => {
+          const fp = path.join(__dirname, "../bin/napi-v3/linux/x64", file);
+          if (fs.existsSync(fp)) { fs.rmSync(fp); }
+        });
+      }
+      if (target.endsWith("-x64")) {
+        rimrafSync(path.join(__dirname, "../bin/napi-v3/darwin/arm64"));
+        rimrafSync(path.join(__dirname, "../bin/napi-v3/linux/arm64"));
+        rimrafSync(path.join(__dirname, "../bin/napi-v3/win32/arm64"));
+      }
+    } catch (e) { console.warn("[info] Error removing unused binaries", e); }
+  }
+  console.log("[info] Copied onnxruntime-node (target: " + target + ")");
 
   // tree-sitter-wasm
   fs.mkdirSync("out", { recursive: true });
@@ -258,33 +276,28 @@ void (async () => {
     );
   });
 
-  const lancedbPackages = [
-    "@lancedb/vectordb-darwin-arm64",
-    "@lancedb/vectordb-darwin-x64",
-    "@lancedb/vectordb-linux-arm64-gnu",
-    "@lancedb/vectordb-linux-x64-gnu",
-    "@lancedb/vectordb-win32-x64-msvc",
-  ];
-
-  // Install all LanceDB platform packages for universal VSIX
-  for (const pkg of lancedbPackages) {
-    const packageDirName = pkg.split("/").pop();
-    const packagePath = path.join(
-      __dirname,
-      "..",
-      "node_modules",
-      "@lancedb",
-      packageDirName,
-    );
-
-    if (!fs.existsSync(packagePath)) {
-      console.log(`[info] Installing LanceDB binary: ${pkg}`);
-      await installAndCopyNodeModules(pkg, "@lancedb");
-      if (!fs.existsSync(packagePath)) {
-        console.warn(`[warn] Failed to install LanceDB binary at ${packagePath}`);
+  const lancedbPackagesByTarget = {
+    "darwin-arm64": "@lancedb/vectordb-darwin-arm64",
+    "darwin-x64": "@lancedb/vectordb-darwin-x64",
+    "linux-arm64": "@lancedb/vectordb-linux-arm64-gnu",
+    "linux-x64": "@lancedb/vectordb-linux-x64-gnu",
+    "win32-x64": "@lancedb/vectordb-win32-x64-msvc",
+    "win32-arm64": "@lancedb/vectordb-win32-arm64-msvc",
+  };
+  const packageToInstall = lancedbPackagesByTarget[target];
+  let packageDirName;
+  let expectedPackagePath;
+  if (packageToInstall) {
+    packageDirName = packageToInstall.split("/").pop();
+    expectedPackagePath = path.join(__dirname, "..", "node_modules", "@lancedb", packageDirName);
+    if (!fs.existsSync(expectedPackagePath)) {
+      console.log(`[info] Installing LanceDB binary for ${target}: ${packageToInstall}`);
+      await installAndCopyNodeModules(packageToInstall, "@lancedb");
+      if (!fs.existsSync(expectedPackagePath)) {
+        throw new Error(`Failed to install LanceDB binary at ${expectedPackagePath}`);
       }
     } else {
-      console.log(`[info] LanceDB binary already present: ${packageDirName}`);
+      console.log(`[info] LanceDB binary already present for ${target}`);
     }
   }
 
@@ -359,18 +372,29 @@ void (async () => {
 
   console.log(`[info] Copied ${NODE_MODULES_TO_COPY.join(", ")}`);
 
-  // Copy all LanceDB platform binaries to out/node_modules for universal VSIX
-  for (const pkg of lancedbPackages) {
-    const packageDirName = pkg.split("/").pop();
-    const srcPath = path.join(__dirname, "..", "node_modules", "@lancedb", packageDirName);
-    const destPath = path.join(__dirname, "..", "out", "node_modules", "@lancedb", packageDirName);
-    const indexPath = path.join(destPath, "index.node");
+  // Remove non-target LanceDB platforms from out/node_modules to minimize VSIX size
+  if (packageDirName) {
+    const lancedbOutDir = path.join(__dirname, "..", "out", "node_modules", "@lancedb");
+    if (fs.existsSync(lancedbOutDir)) {
+      const dirs = fs.readdirSync(lancedbOutDir);
+      for (const dir of dirs) {
+        if (dir !== packageDirName) {
+          console.log(`[info] Removing unused LanceDB platform: ${dir}`);
+          rimrafSync(path.join(lancedbOutDir, dir));
+        }
+      }
+    }
+  }
 
-    if (fs.existsSync(srcPath) && !fs.existsSync(indexPath)) {
-      rimrafSync(destPath);
-      fs.mkdirSync(destPath, { recursive: true });
-      fs.cpSync(srcPath, destPath, { recursive: true, dereference: true });
-      console.log(`[info] Copied LanceDB binary to ${destPath}`);
+  // Copy target LanceDB binary to out/node_modules
+  if (packageDirName && expectedPackagePath) {
+    const expectedOutPackagePath = path.join(__dirname, "..", "out", "node_modules", "@lancedb", packageDirName);
+    const expectedOutIndexPath = path.join(expectedOutPackagePath, "index.node");
+    if (!fs.existsSync(expectedOutIndexPath)) {
+      rimrafSync(expectedOutPackagePath);
+      fs.mkdirSync(expectedOutPackagePath, { recursive: true });
+      fs.cpSync(expectedPackagePath, expectedOutPackagePath, { recursive: true, dereference: true });
+      console.log(`[info] Copied LanceDB binary to ${expectedOutPackagePath}`);
     }
   }
 
@@ -382,18 +406,14 @@ void (async () => {
 
   // Validate the all of the necessary files are present
   try {
-    const platforms = [
-    { os: "darwin", arch: "arm64", ext: "libonnxruntime.1.14.0.dylib" },
-    { os: "darwin", arch: "x64", ext: "libonnxruntime.1.14.0.dylib" },
-    { os: "linux", arch: "arm64", ext: "libonnxruntime.so.1.14.0" },
-    { os: "linux", arch: "x64", ext: "libonnxruntime.so.1.14.0" },
-    { os: "win32", arch: "x64", ext: "onnxruntime.dll" },
+    const isMacTarget = target?.startsWith("darwin");
+  const isLinuxTarget = target?.startsWith("linux");
+  const isWinTarget = target?.startsWith("win");
+  const [targetOs, targetArch] = target ? target.split("-") : [os, arch];
+  const platformFiles = [
+    `bin/napi-v3/${targetOs}/${targetArch}/onnxruntime_binding.node`,
+    `bin/napi-v3/${targetOs}/${targetArch}/${isMacTarget ? "libonnxruntime.1.14.0.dylib" : isLinuxTarget ? "libonnxruntime.so.1.14.0" : "onnxruntime.dll"}`,
   ];
-
-  const platformFiles = platforms.flatMap((p) => [
-    `bin/napi-v3/${p.os}/${p.arch}/onnxruntime_binding.node`,
-    `bin/napi-v3/${p.os}/${p.arch}/${p.ext}`,
-  ]);
 
   validateFilesPresent([
     // Queries used to create the index for @code context provider
@@ -435,12 +455,8 @@ void (async () => {
     // out/node_modules (to be accessed by extension.js)
     "out/node_modules/@vscode/ripgrep/bin/rg",
     "out/node_modules/@vscode/ripgrep/bin/rg.exe",
-    // LanceDB (all platforms for universal VSIX)
-    "out/node_modules/@lancedb/vectordb-darwin-arm64/index.node",
-    "out/node_modules/@lancedb/vectordb-darwin-x64/index.node",
-    "out/node_modules/@lancedb/vectordb-linux-arm64-gnu/index.node",
-    "out/node_modules/@lancedb/vectordb-linux-x64-gnu/index.node",
-    "out/node_modules/@lancedb/vectordb-win32-x64-msvc/index.node",
+    // LanceDB (target platform only)
+    `out/node_modules/@lancedb/vectordb-${target}${isWinTarget ? "-msvc" : ""}${isLinuxTarget ? "-gnu" : ""}/index.node`,
   ]);
   } catch (e) {
     console.error("[warn] File validation failed (some platform files may be missing):", e.message);
