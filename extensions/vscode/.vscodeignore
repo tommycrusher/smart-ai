@@ -1,3 +1,10 @@
+# Universal VSIX: explicitly include these folders
+!bin/**
+!out/**
+!gui/**
+!media/**
+!models/**
+
 .vscode/**
 .vscode-test/**
 build/**

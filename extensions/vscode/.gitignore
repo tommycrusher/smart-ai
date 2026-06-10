@@ -11,6 +11,10 @@ bin
 assets
 tmp
 
+# Universal VSIX: these are needed in the extension package
+!out/
+!bin/
+
 gui/**
 
 .devcontainer

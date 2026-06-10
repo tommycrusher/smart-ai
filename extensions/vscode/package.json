@@ -935,6 +935,13 @@
     "ws": "^8.19.0",
     "yarn": "^1.22.21"
   },
+  "optionalDependencies": {
+    "@lancedb/vectordb-darwin-arm64": "0.21.2",
+    "@lancedb/vectordb-darwin-x64": "0.21.2",
+    "@lancedb/vectordb-linux-arm64-gnu": "0.21.2",
+    "@lancedb/vectordb-linux-x64-gnu": "0.21.2",
+    "@lancedb/vectordb-win32-x64-msvc": "0.21.2"
+  },
   "overrides": {
     "vitest": {
       "@types/node": "^16.18.119"
