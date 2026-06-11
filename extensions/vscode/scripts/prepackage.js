@@ -192,7 +192,27 @@ void (async () => {
   console.log(
     `[timer] onnxruntime copy completed in ${Date.now() - onnxCopyStart}ms`,
   );
-  console.log("[info] Copied onnxruntime-node (all platforms for universal VSIX)");
+
+  // Platform-specific build: keep only the target platform's onnxruntime
+  // binaries to keep the VSIX ~90MB.
+  const onnxBase = path.join(__dirname, "../bin/napi-v3");
+  if (fs.existsSync(onnxBase)) {
+    if (!isMacTarget) rimrafSync(path.join(onnxBase, "darwin"));
+    if (!isLinuxTarget) rimrafSync(path.join(onnxBase, "linux"));
+    if (!isWinTarget) rimrafSync(path.join(onnxBase, "win32"));
+    // Drop large CUDA/TensorRT providers we don't ship
+    if (isLinuxTarget) {
+      for (const f of [
+        "libonnxruntime_providers_cuda.so",
+        "libonnxruntime_providers_shared.so",
+        "libonnxruntime_providers_tensorrt.so",
+      ]) {
+        const fp = path.join(onnxBase, "linux", targetArch, f);
+        if (fs.existsSync(fp)) fs.rmSync(fp);
+      }
+    }
+  }
+  console.log(`[info] Copied onnxruntime-node (target ${target} only)`);
 
   // tree-sitter-wasm
   fs.mkdirSync("out", { recursive: true });
@@ -258,15 +278,23 @@ void (async () => {
     );
   });
 
-  const lancedbPackages = [
-    "@lancedb/vectordb-darwin-arm64",
-    "@lancedb/vectordb-darwin-x64",
-    "@lancedb/vectordb-linux-arm64-gnu",
-    "@lancedb/vectordb-linux-x64-gnu",
-    "@lancedb/vectordb-win32-x64-msvc",
-  ];
+  // Platform-specific build (VS Code Marketplace standard): only include the
+  // LanceDB binary for the target platform. This keeps each VSIX ~90MB.
+  const lancedbPackageByTarget = {
+    "darwin-arm64": "@lancedb/vectordb-darwin-arm64",
+    "darwin-x64": "@lancedb/vectordb-darwin-x64",
+    "linux-arm64": "@lancedb/vectordb-linux-arm64-gnu",
+    "linux-x64": "@lancedb/vectordb-linux-x64-gnu",
+    "win32-x64": "@lancedb/vectordb-win32-x64-msvc",
+    "win32-arm64": "@lancedb/vectordb-win32-x64-msvc", // no native win32-arm64 build
+  };
+  const targetLancedbPackage = lancedbPackageByTarget[target];
+  if (!targetLancedbPackage) {
+    throw new Error(`No LanceDB binary mapping for target ${target}`);
+  }
+  const lancedbPackages = [targetLancedbPackage];
 
-  // Install all LanceDB platform packages for universal VSIX
+  // Install LanceDB binary for the target platform only
   for (const pkg of lancedbPackages) {
     const packageDirName = pkg.split("/").pop();
     const packagePath = path.join(__dirname, "..", "node_modules", "@lancedb", packageDirName);
@@ -278,6 +306,19 @@ void (async () => {
       }
     } else {
       console.log(`[info] LanceDB binary already present: ${packageDirName}`);
+    }
+  }
+
+  // Prune any non-target LanceDB binaries left over from previous builds so
+  // the VSIX only ships the target platform binary (~90MB).
+  const lancedbDir = path.join(__dirname, "..", "node_modules", "@lancedb");
+  if (fs.existsSync(lancedbDir)) {
+    const keepDirName = targetLancedbPackage.split("/").pop();
+    for (const entry of fs.readdirSync(lancedbDir)) {
+      if (entry.startsWith("vectordb-") && entry !== keepDirName) {
+        rimrafSync(path.join(lancedbDir, entry));
+        console.log(`[info] Pruned non-target LanceDB binary: ${entry}`);
+      }
     }
   }
 
@@ -383,7 +424,18 @@ void (async () => {
     console.log("[info] Removed gui source map (15MB)");
   }
 
-  // Copy all LanceDB platform binaries to out/node_modules for universal VSIX
+  // Prune the non-target ripgrep binary so the VSIX only ships one platform's.
+  const rgDir = path.join(__dirname, "..", "out", "node_modules", "@vscode", "ripgrep", "bin");
+  if (fs.existsSync(rgDir)) {
+    const dropRg = isWinTarget ? "rg" : "rg.exe";
+    const dropPath = path.join(rgDir, dropRg);
+    if (fs.existsSync(dropPath)) {
+      fs.rmSync(dropPath);
+      console.log(`[info] Pruned non-target ripgrep binary: ${dropRg}`);
+    }
+  }
+
+  // Copy the target LanceDB platform binary to out/node_modules
   for (const pkg of lancedbPackages) {
     const packageDirName = pkg.split("/").pop();
     const srcPath = path.join(__dirname, "..", "node_modules", "@lancedb", packageDirName);
@@ -405,18 +457,16 @@ void (async () => {
 
   // Validate the all of the necessary files are present
   try {
-    const platforms = [
-    { os: "darwin", arch: "arm64", ext: "libonnxruntime.1.14.0.dylib" },
-    { os: "darwin", arch: "x64", ext: "libonnxruntime.1.14.0.dylib" },
-    { os: "linux", arch: "arm64", ext: "libonnxruntime.so.1.14.0" },
-    { os: "linux", arch: "x64", ext: "libonnxruntime.so.1.14.0" },
-    { os: "win32", arch: "x64", ext: "onnxruntime.dll" },
-  ];
-
-  const platformFiles = platforms.flatMap((p) => [
-    `bin/napi-v3/${p.os}/${p.arch}/onnxruntime_binding.node`,
-    `bin/napi-v3/${p.os}/${p.arch}/${p.ext}`,
-  ]);
+    const onnxExt = isMacTarget
+      ? "libonnxruntime.1.14.0.dylib"
+      : isLinuxTarget
+        ? "libonnxruntime.so.1.14.0"
+        : "onnxruntime.dll";
+    const platformFiles = [
+      `bin/napi-v3/${targetOs}/${targetArch}/onnxruntime_binding.node`,
+      `bin/napi-v3/${targetOs}/${targetArch}/${onnxExt}`,
+    ];
+    const keepLancedbDir = targetLancedbPackage.split("/").pop();
 
   validateFilesPresent([
     // Queries used to create the index for @code context provider
@@ -425,7 +475,7 @@ void (async () => {
     // Queries used for @outline and @highlights context providers
     "tag-qry/tree-sitter-c_sharp-tags.scm",
 
-    // onnx runtime bindings (all platforms for universal VSIX)
+    // onnx runtime bindings (target platform only)
     ...platformFiles,
 
     // Code/styling for the sidebar
@@ -445,25 +495,18 @@ void (async () => {
     "models/all-MiniLM-L6-v2/vocab.txt",
     "models/all-MiniLM-L6-v2/onnx/model_quantized.onnx",
 
-    // node_modules
-    "node_modules/@vscode/ripgrep/bin/rg",
-    "node_modules/@vscode/ripgrep/bin/rg.exe",
+    // node_modules (target platform's ripgrep only)
+    `node_modules/@vscode/ripgrep/bin/rg${exe}`,
 
     // out directory (where the extension.js lives)
     "out/tree-sitter.wasm",
     // Worker required by jsdom
     "out/xhr-sync-worker.js",
-    // SQLite3 Node native module
 
     // out/node_modules (to be accessed by extension.js)
-    "out/node_modules/@vscode/ripgrep/bin/rg",
-    "out/node_modules/@vscode/ripgrep/bin/rg.exe",
-    // LanceDB (all platforms for universal VSIX)
-    "out/node_modules/@lancedb/vectordb-darwin-arm64/index.node",
-    "out/node_modules/@lancedb/vectordb-darwin-x64/index.node",
-    "out/node_modules/@lancedb/vectordb-linux-arm64-gnu/index.node",
-    "out/node_modules/@lancedb/vectordb-linux-x64-gnu/index.node",
-    "out/node_modules/@lancedb/vectordb-win32-x64-msvc/index.node",
+    `out/node_modules/@vscode/ripgrep/bin/rg${exe}`,
+    // LanceDB (target platform only)
+    `out/node_modules/@lancedb/${keepLancedbDir}/index.node`,
   ]);
   } catch (e) {
     console.error("[warn] File validation failed (some platform files may be missing):", e.message);
