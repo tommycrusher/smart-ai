@@ -1,0 +1,113 @@
+# =============================================================================
+# Smart AI - Configuration Template
+# =============================================================================
+# Copy this file to your user config directory and rename it to "config.yaml":
+#   Linux/macOS:  ~/.smart-ai/config.yaml
+#   Windows:      C:\Users\<YOU>\.smart-ai\config.yaml
+#
+# Then replace placeholder API keys and adjust models to your setup.
+#
+# IMPORTANT:
+# - Define models with the FULL local format (name + provider + model + apiKey).
+# - Do NOT use the "uses: owner/slug" registry shorthand unless you are logged
+#   into the hub, otherwise config loading shows "fetch failed" for those models.
+# =============================================================================
+
+name: Smart AI
+version: 1.0.0
+schema: v1
+
+models:
+  # ---------------------------------------------------------------------------
+  # LOCAL MODELS (Ollama)
+  # ---------------------------------------------------------------------------
+  # apiBase points to your Ollama server. Default Ollama port is 11434.
+  # The model name must EXACTLY match `ollama list` output.
+  #
+  # NOTE: Ollama models used for "chat"/"edit" with tool calling must have a
+  # proper chat template in their Modelfile. A template of just "{{ .Prompt }}"
+  # will cause erratic, repetitive, or broken responses. Verify with:
+  #   ollama show --modelfile <model>
+  # ---------------------------------------------------------------------------
+  - name: Qwen3 Chat
+    provider: ollama
+    apiBase: http://localhost:11434
+    model: qwen3:latest
+    roles:
+      - chat
+      - edit
+      - apply
+    defaultCompletionOptions:
+      temperature: 0.3
+      maxTokens: 8192
+      topP: 0.9
+      topK: 20
+      stop:
+        - <|im_start|>
+    chatOptions:
+      baseSystemMessage: >
+        You are Smart AI, a practical coding assistant. You have access to tools
+        for reading files, editing code, running terminal commands, and web
+        search. Use the provided tools when needed to help the user. When not
+        using tools, respond in plain natural text without JSON.
+
+  - name: Qwen2.5-Coder 1.5B (Autocomplete)
+    provider: ollama
+    apiBase: http://localhost:11434
+    model: qwen2.5-coder:1.5b
+    roles:
+      - autocomplete
+    defaultCompletionOptions:
+      temperature: 0.2
+      maxTokens: 256
+      topP: 0.9
+
+  - name: Nomic Embed
+    provider: ollama
+    apiBase: http://localhost:11434
+    model: nomic-embed-text
+    roles:
+      - embed
+
+  # ---------------------------------------------------------------------------
+  # OPENAI MODELS
+  # ---------------------------------------------------------------------------
+  # Use the full local format. Replace <YOUR_OPENAI_API_KEY>.
+  # ---------------------------------------------------------------------------
+  - name: GPT-4.1
+    provider: openai
+    model: gpt-4.1
+    apiKey: <YOUR_OPENAI_API_KEY>
+
+  - name: GPT-4.1 Mini
+    provider: openai
+    model: gpt-4.1-mini
+    apiKey: <YOUR_OPENAI_API_KEY>
+
+  - name: OpenAI o3
+    provider: openai
+    model: o3
+    apiKey: <YOUR_OPENAI_API_KEY>
+
+  # ---------------------------------------------------------------------------
+  # ANTHROPIC (CLAUDE) MODELS
+  # ---------------------------------------------------------------------------
+  # Replace <YOUR_ANTHROPIC_API_KEY>.
+  # ---------------------------------------------------------------------------
+  - name: Claude Sonnet
+    provider: anthropic
+    model: claude-sonnet-4-6
+    apiKey: <YOUR_ANTHROPIC_API_KEY>
+
+# =============================================================================
+# ROLES REFERENCE
+# =============================================================================
+#   chat         - main conversational/agent model
+#   edit         - applies inline edits
+#   apply        - applies code blocks to files
+#   autocomplete - inline tab completion (use a small, fast model)
+#   embed        - embeddings for codebase indexing
+#   summarize    - summarizing context
+#
+# A single model may declare multiple roles via the `roles:` list.
+# =============================================================================
