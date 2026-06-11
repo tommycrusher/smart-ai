@@ -43,6 +43,8 @@ import { streamResponseThunk } from "../thunks/streamResponse";
 import { findChatHistoryItemByToolCallId, findToolCallById } from "../util";
 import type { AutoCommandPolicy } from "./uiSlice";
 
+type ToolApprovalSource = "session" | "repo";
+
 /**
  * Helper function to filter out duplicate edit/search-replace tool calls.
  * Only keeps the first occurrence of edit tools.
@@ -222,6 +224,7 @@ type SessionState = {
   newestToolbarPreviewForInput: Record<string, string>;
   hasReasoningEnabled?: boolean;
   autoCommandPolicySession?: AutoCommandPolicy | null;
+  toolCallAutoApprovalSourceById: Record<string, ToolApprovalSource>;
   isPruned?: boolean;
   contextPercentage?: number;
   inlineErrorMessage?: InlineErrorMessageType;
@@ -246,6 +249,7 @@ export const INITIAL_SESSION_STATE: SessionState = {
   lastSessionId: undefined,
   newestToolbarPreviewForInput: {},
   autoCommandPolicySession: null,
+  toolCallAutoApprovalSourceById: {},
   compactionLoading: {},
 };
 
@@ -700,6 +704,7 @@ export const sessionSlice = createSlice({
       state.isPruned = false;
       state.contextPercentage = undefined;
       state.autoCommandPolicySession = null;
+      state.toolCallAutoApprovalSourceById = {};
 
       if (payload) {
         state.history = payload.history as any;
@@ -979,6 +984,16 @@ export const sessionSlice = createSlice({
     ) => {
       state.autoCommandPolicySession = action.payload;
     },
+    setToolCallAutoApprovalSource: (
+      state,
+      action: PayloadAction<{
+        toolCallId: string;
+        source: ToolApprovalSource;
+      }>,
+    ) => {
+      state.toolCallAutoApprovalSourceById[action.payload.toolCallId] =
+        action.payload.source;
+    },
     setNewestToolbarPreviewForInput: (
       state,
       {
@@ -1100,6 +1115,7 @@ export const {
   setIsInEdit,
   setHasReasoningEnabled,
   setAutoCommandPolicySession,
+  setToolCallAutoApprovalSource,
   setInlineErrorMessage,
   setIsPruned,
   setContextPercentage,

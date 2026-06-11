@@ -1,7 +1,6 @@
 import {
   AtSymbolIcon,
-  CommandLineIcon,
-  FolderIcon,
+  ChevronDownIcon,
   LightBulbIcon as LightBulbIconOutline,
   PaperClipIcon,
   PhotoIcon,
@@ -32,7 +31,13 @@ import { getMetaKeyLabel, isMetaEquivalentKeyPressed } from "../../util";
 import { ToolTip } from "../gui/Tooltip";
 import ModelSelect from "../modelSelection/ModelSelect";
 import { ModeSelect } from "../ModeSelect";
-import { Button } from "../ui";
+import {
+  Button,
+  Listbox,
+  ListboxButton,
+  ListboxOption,
+  ListboxOptions,
+} from "../ui";
 import { useFontSize } from "../ui/font";
 import ContextStatus from "./ContextStatus";
 import HoverItem from "./InputToolbar/HoverItem";
@@ -94,17 +99,30 @@ function InputToolbar(props: InputToolbarProps) {
     repoKey ? store.ui.autoCommandPolicyByRepo[repoKey] : undefined,
   );
 
-  const nextPolicy = (current?: AutoCommandPolicy | null) => {
-    if (!current) return "ask" as const;
-    if (current === "ask") return "safe" as const;
-    if (current === "safe") return "auto" as const;
-    return null;
-  };
-
-  const sessionPolicyLabel =
+  const sessionPolicyValue =
     sessionAutoCommandPolicy == null ? "inherit" : sessionAutoCommandPolicy;
-  const repoPolicyLabel =
+  const repoPolicyValue =
     repoAutoCommandPolicy == null ? "default" : repoAutoCommandPolicy;
+
+  const sessionPolicyOptions: {
+    value: "inherit" | AutoCommandPolicy;
+    label: string;
+  }[] = [
+    { value: "inherit", label: "Inherit" },
+    { value: "ask", label: "Ask" },
+    { value: "safe", label: "Safe" },
+    { value: "auto", label: "Auto" },
+  ];
+
+  const repoPolicyOptions: {
+    value: "default" | AutoCommandPolicy;
+    label: string;
+  }[] = [
+    { value: "default", label: "Default" },
+    { value: "ask", label: "Ask" },
+    { value: "safe", label: "Safe" },
+    { value: "auto", label: "Auto" },
+  ];
 
   const smallFont = useFontSize(-2);
   const tinyFont = useFontSize(-3);
@@ -183,51 +201,77 @@ function InputToolbar(props: InputToolbarProps) {
                 </HoverItem>
               </ToolTip>
             )}
-            <ToolTip
-              place="top"
-              content={`Session command policy: ${sessionPolicyLabel} (click to cycle)`}
-            >
-              <HoverItem
-                onClick={() => {
-                  dispatch(
-                    setAutoCommandPolicySession(
-                      nextPolicy(sessionAutoCommandPolicy),
-                    ),
-                  );
-                }}
-              >
-                <CommandLineIcon
-                  className={`h-3 w-3 hover:brightness-150 ${sessionAutoCommandPolicy === "auto" ? "brightness-200" : ""}`}
-                />
-              </HoverItem>
+            <ToolTip place="top" content="Session command policy for this chat">
+              <div className="mx-0.5">
+                <Listbox
+                  value={sessionPolicyValue}
+                  onChange={(value) => {
+                    dispatch(
+                      setAutoCommandPolicySession(
+                        value === "inherit"
+                          ? null
+                          : (value as AutoCommandPolicy),
+                      ),
+                    );
+                  }}
+                >
+                  <ListboxButton className="border-command-border !h-5 !min-h-0 !w-[5.25rem] justify-between px-1.5 py-0 text-[10px]">
+                    <span>S:{sessionPolicyValue}</span>
+                    <ChevronDownIcon className="h-2.5 w-2.5" />
+                  </ListboxButton>
+                  <ListboxOptions
+                    className="!w-[7.5rem] !min-w-0"
+                    anchor="top start"
+                  >
+                    {sessionPolicyOptions.map((opt) => (
+                      <ListboxOption key={opt.value} value={opt.value}>
+                        {opt.label}
+                      </ListboxOption>
+                    ))}
+                  </ListboxOptions>
+                </Listbox>
+              </div>
             </ToolTip>
 
             <ToolTip
               place="top"
-              content={`Repo command policy: ${repoPolicyLabel} (click to cycle)`}
+              content="Repo command policy for this workspace"
             >
-              <HoverItem
-                onClick={() => {
-                  const next = nextPolicy(repoAutoCommandPolicy);
-                  if (!repoKey) {
-                    return;
-                  }
-                  if (next === null) {
-                    dispatch(clearRepoAutoCommandPolicy(repoKey));
-                  } else {
+              <div className="mx-0.5">
+                <Listbox
+                  value={repoPolicyValue}
+                  onChange={(value) => {
+                    if (!repoKey) {
+                      return;
+                    }
+                    if (value === "default") {
+                      dispatch(clearRepoAutoCommandPolicy(repoKey));
+                      return;
+                    }
                     dispatch(
                       setRepoAutoCommandPolicy({
                         repoKey,
-                        policy: next,
+                        policy: value as AutoCommandPolicy,
                       }),
                     );
-                  }
-                }}
-              >
-                <FolderIcon
-                  className={`h-3 w-3 hover:brightness-150 ${repoAutoCommandPolicy === "auto" ? "brightness-200" : ""}`}
-                />
-              </HoverItem>
+                  }}
+                >
+                  <ListboxButton className="border-command-border !h-5 !min-h-0 !w-[5.25rem] justify-between px-1.5 py-0 text-[10px]">
+                    <span>R:{repoPolicyValue}</span>
+                    <ChevronDownIcon className="h-2.5 w-2.5" />
+                  </ListboxButton>
+                  <ListboxOptions
+                    className="!w-[7.5rem] !min-w-0"
+                    anchor="top start"
+                  >
+                    {repoPolicyOptions.map((opt) => (
+                      <ListboxOption key={opt.value} value={opt.value}>
+                        {opt.label}
+                      </ListboxOption>
+                    ))}
+                  </ListboxOptions>
+                </Listbox>
+              </div>
             </ToolTip>
 
             {supportsReasoning && (

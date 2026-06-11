@@ -1,5 +1,6 @@
 import { Tool, ToolCallState } from "core";
 import Mustache from "mustache";
+import { useAppSelector } from "../../../redux/hooks";
 import { getStatusIntro } from "./utils";
 
 interface ToolCallStatusMessageProps {
@@ -11,6 +12,11 @@ export function ToolCallStatusMessage({
   tool,
   toolCallState,
 }: ToolCallStatusMessageProps) {
+  const autoApprovalSource = useAppSelector(
+    (store) =>
+      store.session.toolCallAutoApprovalSourceById[toolCallState.toolCallId],
+  );
+
   if (!tool) return "Agent tool use";
 
   const toolName = tool.displayTitle ?? tool.function.name;
@@ -51,12 +57,32 @@ export function ToolCallStatusMessage({
     }
   }
 
+  const autoApprovalBadgeLabel = autoApprovalSource
+    ? `AUTO:${autoApprovalSource.toUpperCase()}`
+    : "";
+
+  const autoApprovalBadgeClassName =
+    autoApprovalSource === "session"
+      ? "border-blue-500/40 bg-blue-500/10 text-blue-300"
+      : "border-violet-500/40 bg-violet-500/10 text-violet-300";
+
   return (
-    <div
-      className="text-description line-clamp-4 min-w-0 break-words"
-      data-testid="tool-call-title"
-    >
-      {`Smart AI ${intro} ${message}`}
+    <div className="flex min-w-0 flex-wrap items-center gap-1.5">
+      <div
+        className="text-description line-clamp-4 min-w-0 break-words"
+        data-testid="tool-call-title"
+      >
+        {`Smart AI ${intro} ${message}`}
+      </div>
+      {autoApprovalSource && (
+        <span
+          className={`rounded-full border px-1.5 py-0.5 text-[10px] ${autoApprovalBadgeClassName}`}
+          data-testid="tool-call-auto-approval-source"
+          title={`Auto-approved by ${autoApprovalSource} policy`}
+        >
+          {autoApprovalBadgeLabel}
+        </span>
+      )}
     </div>
   );
 }

@@ -1,4 +1,3 @@
-import { ConfigYaml, parseConfigYaml } from "@smartai/config-yaml";
 import {
   ArrowPathIcon,
   ChevronDownIcon,
@@ -11,6 +10,7 @@ import {
   StopCircleIcon,
   UserCircleIcon,
 } from "@heroicons/react/24/outline";
+import { ConfigYaml, parseConfigYaml } from "@smartai/config-yaml";
 import { MCPConnectionStatus, MCPServerStatus } from "core";
 import { BUILT_IN_GROUP_NAME } from "core/tools/builtIn";
 import { useContext, useMemo, useState } from "react";
@@ -31,8 +31,15 @@ import { IdeMessengerContext } from "../../../context/IdeMessenger";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { updateConfig } from "../../../redux/slices/configSlice";
 import { selectCurrentOrg } from "../../../redux/slices/profilesSlice";
+import { setAutoCommandPolicySession } from "../../../redux/slices/sessionSlice";
+import {
+  AutoCommandPolicy,
+  clearRepoAutoCommandPolicy,
+  setRepoAutoCommandPolicy,
+} from "../../../redux/slices/uiSlice";
 import { ConfigHeader } from "../components/ConfigHeader";
 import { ToolPoliciesGroup } from "../components/ToolPoliciesGroup";
+import { UserSetting } from "../components/UserSetting";
 
 interface MCPServerStatusProps {
   allToolsOff: boolean;
@@ -406,6 +413,7 @@ function MCPServerPreview({
 }
 
 export function ToolsSection() {
+  const dispatch = useAppDispatch();
   const availableTools = useAppSelector((state) => state.config.config.tools);
 
   const currentOrg = useAppSelector(selectCurrentOrg);
@@ -415,6 +423,13 @@ export function ToolsSection() {
   );
   const { selectedProfile } = useAuth();
   const ideMessenger = useContext(IdeMessengerContext);
+  const repoKey = window.workspacePaths?.[0] ?? "";
+  const sessionAutoCommandPolicy = useAppSelector(
+    (store) => store.session.autoCommandPolicySession,
+  );
+  const repoAutoCommandPolicy = useAppSelector((store) =>
+    repoKey ? store.ui.autoCommandPolicyByRepo[repoKey] : undefined,
+  );
   const disableMcp = currentOrg?.policy?.allowMcpServers === false;
   const isLocal = selectedProfile?.profileType === "local";
 
@@ -492,6 +507,56 @@ export function ToolsSection() {
         </div>
       )}
       <div className="mb-4 space-y-6">
+        <Card>
+          <div className="flex flex-col gap-4">
+            <UserSetting
+              type="select"
+              title="Current Session Command Policy"
+              description="Controls command/tool approvals only for the current chat session."
+              value={sessionAutoCommandPolicy ?? "inherit"}
+              onChange={(value) =>
+                dispatch(
+                  setAutoCommandPolicySession(
+                    value === "inherit" ? null : (value as AutoCommandPolicy),
+                  ),
+                )
+              }
+              options={[
+                { label: "Inherit", value: "inherit" },
+                { label: "Ask always", value: "ask" },
+                { label: "Auto safe", value: "safe" },
+                { label: "Auto all", value: "auto" },
+              ]}
+            />
+            <UserSetting
+              type="select"
+              title="Repository Command Policy"
+              description="Default command/tool policy for this workspace repository."
+              value={repoAutoCommandPolicy ?? "default"}
+              onChange={(value) => {
+                if (!repoKey) {
+                  return;
+                }
+                if (value === "default") {
+                  dispatch(clearRepoAutoCommandPolicy(repoKey));
+                  return;
+                }
+                dispatch(
+                  setRepoAutoCommandPolicy({
+                    repoKey,
+                    policy: value as AutoCommandPolicy,
+                  }),
+                );
+              }}
+              options={[
+                { label: "Default", value: "default" },
+                { label: "Ask always", value: "ask" },
+                { label: "Auto safe", value: "safe" },
+                { label: "Auto all", value: "auto" },
+              ]}
+            />
+          </div>
+        </Card>
         <ToolPoliciesGroup
           showIcon={false}
           groupName={BUILT_IN_GROUP_NAME}

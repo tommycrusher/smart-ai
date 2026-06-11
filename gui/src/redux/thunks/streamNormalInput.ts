@@ -15,6 +15,7 @@ import {
   setInactive,
   setInlineErrorMessage,
   setIsPruned,
+  setToolCallAutoApprovalSource,
   setToolGenerated,
   streamUpdate,
 } from "../slices/sessionSlice";
@@ -329,8 +330,14 @@ export const streamNormalInput = createAsyncThunk<
     const repoPolicy = repoKey
       ? state3.ui.autoCommandPolicyByRepo[repoKey]
       : undefined;
+    const sessionPolicy = state3.session.autoCommandPolicySession;
     const effectiveAutoCommandPolicy: AutoCommandPolicy | null =
-      state3.session.autoCommandPolicySession ?? repoPolicy ?? null;
+      sessionPolicy ?? repoPolicy ?? null;
+    const effectiveAutoCommandPolicySource = sessionPolicy
+      ? "session"
+      : repoPolicy
+        ? "repo"
+        : null;
 
     const policies = await evaluateToolPolicies(
       dispatch,
@@ -343,6 +350,20 @@ export const streamNormalInput = createAsyncThunk<
     const autoApprovedPolicies = policies.filter(
       ({ policy }) => policy === "allowedWithoutPermission",
     );
+
+    if (
+      effectiveAutoCommandPolicySource &&
+      effectiveAutoCommandPolicy !== "ask"
+    ) {
+      for (const { toolCallState } of autoApprovedPolicies) {
+        dispatch(
+          setToolCallAutoApprovalSource({
+            toolCallId: toolCallState.toolCallId,
+            source: effectiveAutoCommandPolicySource,
+          }),
+        );
+      }
+    }
     const needsApprovalPolicies = policies.filter(
       ({ policy }) => policy === "allowedWithPermission",
     );
