@@ -616,7 +616,10 @@ class Ollama extends BaseLLM implements ModelInstaller {
       stream: options.tools?.length ? false : options.stream,
       // format: options.format, // Not currently in base completion options
     };
-    if (options.tools?.length && ollamaMessages.at(-1)?.role === "user") {
+    // Always send tools if they are defined. Ollama requires them on every
+    // request in a multi-turn tool conversation — not just when the last
+    // message is from the user (tool results have role "tool").
+    if (options.tools?.length) {
       chatOptions.tools = options.tools.map((tool) => ({
         type: "function",
         function: {
