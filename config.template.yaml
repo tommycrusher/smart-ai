@@ -19,7 +19,14 @@ schema: v1
 
 models:
   # ---------------------------------------------------------------------------
-  # LOCAL MODELS (Ollama)
+  # LOCAL MODELS (Ollama) — Role assignment guide
+  # ---------------------------------------------------------------------------
+  # AGENT models (chat + tools): qwen3, qwen3.6, qwen2.5-instruct,
+  #                               deepseek-coder-v2 (natywny tool calling)
+  # CODE models (edit/apply):    qwen2.5-coder 7B/14B, smarterp-coder,
+  #                               deepseek-coder 6.7b/33b
+  # AUTOCOMPLETE:               qwen2.5-coder:1.5b (FIM, very fast)
+  # EMBED:                      nomic-embed-text
   # ---------------------------------------------------------------------------
   # apiBase points to your Ollama server. Default Ollama port is 11434.
   # The model name must EXACTLY match `ollama list` output.
@@ -62,6 +69,20 @@ models:
       maxTokens: 256
       topP: 0.9
 
+  - name: DeepSeek Coder V2
+    provider: ollama
+    apiBase: http://localhost:11434
+    model: deepseek-coder-v2:latest
+    roles:
+      - chat
+      - edit
+      - apply
+    defaultCompletionOptions:
+      temperature: 0.3
+      maxTokens: 8192
+      topP: 0.9
+      topK: 20
+
   - name: Nomic Embed
     provider: ollama
     apiBase: http://localhost:11434
@@ -98,7 +119,6 @@ models:
     provider: anthropic
     model: claude-sonnet-4-6
     apiKey: <YOUR_ANTHROPIC_API_KEY>
-
 # =============================================================================
 # ROLES REFERENCE
 # =============================================================================
