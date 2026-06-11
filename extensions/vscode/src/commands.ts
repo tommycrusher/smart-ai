@@ -8,14 +8,20 @@ import { EXTENSION_NAME } from "core/control-plane/env";
 import { Core } from "core/core";
 import { walkDirAsync } from "core/indexing/walkDir";
 import { isModelInstaller } from "core/llm";
+import {
+  type AutoProviderPool,
+  autoSelectModelsForAllRoles,
+  explainSelection,
+} from "core/llm/autoRouter";
 import { NextEditLoggingService } from "core/nextEdit/NextEditLoggingService";
 import { TrainingCaptureService } from "core/training";
+import { GlobalContext } from "core/util/GlobalContext";
 import { startLocalLemonade } from "core/util/lemonadeHelper";
 import { startLocalOllama } from "core/util/ollamaHelper";
 import {
-    getConfigJsonPath,
-    getConfigYamlPath,
-    setConfigFilePermissions,
+  getConfigJsonPath,
+  getConfigYamlPath,
+  setConfigFilePermissions,
 } from "core/util/paths";
 import { Telemetry } from "core/util/posthog";
 import * as vscode from "vscode";
@@ -24,27 +30,27 @@ import * as YAML from "yaml";
 import { convertJsonToYamlConfig } from "../../../packages/config-yaml/dist";
 
 import {
-    getAutocompleteStatusBarDescription,
-    getAutocompleteStatusBarTitle,
-    getNextEditMenuItems,
-    getStatusBarStatus,
-    getStatusBarStatusFromQuickPickItemLabel,
-    handleNextEditToggle,
-    isNextEditToggleLabel,
-    quickPickStatusText,
-    setupStatusBar,
-    StatusBarStatus,
+  getAutocompleteStatusBarDescription,
+  getAutocompleteStatusBarTitle,
+  getNextEditMenuItems,
+  getStatusBarStatus,
+  getStatusBarStatusFromQuickPickItemLabel,
+  handleNextEditToggle,
+  isNextEditToggleLabel,
+  quickPickStatusText,
+  setupStatusBar,
+  StatusBarStatus,
 } from "./autocomplete/statusBar";
-import { SmartAiConsoleWebviewViewProvider } from "./SmartAiConsoleWebviewViewProvider";
-import { SmartAiGUIWebviewViewProvider } from "./SmartAiGUIWebviewViewProvider";
 import { processDiff } from "./diff/processDiff";
 import { VerticalDiffManager } from "./diff/vertical/manager";
 import EditDecorationManager from "./quickEdit/EditDecorationManager";
 import { QuickEdit, QuickEditShowParams } from "./quickEdit/QuickEditQuickPick";
+import { SmartAiConsoleWebviewViewProvider } from "./SmartAiConsoleWebviewViewProvider";
+import { SmartAiGUIWebviewViewProvider } from "./SmartAiGUIWebviewViewProvider";
 import {
-    addCodeToContextFromRange,
-    addEntireFileToContext,
-    addHighlightedCodeToContext,
+  addCodeToContextFromRange,
+  addEntireFileToContext,
+  addHighlightedCodeToContext,
 } from "./util/addCode";
 import { Battery } from "./util/battery";
 import { getMetaKeyLabel } from "./util/util";
@@ -181,6 +187,132 @@ const getCommandsMap: (
       rulesToInclude: config.rules,
       isApply: false,
     });
+  }
+
+  function extractUrisFromArg(value: unknown): vscode.Uri[] {
+    if (!value) {
+      return [];
+    }
+
+    if (value instanceof vscode.Uri) {
+      return [value];
+    }
+
+    if (Array.isArray(value)) {
+      return value.flatMap((item) => extractUrisFromArg(item));
+    }
+
+    if (typeof value === "object") {
+      const candidate = value as Record<string, unknown>;
+      const uriLike =
+        candidate.resourceUri ??
+        candidate.uri ??
+        candidate.sourceUri ??
+        candidate.original;
+      if (uriLike instanceof vscode.Uri) {
+        return [uriLike];
+      }
+    }
+
+    return [];
+  }
+
+  async function addUrisToContext(uris: vscode.Uri[]) {
+    if (!uris.length) {
+      return;
+    }
+
+    vscode.commands.executeCommand("smartai.continueGUIView.focus");
+
+    for (const uri of uris) {
+      const isDirectory = await vscode.workspace.fs
+        .stat(uri)
+        .then((stat) => stat.type === vscode.FileType.Directory)
+        .catch(() => false);
+
+      if (isDirectory) {
+        for await (const fileUri of walkDirAsync(uri.toString(), ide, {
+          source: "vscode smartai.addUrisToContext",
+        })) {
+          await addEntireFileToContext(
+            vscode.Uri.parse(fileUri),
+            sidebar.webviewProtocol,
+            ide.ideUtils,
+          );
+        }
+      } else {
+        await addEntireFileToContext(uri, sidebar.webviewProtocol, ide.ideUtils);
+      }
+    }
+  }
+
+  async function addSelectionToChat() {
+    const editor = vscode.window.activeTextEditor;
+    if (!editor || editor.selection.isEmpty) {
+      void vscode.window.showInformationMessage(
+        "Select text in the editor first, then use 'Add Selection to Smart AI Chat'.",
+      );
+      return;
+    }
+
+    vscode.commands.executeCommand("smartai.continueGUIView.focus");
+    await addHighlightedCodeToContext(sidebar.webviewProtocol);
+  }
+
+  async function addActiveFileToChat() {
+    const editor = vscode.window.activeTextEditor;
+    if (!editor) {
+      void vscode.window.showInformationMessage(
+        "Open a file first, then use 'Add File to Smart AI Chat'.",
+      );
+      return;
+    }
+
+    await addUrisToContext([editor.document.uri]);
+  }
+
+  async function addResourceToChat(...args: unknown[]) {
+    const fromArgs = args.flatMap((arg) => extractUrisFromArg(arg));
+    if (fromArgs.length) {
+      await addUrisToContext(fromArgs);
+      return;
+    }
+
+    // Fallback: active editor file
+    await addActiveFileToChat();
+  }
+
+  async function selectFilesAsContext(...args: unknown[]) {
+    const fromArgs = args.flatMap((arg) => extractUrisFromArg(arg));
+
+    if (fromArgs.length) {
+      await addUrisToContext(fromArgs);
+      return;
+    }
+
+    // No command args (e.g. command palette) -> allow picking files/folders
+    const picked = await vscode.window.showOpenDialog({
+      canSelectFiles: true,
+      canSelectFolders: true,
+      canSelectMany: true,
+      openLabel: "Add to Smart AI Chat",
+    });
+
+    if (!picked?.length) {
+      return;
+    }
+
+    await addUrisToContext(picked);
+  }
+
+  async function addScmSelectionToChat(resourceStates?: unknown[]) {
+    const uris = extractUrisFromArg(resourceStates ?? []);
+    if (!uris.length) {
+      // Fallback to currently active file if SCM did not pass states
+      await addActiveFileToChat();
+      return;
+    }
+    await addUrisToContext(uris);
   }
 
   return {
@@ -483,39 +615,24 @@ const getCommandsMap: (
     "smartai.openConfigPage": () => {
       vscode.commands.executeCommand("smartai.navigateTo", "/config", false);
     },
-    "smartai.selectFilesAsContext": async (
-      firstUri: vscode.Uri,
-      uris: vscode.Uri[],
-    ) => {
-      if (uris === undefined) {
-        throw new Error("No files were selected");
-      }
-
-      vscode.commands.executeCommand("smartai.continueGUIView.focus");
-
-      for (const uri of uris) {
-        // If it's a folder, add the entire folder contents recursively by using walkDir (to ignore ignored files)
-        const isDirectory = await vscode.workspace.fs
-          .stat(uri)
-          ?.then((stat) => stat.type === vscode.FileType.Directory);
-        if (isDirectory) {
-          for await (const fileUri of walkDirAsync(uri.toString(), ide, {
-            source: "vscode smartai.selectFilesAsContext command",
-          })) {
-            await addEntireFileToContext(
-              vscode.Uri.parse(fileUri),
-              sidebar.webviewProtocol,
-              ide.ideUtils,
-            );
-          }
-        } else {
-          await addEntireFileToContext(
-            uri,
-            sidebar.webviewProtocol,
-            ide.ideUtils,
-          );
-        }
-      }
+    "smartai.selectFilesAsContext": async (...args: unknown[]) => {
+      await selectFilesAsContext(...args);
+    },
+    "smartai.addSelectionToContext": async () => {
+      captureCommandTelemetry("addSelectionToContext");
+      await addSelectionToChat();
+    },
+    "smartai.addActiveFileToContext": async () => {
+      captureCommandTelemetry("addActiveFileToContext");
+      await addActiveFileToChat();
+    },
+    "smartai.addResourceToContext": async (...args: unknown[]) => {
+      captureCommandTelemetry("addResourceToContext");
+      await addResourceToChat(...args);
+    },
+    "smartai.addScmSelectionToContext": async (resourceStates?: unknown[]) => {
+      captureCommandTelemetry("addScmSelectionToContext");
+      await addScmSelectionToChat(resourceStates);
     },
     "smartai.logAutocompleteOutcome": (
       completionId: string,
@@ -962,6 +1079,98 @@ const getCommandsMap: (
       await trainingService.markRejected();
       vscode.window.showInformationMessage(
         "Marked last response as reject. Will not be used for training.",
+      );
+    },
+    "smartai.autoSelectModels": async () => {
+      captureCommandTelemetry("autoSelectModels");
+
+      const poolItems: vscode.QuickPickItem[] = [
+        {
+          label: "Enable Auto: Ollama (Local, Free)",
+          description: "ollama",
+          detail: "Auto routing limited to local Ollama models.",
+        },
+        {
+          label: "Enable Auto: Anthropic (Claude)",
+          description: "anthropic",
+          detail: "Auto routing limited to Anthropic models.",
+        },
+        {
+          label: "Enable Auto: OpenAI (GPT)",
+          description: "openai",
+          detail: "Auto routing limited to OpenAI models.",
+        },
+        {
+          label: "Enable Auto: Mixed (Best of All)",
+          description: "mixed",
+          detail: "Auto routing across all configured providers.",
+        },
+        {
+          label: "Disable Auto (Manual Selection)",
+          description: "disable",
+          detail: "Keep manual model selection per role.",
+        },
+      ];
+
+      const picked = await vscode.window.showQuickPick(poolItems, {
+        placeHolder: "Select Auto model routing mode",
+        title: "Smart AI — Auto Model Routing",
+      });
+      if (!picked) {
+        return;
+      }
+
+      const profileId = configHandler.currentProfile?.profileDescription.id;
+      if (!profileId) {
+        vscode.window.showErrorMessage("No active profile selected.");
+        return;
+      }
+
+      const globalContext = new GlobalContext();
+
+      if (picked.description === "disable") {
+        globalContext.updateAutoModelSelection(profileId, {
+          enabled: false,
+        });
+        await configHandler.reloadConfig("Auto model routing disabled");
+        vscode.window.showInformationMessage(
+          "Auto model routing disabled. Manual model selections are active.",
+        );
+        return;
+      }
+
+      const pool = (picked.description ?? "ollama") as AutoProviderPool;
+      globalContext.updateAutoModelSelection(profileId, {
+        enabled: true,
+        pool,
+      });
+
+      const { config } = await configHandler.reloadConfig(
+        `Auto model routing enabled (${pool})`,
+      );
+      if (!config) {
+        vscode.window.showErrorMessage(
+          "Failed to reload config after enabling auto routing.",
+        );
+        return;
+      }
+
+      const selections = autoSelectModelsForAllRoles(
+        config.modelsByRole as Record<string, ILLM[]>,
+        pool,
+      );
+      const lines: string[] = [`Auto-selected models (pool: ${pool}):`];
+      for (const [role, model] of Object.entries(selections)) {
+        lines.push(
+          model
+            ? `  ${role}: ${explainSelection(model, role)}`
+            : `  ${role}: (no suitable model found)`,
+        );
+      }
+
+      console.log(lines.join("\n"));
+      vscode.window.showInformationMessage(
+        `Auto model routing enabled (${pool}).`,
       );
     },
   };

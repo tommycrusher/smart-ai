@@ -92,8 +92,6 @@ interface OllamaRawOptions extends OllamaBaseOptions {
 interface OllamaChatOptions extends OllamaBaseOptions {
   messages: OllamaChatMessage[]; // the messages of the chat, this can be used to keep a chat memory
   tools?: OllamaTool[]; // the tools of the chat, this can be used to keep a tool memory
-  // Not supported yet - tools: tools for the model to use if supported. Requires stream to be set to false
-  // And correspondingly, tool calls in OllamaChatMessage
   think?: boolean; // if true the model will be prompted to think about the response before generating it
 }
 
@@ -381,6 +379,49 @@ class Ollama extends BaseLLM implements ModelInstaller {
     return this.modelInfoPromise;
   }
 
+  /**
+   * Models known to support native tool calling via Ollama's /api/chat.
+   * These models can stream tool call responses. Models not in this list
+   * will fall back to content-based tool call parsing.
+   */
+  private static readonly NATIVE_TOOL_MODELS = new Set([
+    "qwen3",
+    "qwen2.5",
+    "qwen2.5-coder",
+    "qwen2",
+    "llama3.1",
+    "llama3.2",
+    "llama3.3",
+    "mistral",
+    "mixtral",
+    "ministral",
+    "deepseek-coder-v2",
+    "deepseek-v2",
+    "deepseek-v3",
+    "command-r",
+    "command-r-plus",
+    "firefunction",
+    "gemma3",
+    "phi4",
+    "qwen3.6",
+    "smarterp-coder",
+  ]);
+
+  /**
+   * Check if the current model supports native tool calling.
+   * This determines whether we can stream with tools or need to fall back
+   * to non-streaming mode.
+   */
+  private _supportsNativeTools(): boolean {
+    const model = this._getModel().toLowerCase();
+    for (const prefix of Ollama.NATIVE_TOOL_MODELS) {
+      if (model.startsWith(prefix)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   // Map of "Smart AI model name" to Ollama actual model name
   private modelMap: Record<string, string> = {
     "mistral-7b": "mistral:7b",
@@ -641,7 +682,14 @@ class Ollama extends BaseLLM implements ModelInstaller {
       options: this._getModelFileParams(options),
       think: options.reasoning,
       keep_alive: options.keepAlive ?? 60 * 30, // 30 minutes
-      stream: options.tools?.length ? false : options.stream,
+      // Enable streaming even with tools for models that support native tool
+      // calling. For models without native support, fall back to non-streaming
+      // so we can parse tool calls from the complete response content.
+      stream: options.tools?.length
+        ? this._supportsNativeTools()
+          ? options.stream
+          : false
+        : options.stream,
       // format: options.format, // Not currently in base completion options
     };
     // Always send tools if they are defined. Ollama requires them on every
@@ -708,6 +756,11 @@ class Ollama extends BaseLLM implements ModelInstaller {
           };
           return [chatMessage];
         }
+        return [];
+      }
+
+      // Guard against responses with no message (e.g. final done chunk)
+      if (!res.message) {
         return [];
       }
 
@@ -778,7 +831,16 @@ class Ollama extends BaseLLM implements ModelInstaller {
         yield msg;
       }
     } else {
+      // When streaming with tools, Ollama sends tool call data across
+      // multiple chunks. We accumulate the full content and tool_calls
+      // from the streaming chunks, then emit a single final message
+      // with the complete tool calls once the stream ends.
       let buffer = "";
+      let accumulatedContent = "";
+      let accumulatedThinking = "";
+      let accumulatedToolCalls: OllamaChatMessage["tool_calls"] = [];
+      let hasToolCallsInStream = false;
+
       for await (const value of streamResponse(response)) {
         // Append the received chunk to the buffer
         buffer += value;
@@ -791,6 +853,66 @@ class Ollama extends BaseLLM implements ModelInstaller {
           if (chunk.trim() !== "") {
             try {
               const j = JSON.parse(chunk) as OllamaChatResponse;
+
+              // Check if this chunk contains tool calls (native Ollama streaming)
+              if (
+                !("error" in j) &&
+                !("type" in j) &&
+                "message" in j &&
+                j.message?.tool_calls?.length
+              ) {
+                hasToolCallsInStream = true;
+                // Deduplicate tool calls in case Ollama repeats them across chunks
+                const seen = new Set<string>();
+                for (const tc of accumulatedToolCalls) {
+                  seen.add(JSON.stringify(tc));
+                }
+                for (const tc of j.message.tool_calls) {
+                  const key = JSON.stringify(tc);
+                  if (!seen.has(key)) {
+                    seen.add(key);
+                    accumulatedToolCalls.push(tc);
+                  }
+                }
+                if (j.message.content) {
+                  accumulatedContent += j.message.content;
+                }
+                if (j.message.thinking) {
+                  accumulatedThinking += j.message.thinking;
+                }
+                // Don't yield yet — accumulate until stream is done
+                continue;
+              }
+
+              // If we've seen tool calls in previous chunks, keep accumulating
+              if (
+                hasToolCallsInStream &&
+                !("error" in j) &&
+                !("type" in j) &&
+                "message" in j
+              ) {
+                if (j.message?.content) {
+                  accumulatedContent += j.message.content;
+                }
+                if (j.message?.thinking) {
+                  accumulatedThinking += j.message.thinking;
+                }
+                if (j.message?.tool_calls?.length) {
+                  const seen = new Set(
+                    accumulatedToolCalls.map((tc) => JSON.stringify(tc)),
+                  );
+                  for (const tc of j.message.tool_calls) {
+                    const key = JSON.stringify(tc);
+                    if (!seen.has(key)) {
+                      seen.add(key);
+                      accumulatedToolCalls.push(tc);
+                    }
+                  }
+                }
+                continue;
+              }
+
+              // Normal streaming (no tool calls) — yield immediately
               for (const msg of convertChatMessage(j)) {
                 yield msg;
               }
@@ -798,6 +920,52 @@ class Ollama extends BaseLLM implements ModelInstaller {
               throw new Error(`Error parsing Ollama response: ${e} ${chunk}`);
             }
           }
+        }
+      }
+
+      // If we accumulated tool calls during streaming, emit them now
+      if (hasToolCallsInStream && accumulatedToolCalls.length > 0) {
+        if (accumulatedThinking) {
+          const thinkingMessage: ThinkingChatMessage = {
+            role: "thinking",
+            content: accumulatedThinking,
+          };
+          yield thinkingMessage;
+        }
+
+        const chatMessage: ChatMessage = {
+          role: "assistant",
+          content: accumulatedContent,
+          toolCalls: accumulatedToolCalls.map((tc) => ({
+            type: "function" as const,
+            id: `tc_${uuidv4()}`,
+            function: {
+              name: tc.function.name,
+              arguments: JSON.stringify(tc.function.arguments),
+            },
+          })),
+        };
+        yield chatMessage;
+      } else if (hasToolCallsInStream && accumulatedContent) {
+        // Stream had tool_calls markers but none parsed — try content-based fallback
+        const { toolCalls: parsedToolCalls, remainingContent } =
+          parseToolCallsFromOllamaContent(accumulatedContent);
+        if (parsedToolCalls.length) {
+          const chatMessage: ChatMessage = {
+            role: "assistant",
+            content: remainingContent,
+            toolCalls: parsedToolCalls.map((tc) => ({
+              type: "function" as const,
+              id: `tc_${uuidv4()}`,
+              function: {
+                name: tc.name,
+                arguments: JSON.stringify(tc.arguments),
+              },
+            })),
+          };
+          yield chatMessage;
+        } else {
+          yield { role: "assistant", content: accumulatedContent };
         }
       }
     }

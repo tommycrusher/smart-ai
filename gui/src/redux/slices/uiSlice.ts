@@ -1,5 +1,5 @@
-import { ToolPolicy } from "@smartai/terminal-security";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { ToolPolicy } from "@smartai/terminal-security";
 import { RuleWithSource, Tool } from "core";
 import { BUILT_IN_GROUP_NAME } from "core/tools/builtIn";
 import {
@@ -17,6 +17,9 @@ export type RulePolicies = { [ruleName: string]: RulePolicy };
 export type ToolGroupPolicies = { [toolGroupName: string]: ToolGroupPolicy };
 export type ReasoningSettings = { [modelTitle: string]: boolean };
 
+export type AutoCommandPolicy = "ask" | "safe" | "auto";
+export type RepoAutoCommandPolicies = { [repoKey: string]: AutoCommandPolicy };
+
 type UIState = {
   showDialog: boolean;
   dialogMessage: JSX.Element | undefined;
@@ -28,6 +31,7 @@ type UIState = {
   toolGroupSettings: ToolGroupPolicies;
   ruleSettings: RulePolicies;
   reasoningSettings: ReasoningSettings;
+  autoCommandPolicyByRepo: RepoAutoCommandPolicies;
   ttsActive: boolean;
 };
 
@@ -49,6 +53,7 @@ export const DEFAULT_UI_SLICE: UIState = {
   },
   ruleSettings: {},
   reasoningSettings: {},
+  autoCommandPolicyByRepo: {},
 };
 
 export const uiSlice = createSlice({
@@ -149,6 +154,19 @@ export const uiSlice = createSlice({
       state.reasoningSettings[action.payload.modelTitle] =
         action.payload.enabled;
     },
+    setRepoAutoCommandPolicy: (
+      state,
+      action: PayloadAction<{
+        repoKey: string;
+        policy: AutoCommandPolicy;
+      }>,
+    ) => {
+      state.autoCommandPolicyByRepo[action.payload.repoKey] =
+        action.payload.policy;
+    },
+    clearRepoAutoCommandPolicy: (state, action: PayloadAction<string>) => {
+      delete state.autoCommandPolicyByRepo[action.payload];
+    },
   },
 });
 
@@ -166,6 +184,8 @@ export const {
   toggleRuleSetting,
   setTTSActive,
   setReasoningSetting,
+  setRepoAutoCommandPolicy,
+  clearRepoAutoCommandPolicy,
 } = uiSlice.actions;
 
 export default uiSlice.reducer;

@@ -3,7 +3,11 @@ import { Tool, ToolCallState } from "core";
 import { IIdeMessenger } from "../../context/IdeMessenger";
 import { isEditTool } from "../../util/toolCallState";
 import { errorToolCall, updateToolCallOutput } from "../slices/sessionSlice";
-import { DEFAULT_TOOL_SETTING, ToolPolicies } from "../slices/uiSlice";
+import {
+  AutoCommandPolicy,
+  DEFAULT_TOOL_SETTING,
+  ToolPolicies,
+} from "../slices/uiSlice";
 import { AppThunkDispatch } from "../store";
 
 interface EvaluatedPolicy {
@@ -12,32 +16,67 @@ interface EvaluatedPolicy {
   toolCallState: ToolCallState;
 }
 
+function applyAutoCommandPolicyOverride(
+  basePolicy: ToolPolicy,
+  tool: Tool | undefined,
+  autoCommandPolicy: AutoCommandPolicy | null | undefined,
+): ToolPolicy {
+  if (!autoCommandPolicy || basePolicy === "disabled") {
+    return basePolicy;
+  }
+
+  if (autoCommandPolicy === "ask") {
+    return "allowedWithPermission";
+  }
+
+  if (autoCommandPolicy === "auto") {
+    return "allowedWithoutPermission";
+  }
+
+  // "safe": auto-approve readonly tools, ask for mutating tools.
+  if (tool?.readonly) {
+    return "allowedWithoutPermission";
+  }
+
+  return "allowedWithPermission";
+}
+
 /**
- * Evaluates the tool policy for a tool call, including dynamic policy evaluation
- * Note that tool group policies are not considered here because activeTools already excludes disabled groups
+ * Evaluates the tool policy for a tool call, including dynamic policy evaluation.
+ * Note that tool group policies are not considered here because activeTools
+ * already excludes disabled groups.
  */
 async function evaluateToolPolicy(
   ideMessenger: IIdeMessenger,
   activeTools: Tool[],
   toolCallState: ToolCallState,
   toolPolicies: ToolPolicies,
+  autoCommandPolicy?: AutoCommandPolicy | null,
 ): Promise<EvaluatedPolicy> {
   // allow edit tool calls without permission
   if (isEditTool(toolCallState.toolCall.function.name)) {
     return { policy: "allowedWithoutPermission", toolCallState };
   }
 
+  const matchingTool = activeTools.find(
+    (tool) => tool.function.name === toolCallState.toolCall.function.name,
+  );
+
   const basePolicy =
     toolPolicies[toolCallState.toolCall.function.name] ??
-    activeTools.find(
-      (tool) => tool.function.name === toolCallState.toolCall.function.name,
-    )?.defaultToolPolicy ??
+    matchingTool?.defaultToolPolicy ??
     DEFAULT_TOOL_SETTING;
+
+  const effectiveBasePolicy = applyAutoCommandPolicyOverride(
+    basePolicy,
+    matchingTool,
+    autoCommandPolicy,
+  );
 
   const toolName = toolCallState.toolCall.function.name;
   const result = await ideMessenger.request("tools/evaluatePolicy", {
     toolName,
-    basePolicy,
+    basePolicy: effectiveBasePolicy,
     parsedArgs: toolCallState.parsedArgs,
     processedArgs: toolCallState.processedArgs,
   });
@@ -52,15 +91,17 @@ async function evaluateToolPolicy(
   const displayValue = result.content.displayValue;
 
   // Ensure dynamic policy cannot be more lenient than base policy
-  // Policy hierarchy (most restrictive to least): disabled > allowedWithPermission > allowedWithoutPermission
-  if (basePolicy === "disabled") {
-    return { policy: "disabled", displayValue, toolCallState }; // Cannot override disabled
+  // Policy hierarchy (most restrictive to least):
+  // disabled > allowedWithPermission > allowedWithoutPermission
+  if (effectiveBasePolicy === "disabled") {
+    return { policy: "disabled", displayValue, toolCallState };
   }
+
   if (
-    basePolicy === "allowedWithPermission" &&
+    effectiveBasePolicy === "allowedWithPermission" &&
     dynamicPolicy === "allowedWithoutPermission"
   ) {
-    return { policy: "allowedWithPermission", displayValue, toolCallState }; // Cannot make more lenient
+    return { policy: "allowedWithPermission", displayValue, toolCallState };
   }
 
   return { policy: dynamicPolicy, displayValue, toolCallState };
@@ -77,8 +118,8 @@ export async function evaluateToolPolicies(
   activeTools: Tool[],
   generatedToolCalls: ToolCallState[],
   toolPolicies: ToolPolicies,
+  autoCommandPolicy?: AutoCommandPolicy | null,
 ): Promise<EvaluatedPolicy[]> {
-  // Check if ALL tool calls are auto-approved using dynamic evaluation
   const policyResults = await Promise.all(
     generatedToolCalls.map((toolCallState) =>
       evaluateToolPolicy(
@@ -86,6 +127,7 @@ export async function evaluateToolPolicies(
         activeTools,
         toolCallState,
         toolPolicies,
+        autoCommandPolicy,
       ),
     ),
   );
@@ -97,10 +139,8 @@ export async function evaluateToolPolicies(
   for (const { displayValue, toolCallState } of disabledResults) {
     dispatch(errorToolCall({ toolCallId: toolCallState.toolCallId }));
 
-    // Use the displayValue from the policy evaluation, or fallback to function name
     const command = displayValue || toolCallState.toolCall.function.name;
 
-    // Add error message explaining why it's disabled
     dispatch(
       updateToolCallOutput({
         toolCallId: toolCallState.toolCallId,

@@ -1,10 +1,10 @@
 import fs from "node:fs";
 
-import { ModelRole } from "@smartai/config-yaml";
 import {
   OAuthClientInformationFull,
   OAuthTokens,
 } from "@modelcontextprotocol/sdk/shared/auth.js";
+import { ModelRole } from "@smartai/config-yaml";
 
 import { SiteIndexingConfig } from "..";
 import {
@@ -12,12 +12,18 @@ import {
   sharedConfigSchema,
   SharedConfigSchema,
 } from "../config/sharedConfig";
+import type { AutoProviderPool } from "../llm/autoRouter";
 
 import { getGlobalContextFilePath } from "./paths";
 
 export type GlobalContextModelSelections = Partial<
   Record<ModelRole, string | null>
 >;
+
+export type AutoModelSelectionConfig = {
+  enabled: boolean;
+  pool: AutoProviderPool;
+};
 
 export type GlobalContextType = {
   indexingPaused: boolean;
@@ -29,6 +35,9 @@ export type GlobalContextType = {
   };
   selectedModelsByProfileId: {
     [profileId: string]: GlobalContextModelSelections;
+  };
+  autoModelSelectionByProfileId: {
+    [profileId: string]: AutoModelSelectionConfig;
   };
   cliSelectedModel?: string; // CLI-specific model selection for unauthenticated users
 
@@ -181,5 +190,32 @@ export class GlobalContext {
       [profileId]: newSelections,
     });
     return newSelections;
+  }
+
+  getAutoModelSelection(profileId: string): AutoModelSelectionConfig {
+    const all = this.get("autoModelSelectionByProfileId") ?? {};
+    return all[profileId] ?? { enabled: false, pool: "ollama" };
+  }
+
+  updateAutoModelSelection(
+    profileId: string,
+    config: Partial<AutoModelSelectionConfig>,
+  ): AutoModelSelectionConfig {
+    const all = this.get("autoModelSelectionByProfileId") ?? {};
+    const current = all[profileId] ?? {
+      enabled: false,
+      pool: "ollama" as const,
+    };
+    const updated: AutoModelSelectionConfig = {
+      ...current,
+      ...config,
+    };
+
+    this.update("autoModelSelectionByProfileId", {
+      ...all,
+      [profileId]: updated,
+    });
+
+    return updated;
   }
 }

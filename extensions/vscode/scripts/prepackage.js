@@ -322,38 +322,28 @@ void (async () => {
     }
   }
 
+  // --- SQLite3 cross-platform binary handling ---
+  // Step 1: Download the correct prebuilt sqlite3 binary for the TARGET platform
+  // via copySqlite (downloads from GitHub releases into core/node_modules/sqlite3/build/).
   if (!skipInstalls) {
     await copySqlite(target);
   } else {
     console.log("[info] Skipping sqlite download because SKIP_INSTALLS=true");
   }
 
-  // Download correct sqlite3 prebuild for target platform, then copy
+  // Step 2: Copy the sqlite3 package to out/node_modules/sqlite3.
+  // IMPORTANT: We first copy the JS files from the local node_modules/sqlite3,
+  // then OVERWRITE the native binary (build/Release/node_sqlite3.node) with the
+  // one downloaded by copySqlite for the target platform. This prevents shipping
+  // a host-platform binary (e.g. Windows PE) inside a Linux VSIX.
   const sqlite3PkgPath = path.join(__dirname, "../node_modules/sqlite3");
   const sqlite3OutPath = path.join(__dirname, "../out/node_modules/sqlite3");
-  if (fs.existsSync(sqlite3PkgPath)) {
-    // If building for a different platform than host, download the correct prebuild
-    const hostPlatform = os.platform();
-    const targetPlatform = target ? target.split("-")[0] : hostPlatform;
-    if (target && targetPlatform !== hostPlatform) {
-      const targetArch = target.split("-")[1] || os.arch();
-      console.log(`[info] Downloading sqlite3 prebuild for ${targetPlatform}-${targetArch}`);
-      try {
-        const { execSync } = require("child_process");
-        execSync(
-          `npx prebuild-install -r napi --platform=${targetPlatform} --arch=${targetArch} --tag-prefix=v --verbose`,
-          {
-            cwd: sqlite3PkgPath,
-            stdio: "inherit",
-          }
-        );
-        console.log(`[info] Downloaded sqlite3 prebuild for ${targetPlatform}-${targetArch}`);
-      } catch (e) {
-        console.warn(`[warn] Failed to download sqlite3 prebuild for ${targetPlatform}-${targetArch}:`, e.message);
-      }
-    }
+  // The target-platform binary lives in core/node_modules/sqlite3/build/Release
+  // after copySqlite downloads and extracts it.
+  const sqlite3CoreBuildPath = path.join(__dirname, "../../../core/node_modules/sqlite3/build");
 
-    console.log("[info] Copying sqlite3 package to out/node_modules");
+  if (fs.existsSync(sqlite3PkgPath)) {
+    console.log("[info] Copying sqlite3 JS package to out/node_modules");
     fs.mkdirSync(sqlite3OutPath, { recursive: true });
     await new Promise((resolve, reject) => {
       ncp(
@@ -370,8 +360,24 @@ void (async () => {
         },
       );
     });
+
+    // Step 3: Overwrite the native binary with the target-platform version.
+    // copySqlite downloads the correct binary for the target into
+    // core/node_modules/sqlite3/build/Release/node_sqlite3.node.
+    // We must copy it on top of whatever was in node_modules/sqlite3/build/
+    // (which is the HOST platform binary from npm install).
+    const targetBinaryPath = path.join(sqlite3CoreBuildPath, "Release", "node_sqlite3.node");
+    const outBinaryPath = path.join(sqlite3OutPath, "build", "Release", "node_sqlite3.node");
+    if (fs.existsSync(targetBinaryPath)) {
+      fs.mkdirSync(path.join(sqlite3OutPath, "build", "Release"), { recursive: true });
+      fs.copyFileSync(targetBinaryPath, outBinaryPath);
+      console.log(`[info] Overwrote sqlite3 native binary with target-platform (${target}) build`);
+    } else {
+      console.warn(`[warn] Target-platform sqlite3 binary not found at ${targetBinaryPath}`);
+      console.warn("[warn] The VSIX may contain a host-platform binary — this will cause 'invalid ELF header' errors on other platforms!");
+    }
   } else {
-    console.warn("[warn] sqlite3 not found, skipping copy");
+    console.warn("[warn] sqlite3 not found in node_modules, skipping copy");
   }
 
   // Copy node_modules for pre-built binaries
@@ -507,6 +513,8 @@ void (async () => {
     `out/node_modules/@vscode/ripgrep/bin/rg${exe}`,
     // LanceDB (target platform only)
     `out/node_modules/@lancedb/${keepLancedbDir}/index.node`,
+    // SQLite3 native binary (must match target platform)
+    "out/node_modules/sqlite3/build/Release/node_sqlite3.node",
   ]);
   } catch (e) {
     console.error("[warn] File validation failed (some platform files may be missing):", e.message);

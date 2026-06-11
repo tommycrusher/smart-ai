@@ -1,6 +1,9 @@
 import {
   AtSymbolIcon,
+  CommandLineIcon,
+  FolderIcon,
   LightBulbIcon as LightBulbIconOutline,
+  PaperClipIcon,
   PhotoIcon,
 } from "@heroicons/react/24/outline";
 import { LightBulbIcon as LightBulbIconSolid } from "@heroicons/react/24/solid";
@@ -14,8 +17,16 @@ import { IdeMessengerContext } from "../../context/IdeMessenger";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { selectUseActiveFile } from "../../redux/selectors";
 import { selectSelectedChatModel } from "../../redux/slices/configSlice";
-import { setHasReasoningEnabled } from "../../redux/slices/sessionSlice";
-import { setReasoningSetting } from "../../redux/slices/uiSlice";
+import {
+  setAutoCommandPolicySession,
+  setHasReasoningEnabled,
+} from "../../redux/slices/sessionSlice";
+import {
+  AutoCommandPolicy,
+  clearRepoAutoCommandPolicy,
+  setReasoningSetting,
+  setRepoAutoCommandPolicy,
+} from "../../redux/slices/uiSlice";
 import { exitEdit } from "../../redux/thunks/edit";
 import { getMetaKeyLabel, isMetaEquivalentKeyPressed } from "../../util";
 import { ToolTip } from "../gui/Tooltip";
@@ -69,7 +80,31 @@ function InputToolbar(props: InputToolbarProps) {
       defaultModel.capabilities,
     );
 
-  const supportsReasoning = modelSupportsReasoning(defaultModel);
+  const supportsReasoning =
+    !!defaultModel &&
+    (modelSupportsReasoning(defaultModel) ||
+      defaultModel.provider === "ollama" ||
+      defaultModel.underlyingProviderName === "ollama");
+
+  const repoKey = window.workspacePaths?.[0] ?? "";
+  const sessionAutoCommandPolicy = useAppSelector(
+    (store) => store.session.autoCommandPolicySession,
+  );
+  const repoAutoCommandPolicy = useAppSelector((store) =>
+    repoKey ? store.ui.autoCommandPolicyByRepo[repoKey] : undefined,
+  );
+
+  const nextPolicy = (current?: AutoCommandPolicy | null) => {
+    if (!current) return "ask" as const;
+    if (current === "ask") return "safe" as const;
+    if (current === "safe") return "auto" as const;
+    return null;
+  };
+
+  const sessionPolicyLabel =
+    sessionAutoCommandPolicy == null ? "inherit" : sessionAutoCommandPolicy;
+  const repoPolicyLabel =
+    repoAutoCommandPolicy == null ? "default" : repoAutoCommandPolicy;
 
   const smallFont = useFontSize(-2);
   const tinyFont = useFontSize(-3);
@@ -96,7 +131,20 @@ function InputToolbar(props: InputToolbarProps) {
               <ModelSelect />
             </HoverItem>
           </ToolTip>
-          <div className="xs:flex text-description -mb-1 hidden items-center transition-colors duration-200">
+          <div className="text-description -mb-1 flex items-center transition-colors duration-200">
+            <ToolTip place="top" content="Attach Files/Folders">
+              <HoverItem
+                className=""
+                onClick={() => {
+                  void ideMessenger.ide.runCommand(
+                    "smartai.selectFilesAsContext",
+                  );
+                }}
+              >
+                <PaperClipIcon className="h-3 w-3 hover:brightness-125" />
+              </HoverItem>
+            </ToolTip>
+
             {props.toolbarOptions?.hideImageUpload ||
               (supportsImages && (
                 <>
@@ -120,7 +168,7 @@ function InputToolbar(props: InputToolbarProps) {
                     <HoverItem className="">
                       <PhotoIcon
                         className="h-3 w-3 hover:brightness-125"
-                        onClick={(e) => {
+                        onClick={() => {
                           fileInputRef.current?.click();
                         }}
                       />
@@ -135,6 +183,53 @@ function InputToolbar(props: InputToolbarProps) {
                 </HoverItem>
               </ToolTip>
             )}
+            <ToolTip
+              place="top"
+              content={`Session command policy: ${sessionPolicyLabel} (click to cycle)`}
+            >
+              <HoverItem
+                onClick={() => {
+                  dispatch(
+                    setAutoCommandPolicySession(
+                      nextPolicy(sessionAutoCommandPolicy),
+                    ),
+                  );
+                }}
+              >
+                <CommandLineIcon
+                  className={`h-3 w-3 hover:brightness-150 ${sessionAutoCommandPolicy === "auto" ? "brightness-200" : ""}`}
+                />
+              </HoverItem>
+            </ToolTip>
+
+            <ToolTip
+              place="top"
+              content={`Repo command policy: ${repoPolicyLabel} (click to cycle)`}
+            >
+              <HoverItem
+                onClick={() => {
+                  const next = nextPolicy(repoAutoCommandPolicy);
+                  if (!repoKey) {
+                    return;
+                  }
+                  if (next === null) {
+                    dispatch(clearRepoAutoCommandPolicy(repoKey));
+                  } else {
+                    dispatch(
+                      setRepoAutoCommandPolicy({
+                        repoKey,
+                        policy: next,
+                      }),
+                    );
+                  }
+                }}
+              >
+                <FolderIcon
+                  className={`h-3 w-3 hover:brightness-150 ${repoAutoCommandPolicy === "auto" ? "brightness-200" : ""}`}
+                />
+              </HoverItem>
+            </ToolTip>
+
             {supportsReasoning && (
               <HoverItem
                 onClick={() => {

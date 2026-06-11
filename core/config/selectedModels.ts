@@ -1,6 +1,7 @@
 import { ModelRole } from "@smartai/config-yaml";
 
 import { ContinueConfig, ILLM } from "..";
+import { autoSelectModelsForAllRoles } from "../llm/autoRouter";
 import { LLMConfigurationStatuses } from "../llm/constants";
 import {
   GlobalContext,
@@ -18,17 +19,45 @@ export function rectifySelectedModelsFromGlobalContext(
   const currentForProfile: GlobalContextModelSelections =
     currentSelectedModels?.[profileId] ?? {};
 
+  const autoSelection = globalContext.getAutoModelSelection(profileId);
+
+  // Auto mode: pick the best model for every role from the selected pool.
+  if (autoSelection.enabled) {
+    const autoSelected = autoSelectModelsForAllRoles(
+      continueConfig.modelsByRole as Record<string, ILLM[]>,
+      autoSelection.pool,
+    );
+
+    for (const role of Object.keys(
+      configCopy.selectedModelByRole,
+    ) as ModelRole[]) {
+      const picked = autoSelected[role] ?? null;
+      if (
+        role === "apply" &&
+        picked?.getConfigurationStatus() !== LLMConfigurationStatuses.VALID
+      ) {
+        continue;
+      }
+      configCopy.selectedModelByRole[role] = picked;
+    }
+
+    // Keep profile selections in sync so UI reflects auto-selected models.
+    globalContext.update("selectedModelsByProfileId", {
+      ...currentSelectedModels,
+      [profileId]: Object.fromEntries(
+        Object.entries(configCopy.selectedModelByRole).map(([key, value]) => [
+          key,
+          value?.title ?? null,
+        ]),
+      ),
+    });
+
+    return configCopy;
+  }
+
   let fellBack = false;
 
-  // summarize not implemented yet
-  const roles: ModelRole[] = [
-    "autocomplete",
-    "apply",
-    "edit",
-    "embed",
-    "rerank",
-    "chat",
-  ];
+  const roles = Object.keys(configCopy.modelsByRole) as ModelRole[];
 
   for (const role of roles) {
     let newModel: ILLM | null = null;

@@ -330,6 +330,30 @@
         "group": "Smart AI"
       },
       {
+        "command": "smartai.addSelectionToContext",
+        "category": "Smart AI",
+        "title": "Add Selection to Chat",
+        "group": "Smart AI"
+      },
+      {
+        "command": "smartai.addActiveFileToContext",
+        "category": "Smart AI",
+        "title": "Add Current File to Chat",
+        "group": "Smart AI"
+      },
+      {
+        "command": "smartai.addResourceToContext",
+        "category": "Smart AI",
+        "title": "Add Resource to Chat",
+        "group": "Smart AI"
+      },
+      {
+        "command": "smartai.addScmSelectionToContext",
+        "category": "Smart AI",
+        "title": "Add Source Control Selection to Chat",
+        "group": "Smart AI"
+      },
+      {
         "command": "smartai.newSession",
         "category": "Smart AI",
         "title": "New Session",
@@ -516,6 +540,12 @@
         "category": "Smart AI",
         "title": "Mark Last Response as Reject / Do Not Train",
         "group": "Smart AI Training"
+      },
+      {
+        "command": "smartai.autoSelectModels",
+        "category": "Smart AI",
+        "title": "Auto-Select Best Models",
+        "group": "Smart AI"
       }
     ],
     "keybindings": [
@@ -651,6 +681,15 @@
           "command": "smartai.focusContinueInputWithoutClear"
         },
         {
+          "command": "smartai.addSelectionToContext"
+        },
+        {
+          "command": "smartai.addActiveFileToContext"
+        },
+        {
+          "command": "smartai.selectFilesAsContext"
+        },
+        {
           "command": "smartai.debugTerminal"
         },
         {
@@ -685,6 +724,9 @@
         },
         {
           "command": "smartai.markReject"
+        },
+        {
+          "command": "smartai.autoSelectModels"
         }
       ],
       "editor/context": [
@@ -706,6 +748,15 @@
           "group": "Smart AI"
         },
         {
+          "command": "smartai.addSelectionToContext",
+          "group": "Smart AI",
+          "when": "editorHasSelection"
+        },
+        {
+          "command": "smartai.addActiveFileToContext",
+          "group": "Smart AI"
+        },
+        {
           "command": "smartai.focusEdit",
           "group": "Smart AI",
           "when": "!editorReadonly"
@@ -713,8 +764,30 @@
       ],
       "explorer/context": [
         {
-          "command": "smartai.selectFilesAsContext",
+          "command": "smartai.addResourceToContext",
           "group": "1_debug@1"
+        },
+        {
+          "command": "smartai.selectFilesAsContext",
+          "group": "1_debug@2"
+        }
+      ],
+      "scm/resourceState/context": [
+        {
+          "command": "smartai.addResourceToContext",
+          "group": "navigation@1"
+        }
+      ],
+      "scm/resourceFolder/context": [
+        {
+          "command": "smartai.addResourceToContext",
+          "group": "navigation@1"
+        }
+      ],
+      "scm/resourceGroup/context": [
+        {
+          "command": "smartai.addScmSelectionToContext",
+          "group": "navigation@1"
         }
       ],
       "view/title": [

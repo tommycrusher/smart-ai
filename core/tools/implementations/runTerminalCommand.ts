@@ -3,8 +3,8 @@ import childProcess from "node:child_process";
 import os from "node:os";
 import { ContinueError, ContinueErrorReason } from "../../util/errors";
 
-// Default timeout for terminal commands (2 minutes)
-const DEFAULT_TOOL_TIMEOUT_MS = 120_000;
+// Default timeout for terminal commands (10 minutes)
+const DEFAULT_TOOL_TIMEOUT_MS = 600_000;
 
 // Automatically decode the buffer according to the platform to avoid garbled Chinese
 function getDecodedOutput(data: Buffer): string {
@@ -116,7 +116,38 @@ export const runTerminalCommandImpl: ToolImpl = async (args, extras) => {
   const toolCallId = extras.toolCallId || "";
 
   if (LOCAL_ONLY.includes(ideInfo.remoteName)) {
-    // For streaming output
+    // Use VS Code terminal API for background commands to get a stateful shell
+    // that remembers cwd, env vars, etc. between commands.
+    if (!waitForCompletion) {
+      await extras.ide.runCommand(command, {
+        reuseTerminal: true,
+        terminalName: "Smart AI",
+      });
+      const status = "Command is running in the background...";
+      if (extras.onPartialOutput) {
+        extras.onPartialOutput({
+          toolCallId,
+          contextItems: [
+            {
+              name: "Terminal",
+              description: "Terminal command output",
+              content: "",
+              status: status,
+            },
+          ],
+        });
+      }
+      return [
+        {
+          name: "Terminal",
+          description: "Terminal command output",
+          content: "",
+          status: status,
+        },
+      ];
+    }
+
+    // For streaming output (waitForCompletion=true)
     if (extras.onPartialOutput) {
       try {
         const workspaceDirs = await extras.ide.getWorkspaceDirs();
@@ -126,23 +157,6 @@ export const runTerminalCommandImpl: ToolImpl = async (args, extras) => {
           let terminalOutput = "";
           let timeoutId: ReturnType<typeof setTimeout> | undefined;
           let sigkillTimeoutId: ReturnType<typeof setTimeout> | undefined;
-
-          if (!waitForCompletion) {
-            const status = "Command is running in the background...";
-            if (extras.onPartialOutput) {
-              extras.onPartialOutput({
-                toolCallId,
-                contextItems: [
-                  {
-                    name: "Terminal",
-                    description: "Terminal command output",
-                    content: "",
-                    status: status,
-                  },
-                ],
-              });
-            }
-          }
 
           // Use spawn with color environment
           const { shell, args } = getShellCommand(command);
@@ -172,7 +186,7 @@ export const runTerminalCommandImpl: ToolImpl = async (args, extras) => {
             timeoutId = setTimeout(() => {
               if (isRunning()) {
                 terminalOutput +=
-                  "\n[Timeout: process killed after 2 minutes]\n";
+                  "\n[Timeout: process killed after 10 minutes]\n";
 
                 // Update UI with timeout message
                 if (extras.onPartialOutput) {
@@ -408,7 +422,7 @@ export const runTerminalCommandImpl: ToolImpl = async (args, extras) => {
               // Set up timeout
               timeoutId = setTimeout(() => {
                 if (isRunning()) {
-                  stderr += "\n[Timeout: process killed after 2 minutes]\n";
+                  stderr += "\n[Timeout: process killed after 10 minutes]\n";
 
                   // Try graceful termination first
                   childProc.kill("SIGTERM");
@@ -499,36 +513,12 @@ export const runTerminalCommandImpl: ToolImpl = async (args, extras) => {
           ];
         }
       } else {
-        // For non-streaming but also not waiting for completion, use spawn
-        // but don't attach any listeners other than error
+        // For background commands use VS Code terminal API for a stateful shell
         try {
-          // Use spawn with color environment
-          const { shell: detachedShell, args: detachedArgs } =
-            getShellCommand(command);
-          const childProc = childProcess.spawn(detachedShell, detachedArgs, {
-            cwd,
-            env: getColorEnv(), // Add color environment
-            // Detach the process so it's not tied to the parent
-            detached: true,
-            // Redirect to /dev/null equivalent (works cross-platform)
-            stdio: "ignore",
+          await extras.ide.runCommand(command, {
+            reuseTerminal: true,
+            terminalName: "Smart AI",
           });
-
-          // Even for detached processes, add event handlers to clean up the background process map
-          childProc.on("close", () => {
-            if (isProcessBackgrounded(toolCallId)) {
-              removeBackgroundedProcess(toolCallId);
-            }
-          });
-
-          childProc.on("error", () => {
-            if (isProcessBackgrounded(toolCallId)) {
-              removeBackgroundedProcess(toolCallId);
-            }
-          });
-
-          // Unref the child to allow the Node.js process to exit
-          childProc.unref();
           const status = "Command is running in the background...";
           return [
             {

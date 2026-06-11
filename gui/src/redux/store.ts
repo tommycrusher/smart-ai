@@ -57,6 +57,7 @@ const saveSubsetFilters = [
     "toolGroupSettings",
     "ruleSettings",
     "reasoningSettings",
+    "autoCommandPolicyByRepo",
   ]),
   createFilter("indexing", []),
   createFilter("tabs", ["tabs"]),

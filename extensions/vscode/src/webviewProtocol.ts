@@ -51,8 +51,16 @@ export class VsCodeWebviewProtocol
     this._webviewListener?.dispose();
 
     const handleMessage = async (msg: Message): Promise<void> => {
-      if (!("messageType" in msg) || !("messageId" in msg)) {
-        throw new Error(`Invalid webview protocol msg: ${JSON.stringify(msg)}`);
+      if (!msg || !("messageType" in msg) || !("messageId" in msg)) {
+        console.warn("[Smart AI] Received invalid webview message (missing messageType or messageId), ignoring:", msg);
+        return;
+      }
+
+      // Guard against messages with missing data payload (prevents
+      // "Cannot read properties of undefined" crashes in downstream handlers)
+      if (msg.data === undefined || msg.data === null) {
+        console.warn(`[Smart AI] Received webview message "${msg.messageType}" with no data payload, ignoring.`);
+        return;
       }
 
       const respond = (message: any) =>

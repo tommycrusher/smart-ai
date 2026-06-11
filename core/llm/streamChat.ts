@@ -4,8 +4,10 @@ import { ConfigHandler } from "../config/ConfigHandler";
 import { usesCreditsBasedApiKey } from "../config/usesFreeTrialApiKey";
 import { FromCoreProtocol, ToCoreProtocol } from "../protocol";
 import { IMessenger, Message } from "../protocol/messenger";
+import { GlobalContext } from "../util/GlobalContext";
 import { Telemetry } from "../util/posthog";
 import { TTS } from "../util/tts";
+import { selectBestModelForMessage } from "./autoRouter";
 import { isOutOfStarterCredits } from "./utils/starterCredits";
 
 export async function* llmStreamChat(
@@ -32,10 +34,39 @@ export async function* llmStreamChat(
     messageOptions,
   } = msg.data;
 
-  const model = config.selectedModelByRole.chat;
+  let model = config.selectedModelByRole.chat;
 
   if (!model) {
     throw new Error("No chat model selected");
+  }
+
+  // Auto model routing: dynamically choose best chat model for this message
+  const profileId = configHandler.currentProfile?.profileDescription.id;
+  if (profileId) {
+    const autoConfig = new GlobalContext().getAutoModelSelection(profileId);
+    if (autoConfig.enabled) {
+      const latestUserMessage = [...messages]
+        .reverse()
+        .find((m) => m.role === "user");
+      const userText =
+        typeof latestUserMessage?.content === "string"
+          ? latestUserMessage.content
+          : (latestUserMessage?.content ?? [])
+              .map((part) => (part.type === "text" ? part.text : ""))
+              .join("\n");
+
+      const hasTools = (completionOptions?.tools?.length ?? 0) > 0;
+      const autoModel = selectBestModelForMessage(
+        config.modelsByRole.chat,
+        userText,
+        hasTools,
+        autoConfig.pool,
+      );
+
+      if (autoModel) {
+        model = autoModel;
+      }
+    }
   }
 
   // Log to return in case of error

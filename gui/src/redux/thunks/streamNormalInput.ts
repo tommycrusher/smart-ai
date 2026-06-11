@@ -31,6 +31,7 @@ import {
   selectCurrentToolCalls,
   selectPendingToolCalls,
 } from "../selectors/selectToolCalls";
+import { AutoCommandPolicy } from "../slices/uiSlice";
 import { getBaseSystemMessage } from "../util/getBaseSystemMessage";
 import { callToolById } from "./callToolById";
 import { evaluateToolPolicies } from "./evaluateToolPolicies";
@@ -324,12 +325,20 @@ export const streamNormalInput = createAsyncThunk<
     }
     const generatedCalls3 = selectPendingToolCalls(state3);
     const toolPolicies = state3.ui.toolSettings;
+    const repoKey = window.workspacePaths?.[0] ?? "";
+    const repoPolicy = repoKey
+      ? state3.ui.autoCommandPolicyByRepo[repoKey]
+      : undefined;
+    const effectiveAutoCommandPolicy: AutoCommandPolicy | null =
+      state3.session.autoCommandPolicySession ?? repoPolicy ?? null;
+
     const policies = await evaluateToolPolicies(
       dispatch,
       extra.ideMessenger,
       activeTools,
       generatedCalls3,
       toolPolicies,
+      effectiveAutoCommandPolicy,
     );
     const autoApprovedPolicies = policies.filter(
       ({ policy }) => policy === "allowedWithoutPermission",

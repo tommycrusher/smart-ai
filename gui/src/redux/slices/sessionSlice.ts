@@ -41,6 +41,7 @@ import { addToolCallDeltaToState, isEditTool } from "../../util/toolCallState";
 import { RootState } from "../store";
 import { streamResponseThunk } from "../thunks/streamResponse";
 import { findChatHistoryItemByToolCallId, findToolCallById } from "../util";
+import type { AutoCommandPolicy } from "./uiSlice";
 
 /**
  * Helper function to filter out duplicate edit/search-replace tool calls.
@@ -220,6 +221,7 @@ type SessionState = {
   };
   newestToolbarPreviewForInput: Record<string, string>;
   hasReasoningEnabled?: boolean;
+  autoCommandPolicySession?: AutoCommandPolicy | null;
   isPruned?: boolean;
   contextPercentage?: number;
   inlineErrorMessage?: InlineErrorMessageType;
@@ -243,6 +245,7 @@ export const INITIAL_SESSION_STATE: SessionState = {
   },
   lastSessionId: undefined,
   newestToolbarPreviewForInput: {},
+  autoCommandPolicySession: null,
   compactionLoading: {},
 };
 
@@ -696,6 +699,7 @@ export const sessionSlice = createSlice({
       state.inlineErrorMessage = undefined;
       state.isPruned = false;
       state.contextPercentage = undefined;
+      state.autoCommandPolicySession = null;
 
       if (payload) {
         state.history = payload.history as any;
@@ -969,6 +973,12 @@ export const sessionSlice = createSlice({
     setHasReasoningEnabled: (state, action: PayloadAction<boolean>) => {
       state.hasReasoningEnabled = action.payload;
     },
+    setAutoCommandPolicySession: (
+      state,
+      action: PayloadAction<AutoCommandPolicy | null>,
+    ) => {
+      state.autoCommandPolicySession = action.payload;
+    },
     setNewestToolbarPreviewForInput: (
       state,
       {
@@ -1089,6 +1099,7 @@ export const {
   setNewestToolbarPreviewForInput,
   setIsInEdit,
   setHasReasoningEnabled,
+  setAutoCommandPolicySession,
   setInlineErrorMessage,
   setIsPruned,
   setContextPercentage,
