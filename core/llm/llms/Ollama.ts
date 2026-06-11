@@ -4,6 +4,11 @@ import { v4 as uuidv4 } from "uuid";
 
 import { streamResponse } from "@smartai/fetch";
 import { getOllamaConfig } from "../../config/ollama.js";
+import type {
+  LLMFullCompletionOptions,
+  MessageOption,
+  PromptLog,
+} from "../../index.d.ts";
 import {
   ChatMessage,
   ChatMessageRole,
@@ -268,6 +273,29 @@ class Ollama extends BaseLLM implements ModelInstaller {
 
     super(options);
     this.explicitContextLength = options.contextLength !== undefined;
+  }
+
+  async *streamChat(
+    _messages: ChatMessage[],
+    signal: AbortSignal,
+    options: LLMFullCompletionOptions = {},
+    messageOptions?: MessageOption,
+  ): AsyncGenerator<ChatMessage, PromptLog> {
+    // Ollama supports tools only through the native /api/chat endpoint.
+    // BaseLLM.streamChat falls back to _streamComplete when templateMessages
+    // is set, which uses /api/generate and strips tools. Force the chat path.
+    const savedTemplateMessages = this.templateMessages;
+    this.templateMessages = undefined;
+    try {
+      return yield* super.streamChat(
+        _messages,
+        signal,
+        options,
+        messageOptions,
+      );
+    } finally {
+      this.templateMessages = savedTemplateMessages;
+    }
   }
 
   private ensureModelInfo(): Promise<void> {
