@@ -3,7 +3,7 @@ jest.mock("@smartai/fetch", () => ({
 }));
 
 import { ChatMessage } from "../../index.js";
-import Ollama from "./Ollama.js";
+import Ollama, { parseToolCallsFromOllamaContent } from "./Ollama.js";
 
 function createOllama(): Ollama {
   // Create instance without triggering constructor's fetch call
@@ -221,6 +221,74 @@ describe("Ollama", () => {
       // System should be moved before tool
       expect(result[0].role).toBe("system");
       expect(result[1].role).toBe("tool");
+    });
+  });
+
+  describe("parseToolCallsFromOllamaContent", () => {
+    it("should parse a bare JSON tool call (qwen2.5-coder behavior)", () => {
+      const content =
+        '{"name": "read_file", "arguments": {"filepath": "README.md"}}';
+      const { toolCalls, remainingContent } =
+        parseToolCallsFromOllamaContent(content);
+      expect(toolCalls).toHaveLength(1);
+      expect(toolCalls[0].name).toBe("read_file");
+      expect(toolCalls[0].arguments).toEqual({ filepath: "README.md" });
+      expect(remainingContent).toBe("");
+    });
+
+    it("should parse a multi-line/pretty-printed bare JSON tool call", () => {
+      const content =
+        '{\n  "name": "read_file",\n  "arguments": {\n    "filepath": "README.md"\n  }\n}';
+      const { toolCalls } = parseToolCallsFromOllamaContent(content);
+      expect(toolCalls).toHaveLength(1);
+      expect(toolCalls[0].name).toBe("read_file");
+    });
+
+    it("should parse <tool_call> wrapped JSON", () => {
+      const content =
+        'Sure!\n<tool_call>\n{"name": "read_file", "arguments": {"filepath": "a.py"}}\n</tool_call>';
+      const { toolCalls, remainingContent } =
+        parseToolCallsFromOllamaContent(content);
+      expect(toolCalls).toHaveLength(1);
+      expect(toolCalls[0].name).toBe("read_file");
+      expect(remainingContent).toBe("Sure!");
+    });
+
+    it("should parse multiple <tool_call> blocks", () => {
+      const content =
+        '<tool_call>{"name": "a", "arguments": {}}</tool_call><tool_call>{"name": "b", "arguments": {"x": 1}}</tool_call>';
+      const { toolCalls } = parseToolCallsFromOllamaContent(content);
+      expect(toolCalls).toHaveLength(2);
+      expect(toolCalls.map((t) => t.name)).toEqual(["a", "b"]);
+    });
+
+    it("should parse a fenced ```json code block tool call", () => {
+      const content =
+        '```json\n{"name": "search", "arguments": {"q": "hi"}}\n```';
+      const { toolCalls } = parseToolCallsFromOllamaContent(content);
+      expect(toolCalls).toHaveLength(1);
+      expect(toolCalls[0].name).toBe("search");
+    });
+
+    it("should NOT treat regular prose as a tool call", () => {
+      const content = "Here is how you reverse a string in Python.";
+      const { toolCalls, remainingContent } =
+        parseToolCallsFromOllamaContent(content);
+      expect(toolCalls).toHaveLength(0);
+      expect(remainingContent).toBe(content);
+    });
+
+    it("should NOT treat arbitrary JSON without name/arguments as a tool call", () => {
+      const content = '{"foo": "bar", "baz": 1}';
+      const { toolCalls } = parseToolCallsFromOllamaContent(content);
+      expect(toolCalls).toHaveLength(0);
+    });
+
+    it("should handle empty content gracefully", () => {
+      const { toolCalls, remainingContent } =
+        parseToolCallsFromOllamaContent("");
+      expect(toolCalls).toHaveLength(0);
+      expect(remainingContent).toBe("");
     });
   });
 });

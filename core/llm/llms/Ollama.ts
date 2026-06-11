@@ -150,6 +150,99 @@ interface OllamaTool {
   };
 }
 
+interface ParsedOllamaToolCall {
+  name: string;
+  arguments: Record<string, unknown>;
+}
+
+/**
+ * Some Ollama models (notably the qwen2.5-coder family and deepseek-coder)
+ * emit tool calls as raw JSON in the message content instead of using the
+ * native tool_calls field. The JSON may be bare, wrapped in
+ * <tool_call></tool_call> tags, or fenced in a ```json code block.
+ *
+ * This parses such content into structured tool calls so that all Ollama
+ * models behave consistently for agentic/tool use. Returns the parsed tool
+ * calls plus any remaining (non-tool) text content.
+ */
+export function parseToolCallsFromOllamaContent(content: string): {
+  toolCalls: ParsedOllamaToolCall[];
+  remainingContent: string;
+} {
+  const toolCalls: ParsedOllamaToolCall[] = [];
+  if (!content || !content.trim()) {
+    return { toolCalls, remainingContent: content };
+  }
+
+  const isValidToolCall = (obj: any): obj is ParsedOllamaToolCall =>
+    !!obj &&
+    typeof obj === "object" &&
+    typeof obj.name === "string" &&
+    obj.name.length > 0 &&
+    "arguments" in obj &&
+    typeof obj.arguments === "object" &&
+    obj.arguments !== null &&
+    !Array.isArray(obj.arguments);
+
+  let remainingContent = content;
+
+  // 1. Extract any <tool_call>...</tool_call> blocks
+  const tagRegex = /<tool_call>\s*([\s\S]*?)\s*<\/tool_call>/g;
+  let tagMatch: RegExpExecArray | null;
+  let foundTagged = false;
+  while ((tagMatch = tagRegex.exec(content)) !== null) {
+    foundTagged = true;
+    try {
+      const parsed = JSON.parse(tagMatch[1].trim());
+      if (isValidToolCall(parsed)) {
+        toolCalls.push(parsed);
+      }
+    } catch {
+      // ignore unparseable block
+    }
+  }
+  if (foundTagged) {
+    remainingContent = content.replace(tagRegex, "").trim();
+    return { toolCalls, remainingContent };
+  }
+
+  // 2. Try fenced ```json ... ``` blocks
+  const fenceRegex = /```(?:json)?\s*([\s\S]*?)```/g;
+  let fenceMatch: RegExpExecArray | null;
+  let foundFenced = false;
+  while ((fenceMatch = fenceRegex.exec(content)) !== null) {
+    try {
+      const parsed = JSON.parse(fenceMatch[1].trim());
+      if (isValidToolCall(parsed)) {
+        foundFenced = true;
+        toolCalls.push(parsed);
+      }
+    } catch {
+      // ignore
+    }
+  }
+  if (foundFenced) {
+    remainingContent = content.replace(fenceRegex, "").trim();
+    return { toolCalls, remainingContent };
+  }
+
+  // 3. Try parsing the entire trimmed content as a single bare JSON object
+  const trimmed = content.trim();
+  if (trimmed.startsWith("{") && trimmed.endsWith("}")) {
+    try {
+      const parsed = JSON.parse(trimmed);
+      if (isValidToolCall(parsed)) {
+        toolCalls.push(parsed);
+        return { toolCalls, remainingContent: "" };
+      }
+    } catch {
+      // not a single JSON object
+    }
+  }
+
+  return { toolCalls, remainingContent: content };
+}
+
 class Ollama extends BaseLLM implements ModelInstaller {
   static providerName = "ollama";
   static defaultOptions: Partial<LLMOptions> = {
@@ -618,6 +711,23 @@ class Ollama extends BaseLLM implements ModelInstaller {
               arguments: JSON.stringify(tc.function.arguments),
             },
           }));
+        } else if (chatOptions.tools?.length && content) {
+          // Fallback: some models (qwen2.5-coder, deepseek-coder) emit tool
+          // calls as raw JSON in content instead of the native tool_calls
+          // field. Parse them so all Ollama models support tool use.
+          const { toolCalls: parsedToolCalls, remainingContent } =
+            parseToolCallsFromOllamaContent(content);
+          if (parsedToolCalls.length) {
+            chatMessage.content = remainingContent;
+            chatMessage.toolCalls = parsedToolCalls.map((tc) => ({
+              type: "function",
+              id: `tc_${uuidv4()}`,
+              function: {
+                name: tc.name,
+                arguments: JSON.stringify(tc.arguments),
+              },
+            }));
+          }
         }
 
         // Return both thinking and chat messages if applicable
