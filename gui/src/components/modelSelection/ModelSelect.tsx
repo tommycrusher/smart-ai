@@ -6,9 +6,10 @@ import {
   PlusIcon,
 } from "@heroicons/react/24/outline";
 import { AutoProviderPool } from "core/llm/autoRouter";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/Auth";
+import { IdeMessengerContext } from "../../context/IdeMessenger";
 import { AddModelForm } from "../../forms/AddModelForm";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { setDialogMessage, setShowDialog } from "../../redux/slices/uiSlice";
