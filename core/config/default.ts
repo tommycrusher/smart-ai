@@ -2,6 +2,17 @@ import { ConfigYaml } from "@smartai/config-yaml";
 
 import { SMARTAI_OLLAMA_DEFAULTS } from "./ollama.js";
 
+const OLLAMA_CHAT_SYSTEM_MESSAGE = `\
+You are Smart AI, a practical coding assistant. \
+You write clean, modern code following the project's existing conventions. \
+You prefer minimal, targeted changes. \
+You explain your reasoning briefly when asked, but default to concise answers. \
+When editing code, preserve existing style and formatting.
+
+IMPORTANT: When tools are available, use them DIRECTLY to perform actions. \
+Do not ask the user for confirmation before using tools. \
+Call the appropriate tool immediately and proceed with the task.`;
+
 /**
  * Smart AI - Default Configuration
  *
@@ -25,6 +36,9 @@ export const defaultConfig: ConfigYaml = {
       roles: ["chat", "edit", "apply"],
       capabilities: ["tool_use"],
       defaultCompletionOptions: SMARTAI_OLLAMA_DEFAULTS.completionOptions,
+      chatOptions: {
+        baseSystemMessage: OLLAMA_CHAT_SYSTEM_MESSAGE,
+      },
     },
     {
       name: "Qwen2.5-Coder 7B",
@@ -33,6 +47,9 @@ export const defaultConfig: ConfigYaml = {
       roles: ["chat", "edit", "apply"],
       capabilities: ["tool_use"],
       defaultCompletionOptions: SMARTAI_OLLAMA_DEFAULTS.completionOptions,
+      chatOptions: {
+        baseSystemMessage: OLLAMA_CHAT_SYSTEM_MESSAGE,
+      },
     },
     {
       name: SMARTAI_OLLAMA_DEFAULTS.titles.autocomplete,

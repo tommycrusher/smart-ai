@@ -213,7 +213,30 @@ export function parseToolCallsFromOllamaContent(content: string): {
     return { toolCalls, remainingContent };
   }
 
-  // 2. Try fenced ```json ... ``` blocks
+  // 2. Try fenced ```tool ... ``` codeblocks (system message tool framework)
+  const toolFenceRegex = /```tool\s*([\s\S]*?)```/g;
+  let toolFenceMatch: RegExpExecArray | null;
+  let foundToolFenced = false;
+  while ((toolFenceMatch = toolFenceRegex.exec(content)) !== null) {
+    try {
+      const block = toolFenceMatch[1].trim();
+      // Try parsing the block content directly as JSON first
+      const parsed = JSON.parse(block);
+      if (isValidToolCall(parsed)) {
+        foundToolFenced = true;
+        toolCalls.push(parsed);
+        continue;
+      }
+    } catch {
+      // not direct JSON, ignore for now
+    }
+  }
+  if (foundToolFenced) {
+    remainingContent = content.replace(toolFenceRegex, "").trim();
+    return { toolCalls, remainingContent };
+  }
+
+  // 3. Try fenced ```json ... ``` blocks
   const fenceRegex = /```(?:json)?\s*([\s\S]*?)```/g;
   let fenceMatch: RegExpExecArray | null;
   let foundFenced = false;
@@ -233,7 +256,7 @@ export function parseToolCallsFromOllamaContent(content: string): {
     return { toolCalls, remainingContent };
   }
 
-  // 3. Try parsing the entire trimmed content as a single bare JSON object
+  // 4. Try parsing the entire trimmed content as a single bare JSON object
   const trimmed = content.trim();
   if (trimmed.startsWith("{") && trimmed.endsWith("}")) {
     try {
@@ -247,7 +270,99 @@ export function parseToolCallsFromOllamaContent(content: string): {
     }
   }
 
+  // 5. Scan for JSON objects embedded anywhere in the text.
+  //    This catches models that output prose followed by a tool call JSON.
+  //    We scan for balanced { ... } blocks that parse as valid tool calls.
+  const extractedToolCalls = extractJsonToolCallsFromText(content);
+  if (extractedToolCalls.length > 0) {
+    for (const tc of extractedToolCalls) {
+      if (isValidToolCall(tc)) {
+        toolCalls.push(tc);
+      }
+    }
+    if (toolCalls.length > 0) {
+      // Rebuild remaining content by removing the matched JSON blocks
+      remainingContent = removeMatchedJsonBlocks(content, extractedToolCalls);
+      return { toolCalls, remainingContent };
+    }
+  }
+
   return { toolCalls, remainingContent: content };
+}
+
+/**
+ * Scans text for JSON objects that look like tool calls.
+ * Uses a brace-depth tracker to find balanced JSON objects.
+ */
+function extractJsonToolCallsFromText(text: string): any[] {
+  const results: any[] = [];
+  let i = 0;
+  while (i < text.length) {
+    const braceIdx = text.indexOf("{", i);
+    if (braceIdx === -1) break;
+
+    // Try to find a balanced JSON object starting at this brace
+    let depth = 1;
+    let j = braceIdx + 1;
+    let inString = false;
+    let escapeNext = false;
+
+    while (j < text.length && depth > 0) {
+      const ch = text[j];
+      if (escapeNext) {
+        escapeNext = false;
+      } else if (ch === "\\") {
+        escapeNext = true;
+      } else if (ch === '"') {
+        inString = !inString;
+      } else if (!inString) {
+        if (ch === "{") depth++;
+        else if (ch === "}") depth--;
+      }
+      j++;
+    }
+
+    if (depth === 0) {
+      const candidate = text.slice(braceIdx, j);
+      try {
+        const parsed = JSON.parse(candidate);
+        if (
+          parsed &&
+          typeof parsed === "object" &&
+          typeof parsed.name === "string" &&
+          parsed.name.length > 0 &&
+          "arguments" in parsed
+        ) {
+          results.push(parsed);
+          i = j;
+          continue;
+        }
+      } catch {
+        // not valid JSON, continue scanning
+      }
+    }
+
+    i = braceIdx + 1;
+  }
+
+  return results;
+}
+
+/**
+ * Removes matched JSON object strings from text to produce clean remaining content.
+ */
+function removeMatchedJsonBlocks(text: string, jsonObjects: any[]): string {
+  let result = text;
+  for (const obj of jsonObjects) {
+    const jsonStr = JSON.stringify(obj);
+    // Try to find an exact match, or a pretty-printed variant
+    result = result.replace(jsonStr, "");
+    // Also try to replace with normalized whitespace
+    const normalized = JSON.stringify(JSON.parse(jsonStr));
+    result = result.replace(normalized, "");
+  }
+  // Clean up extra whitespace/newlines left behind
+  return result.replace(/\n{3,}/g, "\n\n").trim();
 }
 
 class Ollama extends BaseLLM implements ModelInstaller {
@@ -391,7 +506,10 @@ class Ollama extends BaseLLM implements ModelInstaller {
   private static readonly NATIVE_TOOL_MODELS = new Set([
     "qwen3",
     "qwen2.5",
-    "qwen2.5-coder",
+    // Note: qwen2.5-coder is excluded because it often emits tool calls as raw
+    // JSON in content instead of using Ollama's native tool_calls field.
+    // Falling back to non-streaming mode ensures reliable content-based parsing.
+    // "qwen2.5-coder",
     "qwen2",
     "llama3.1",
     "llama3.2",
@@ -408,7 +526,8 @@ class Ollama extends BaseLLM implements ModelInstaller {
     "gemma3",
     "phi4",
     "qwen3.6",
-    "smarterp-coder",
+    // smarterp-coder excluded for same reason as qwen2.5-coder
+    // "smarterp-coder",
   ]);
 
   /**
