@@ -996,9 +996,20 @@ class Ollama extends BaseLLM implements ModelInstaller {
         for (let i = 0; i < chunks.length; i++) {
           const chunk = chunks[i];
           if (chunk.trim() !== "") {
+            let j: OllamaChatResponse;
             try {
-              const j = JSON.parse(chunk) as OllamaChatResponse;
-
+              j = JSON.parse(chunk) as OllamaChatResponse;
+            } catch (e) {
+              // A complete JSON line failed to parse. This usually means the
+              // line was split across network reads (e.g. a multi-byte UTF-8
+              // character or a long line). Instead of throwing — which would
+              // kill the stream and truncate the response mid-word — re-join
+              // this chunk and any remaining chunks back into the buffer so
+              // they can be completed by the next streamed value.
+              buffer = chunks.slice(i).join("\n") + "\n" + buffer;
+              break;
+            }
+            try {
               // Check if this chunk contains tool calls (native Ollama streaming)
               if (
                 !("error" in j) &&
@@ -1062,7 +1073,9 @@ class Ollama extends BaseLLM implements ModelInstaller {
                 yield msg;
               }
             } catch (e) {
-              throw new Error(`Error parsing Ollama response: ${e} ${chunk}`);
+              throw new Error(
+                `Error processing Ollama response: ${e} ${chunk}`,
+              );
             }
           }
         }
