@@ -919,10 +919,13 @@ class Ollama extends BaseLLM implements ModelInstaller {
               arguments: JSON.stringify(tc.function.arguments),
             },
           }));
-        } else if (chatOptions.tools?.length && content) {
+        } else if (content) {
           // Fallback: some models (qwen2.5-coder, deepseek-coder) emit tool
           // calls as raw JSON in content instead of the native tool_calls
           // field. Parse them so all Ollama models support tool use.
+          // We check content regardless of whether tools were sent to the API,
+          // because the GUI may use SystemMessageToolCodeblocksFramework
+          // (tools only in system message, not in API options).
           const { toolCalls: parsedToolCalls, remainingContent } =
             parseToolCallsFromOllamaContent(content);
           if (parsedToolCalls.length) {
