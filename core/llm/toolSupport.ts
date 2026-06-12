@@ -162,6 +162,17 @@ export const PROVIDER_TOOL_SUPPORT: Record<string, (model: string) => boolean> =
         return false;
       }
 
+      // qwen2.5-coder and smarterp-coder do not reliably invoke native tools
+      // via Ollama's /api/chat. They tend to emit plain-text plans instead of
+      // structured tool_calls. Force system-message tool codeblocks so the
+      // model receives explicit instructions for tool formatting.
+      if (
+        modelName.toLowerCase().includes("qwen2.5-coder") ||
+        modelName.toLowerCase().includes("smarterp-coder")
+      ) {
+        return false;
+      }
+
       // Some Ollama cloud models don't support tools despite matching the
       // family-name heuristic below (https://ollama.com/search?c=cloud)
       if (modelName.toLowerCase().includes(":cloud")) {
