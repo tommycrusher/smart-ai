@@ -9,20 +9,32 @@ import { codebaseToolImpl } from "./implementations/codebaseTool";
 import { createNewFileImpl } from "./implementations/createNewFile";
 import { createRuleBlockImpl } from "./implementations/createRuleBlock";
 import { fetchUrlContentImpl } from "./implementations/fetchUrlContent";
+import { gitStatusImpl } from "./implementations/gitStatus";
 import { fileGlobSearchImpl } from "./implementations/globSearch";
 import { grepSearchImpl } from "./implementations/grepSearch";
 import { lsToolImpl } from "./implementations/lsTool";
 import { readCurrentlyOpenFileImpl } from "./implementations/readCurrentlyOpenFile";
+import { readDiagnosticsImpl } from "./implementations/readDiagnostics";
 import { readFileImpl } from "./implementations/readFile";
 
+import { findActionMenuRouteImpl } from "./implementations/findActionMenuRoute";
+import { findModelFieldImpl } from "./implementations/findModelField";
+import { openManifestImpl } from "./implementations/openManifest";
+import { openXmlViewImpl } from "./implementations/openXmlView";
 import { readFileRangeImpl } from "./implementations/readFileRange";
 import { readSkillImpl } from "./implementations/readSkill";
 import { requestRuleImpl } from "./implementations/requestRule";
 import { runTerminalCommandImpl } from "./implementations/runTerminalCommand";
+import { runTestsImpl } from "./implementations/runTests";
+import { searchModuleStructureImpl } from "./implementations/searchModuleStructure";
+import { searchRepoImpl } from "./implementations/searchRepo";
 import { searchWebImpl } from "./implementations/searchWeb";
+import { smarterpApiCallImpl } from "./implementations/smarterpApiCall";
+import { smarterpShellCommandImpl } from "./implementations/smarterpShellCommand";
 import { viewDiffImpl } from "./implementations/viewDiff";
 import { viewRepoMapImpl } from "./implementations/viewRepoMap";
 import { viewSubdirectoryImpl } from "./implementations/viewSubdirectory";
+import { writeFileImpl } from "./implementations/writeFile";
 import { coerceArgsToSchema, safeParseToolCallArgs } from "./parseArgs";
 
 async function callHttpTool(
@@ -224,6 +236,30 @@ export async function callBuiltInTool(
       return await viewRepoMapImpl(args, extras);
     case BuiltInToolNames.ViewSubdirectory:
       return await viewSubdirectoryImpl(args, extras);
+    case BuiltInToolNames.WriteFile:
+      return await writeFileImpl(args, extras);
+    case BuiltInToolNames.GitStatus:
+      return await gitStatusImpl(args, extras);
+    case BuiltInToolNames.RunTests:
+      return await runTestsImpl(args, extras);
+    case BuiltInToolNames.ReadDiagnostics:
+      return await readDiagnosticsImpl(args, extras);
+    case BuiltInToolNames.SearchRepo:
+      return await searchRepoImpl(args, extras);
+    case BuiltInToolNames.SmarterpShellCommand:
+      return await smarterpShellCommandImpl(args, extras);
+    case BuiltInToolNames.SmarterpApiCall:
+      return await smarterpApiCallImpl(args, extras);
+    case BuiltInToolNames.FindModelField:
+      return await findModelFieldImpl(args, extras);
+    case BuiltInToolNames.FindActionMenuRoute:
+      return await findActionMenuRouteImpl(args, extras);
+    case BuiltInToolNames.SearchModuleStructure:
+      return await searchModuleStructureImpl(args, extras);
+    case BuiltInToolNames.OpenManifest:
+      return await openManifestImpl(args, extras);
+    case BuiltInToolNames.OpenXmlView:
+      return await openXmlViewImpl(args, extras);
     default:
       throw new Error(`Tool "${functionName}" not found`);
   }

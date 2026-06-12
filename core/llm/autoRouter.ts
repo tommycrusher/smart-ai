@@ -17,7 +17,8 @@
  * load time to populate `selectedModelByRole`.
  */
 
-import type { ILLM, ModelRole } from "..";
+import type { ModelRole } from "@smartai/config-yaml";
+import type { ILLM } from "..";
 
 // ─── Provider pool types ────────────────────────────────────────────────────
 

@@ -6,13 +6,25 @@ import * as toolDefinitions from "./definitions";
 export const getBaseToolDefinitions = () => [
   toolDefinitions.readFileTool,
   toolDefinitions.createNewFileTool,
+  toolDefinitions.writeFileTool,
   toolDefinitions.runTerminalCommandTool,
+  toolDefinitions.runTestsTool,
   toolDefinitions.globSearchTool,
   toolDefinitions.viewDiffTool,
   toolDefinitions.readCurrentlyOpenFileTool,
   toolDefinitions.lsTool,
   toolDefinitions.createRuleBlock,
   toolDefinitions.fetchUrlContentTool,
+  toolDefinitions.gitStatusTool,
+  toolDefinitions.readDiagnosticsTool,
+  toolDefinitions.searchRepoTool,
+  toolDefinitions.smarterpShellCommandTool,
+  toolDefinitions.smarterpApiCallTool,
+  toolDefinitions.findModelFieldTool,
+  toolDefinitions.findActionMenuRouteTool,
+  toolDefinitions.searchModuleStructureTool,
+  toolDefinitions.openManifestTool,
+  toolDefinitions.openXmlViewTool,
 ];
 
 export const getConfigDependentToolDefinitions = async (
