@@ -154,6 +154,14 @@ export const PROVIDER_TOOL_SUPPORT: Record<string, (model: string) => boolean> =
         modelName = model;
       }
 
+      // Qwen3 has a critical bug in Ollama's /api chat tool formatting:
+      // tool definitions are serialized as Go structs instead of valid JSON.
+      // Use system-message tools instead until Ollama #14601 is fixed.
+      // https://github.com/ollama/ollama/issues/14601
+      if (modelName.toLowerCase().includes("qwen3")) {
+        return false;
+      }
+
       // Some Ollama cloud models don't support tools despite matching the
       // family-name heuristic below (https://ollama.com/search?c=cloud)
       if (modelName.toLowerCase().includes(":cloud")) {

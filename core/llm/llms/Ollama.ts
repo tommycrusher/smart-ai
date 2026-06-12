@@ -92,6 +92,10 @@ interface OllamaRawOptions extends OllamaBaseOptions {
 interface OllamaChatOptions extends OllamaBaseOptions {
   messages: OllamaChatMessage[]; // the messages of the chat, this can be used to keep a chat memory
   tools?: OllamaTool[]; // the tools of the chat, this can be used to keep a tool memory
+  tool_choice?:
+    | "auto"
+    | "none"
+    | { type: "function"; function: { name: string } }; // controls whether the model should use a tool
   think?: boolean; // if true the model will be prompted to think about the response before generating it
 }
 
@@ -704,6 +708,7 @@ class Ollama extends BaseLLM implements ModelInstaller {
           parameters: tool.function.parameters,
         },
       }));
+      chatOptions.tool_choice = "auto";
     }
     const headers: Record<string, string> = {
       "Content-Type": "application/json",
