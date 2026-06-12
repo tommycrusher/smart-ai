@@ -23,6 +23,7 @@ export const defaultConfig: ConfigYaml = {
       provider: SMARTAI_OLLAMA_DEFAULTS.provider,
       model: SMARTAI_OLLAMA_DEFAULTS.chatModels[0],
       roles: ["chat", "edit", "apply"],
+      capabilities: { tools: true },
       defaultCompletionOptions: SMARTAI_OLLAMA_DEFAULTS.completionOptions,
     },
     {
@@ -30,6 +31,7 @@ export const defaultConfig: ConfigYaml = {
       provider: SMARTAI_OLLAMA_DEFAULTS.provider,
       model: SMARTAI_OLLAMA_DEFAULTS.chatModels[1],
       roles: ["chat", "edit", "apply"],
+      capabilities: { tools: true },
       defaultCompletionOptions: SMARTAI_OLLAMA_DEFAULTS.completionOptions,
     },
     {

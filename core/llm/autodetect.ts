@@ -139,6 +139,13 @@ const PROVIDER_SUPPORTS_IMAGES: string[] = [
 
 const MODEL_SUPPORTS_IMAGES: RegExp[] = [
   /llava/,
+  /bakllava/,
+  /moondream/,
+  /minicpm-v/,
+  /granite3\.2-vision/,
+  /phi4-multimodal/,
+  /qwen2-vl/,
+  /qwen(.*)vl/,
   /gpt-4-turbo/,
   /gpt-4o/,
   /gpt-4o-mini/,
@@ -154,7 +161,6 @@ const MODEL_SUPPORTS_IMAGES: RegExp[] = [
   /llama-?4/, // might use something like /llama-?(?:[4-9](?:\.\d+)?|\d{2,}(?:\.\d+)?)/ for forward compat, if needed
   /\bgemma-?[34](?!n)/, // gemma3/gemma4 support vision, but gemma3n doesn't!
   /\b(pali|med)gemma/,
-  /qwen(.*)vl/,
   /mistral-small/,
   /mistral-medium/,
 ];
@@ -214,6 +220,10 @@ function modelSupportsReasoning(
     return true;
   }
   if (model.model.includes("deepseek-r")) {
+    return true;
+  }
+  // Qwen3 series has built-in reasoning/thinking capability via <think> tags
+  if (model.model.includes("qwen3")) {
     return true;
   }
   // o-series reasoning models

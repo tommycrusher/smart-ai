@@ -50,10 +50,11 @@ export async function handleImageFile(
     let img = new window.Image();
     img.src = _URL.createObjectURL(file);
 
-    return await new Promise((resolve) => {
+    return await new Promise((resolve, reject) => {
       img.onload = function () {
         const dataUrl = getDataUrlForFile(file, img);
         if (!dataUrl) {
+          reject(new Error("Failed to process image"));
           return;
         }
 
@@ -62,6 +63,12 @@ export async function handleImageFile(
         image.onload = function () {
           resolve([image, dataUrl]);
         };
+        image.onerror = function () {
+          reject(new Error("Failed to load resized image"));
+        };
+      };
+      img.onerror = function () {
+        reject(new Error("Failed to load image from clipboard"));
       };
     });
   } else {
@@ -69,5 +76,6 @@ export async function handleImageFile(
       "error",
       "Images need to be in jpg or png format and less than 10MB in size.",
     ]);
+    return undefined;
   }
 }

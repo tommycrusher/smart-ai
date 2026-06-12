@@ -86,10 +86,7 @@ function InputToolbar(props: InputToolbarProps) {
     );
 
   const supportsReasoning =
-    !!defaultModel &&
-    (modelSupportsReasoning(defaultModel) ||
-      defaultModel.provider === "ollama" ||
-      defaultModel.underlyingProviderName === "ollama");
+    !!defaultModel && modelSupportsReasoning(defaultModel);
 
   const repoKey = window.workspacePaths?.[0] ?? "";
   const sessionAutoCommandPolicy = useAppSelector(

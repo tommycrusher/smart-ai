@@ -16,8 +16,8 @@ import { DataLogger } from "./data/log";
 import { CodebaseIndexer } from "./indexing/CodebaseIndexer";
 import DocsService from "./indexing/docs/DocsService";
 import { countTokens } from "./llm/countTokens";
-import Lemonade from "./llm/llms/Lemonade";
 import { fetchModels } from "./llm/fetchModels";
+import Lemonade from "./llm/llms/Lemonade";
 import Ollama from "./llm/llms/Ollama";
 import { EditAggregator } from "./nextEdit/context/aggregateEdits";
 import { createNewPromptFileV2 } from "./promptFiles/createNewPromptFile";
@@ -509,6 +509,24 @@ export class Core {
         "Selected model update (config/updateSelectedModel message)",
       );
       return newSelectedModels;
+    });
+
+    on("config/getAutoModelSelection", async (msg) => {
+      return this.globalContext.getAutoModelSelection(msg.data.profileId);
+    });
+
+    on("config/updateAutoModelSelection", async (msg) => {
+      const updated = this.globalContext.updateAutoModelSelection(
+        msg.data.profileId,
+        {
+          enabled: msg.data.enabled,
+          pool: msg.data.pool,
+        },
+      );
+      await this.configHandler.reloadConfig(
+        "Auto model selection update (config/updateAutoModelSelection message)",
+      );
+      return updated;
     });
 
     on("controlPlane/openUrl", async (msg) => {

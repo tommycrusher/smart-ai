@@ -161,18 +161,22 @@ export function createEditorConfig(options: {
               handleDOMEvents: {
                 paste(view, event) {
                   const model = defaultModelRef.current;
-                  if (!model) return;
+                  if (!model) return false;
                   const items = event.clipboardData?.items;
+                  let handled = false;
                   if (items) {
                     for (const item of items) {
                       const file = item.getAsFile();
-                      file &&
+                      if (
+                        file &&
                         modelSupportsImages(
                           model.provider,
                           model.model,
                           model.title,
                           model.capabilities,
-                        ) &&
+                        )
+                      ) {
+                        handled = true;
                         void handleImageFile(ideMessenger, file).then(
                           (resp) => {
                             if (!resp) return;
@@ -185,8 +189,10 @@ export function createEditorConfig(options: {
                             view.dispatch(tr);
                           },
                         );
+                      }
                     }
                   }
+                  return handled;
                 },
               },
             },

@@ -5,6 +5,7 @@ import {
   CubeIcon,
   PlusIcon,
 } from "@heroicons/react/24/outline";
+import { AutoProviderPool } from "core/llm/autoRouter";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/Auth";
@@ -120,6 +121,7 @@ function ModelOption({
 function ModelSelect() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const ideMessenger = useContext(IdeMessengerContext);
 
   const isInEdit = useAppSelector((store) => store.session.isInEdit);
   const config = useAppSelector((state) => state.config.config);
@@ -127,6 +129,10 @@ function ModelSelect() {
   const buttonRef = useRef<HTMLButtonElement>(null);
   const [options, setOptions] = useState<Option[]>([]);
   const [sortedOptions, setSortedOptions] = useState<Option[]>([]);
+  const [autoRouter, setAutoRouter] = useState<{
+    enabled: boolean;
+    pool: AutoProviderPool;
+  }>({ enabled: false, pool: "ollama" });
   const { selectedProfile } = useAuth();
   const tinyFont = useFontSize(-4);
 
@@ -167,6 +173,20 @@ function ModelSelect() {
       }),
     );
   }, [allModels]);
+
+  // Load auto model selection config
+  useEffect(() => {
+    if (!selectedProfile) return;
+    void (async () => {
+      const result = await ideMessenger.request(
+        "config/getAutoModelSelection",
+        { profileId: selectedProfile.id },
+      );
+      if (result.status === "success") {
+        setAutoRouter(result.content);
+      }
+    })();
+  }, [selectedProfile, ideMessenger]);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -302,6 +322,65 @@ function ModelSelect() {
 
           {!isConfigLoading && (
             <>
+              <Divider className="!my-0" />
+              <div className="flex flex-col gap-1 px-2 py-1.5">
+                <div className="text-description flex items-center gap-1.5 text-xs font-medium">
+                  <SparklesIcon className="h-3 w-3" />
+                  Auto Model Router
+                </div>
+                <label className="text-description-muted text-2xs flex cursor-pointer items-center gap-1.5">
+                  <input
+                    type="checkbox"
+                    className="h-3 w-3"
+                    checked={autoRouter.enabled}
+                    onChange={async (e) => {
+                      const enabled = e.target.checked;
+                      setAutoRouter((prev) => ({ ...prev, enabled }));
+                      if (selectedProfile) {
+                        await ideMessenger.request(
+                          "config/updateAutoModelSelection",
+                          {
+                            profileId: selectedProfile.id,
+                            enabled,
+                            pool: autoRouter.pool,
+                          },
+                        );
+                      }
+                    }}
+                  />
+                  Enable auto-select
+                </label>
+                {autoRouter.enabled && (
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-description-muted text-2xs">
+                      Pool:
+                    </span>
+                    <select
+                      className="bg-vsc-input-background text-description border-command-border text-2xs h-5 rounded px-1"
+                      value={autoRouter.pool}
+                      onChange={async (e) => {
+                        const pool = e.target.value as AutoProviderPool;
+                        setAutoRouter((prev) => ({ ...prev, pool }));
+                        if (selectedProfile) {
+                          await ideMessenger.request(
+                            "config/updateAutoModelSelection",
+                            {
+                              profileId: selectedProfile.id,
+                              pool,
+                            },
+                          );
+                        }
+                      }}
+                    >
+                      <option value="ollama">Ollama (local)</option>
+                      <option value="anthropic">Anthropic</option>
+                      <option value="openai">OpenAI</option>
+                      <option value="mixed">Mixed (best)</option>
+                    </select>
+                  </div>
+                )}
+              </div>
+
               {selectedProfile?.profileType === "local" && (
                 <>
                   <Divider className="!mb-0" />

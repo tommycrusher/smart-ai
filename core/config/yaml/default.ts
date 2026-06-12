@@ -14,6 +14,7 @@ const defaultOllamaModels: AssistantUnrolled["models"] = [
     provider: SMARTAI_OLLAMA_DEFAULTS.provider,
     model: SMARTAI_OLLAMA_DEFAULTS.chatModels[0],
     roles: ["chat", "edit", "apply"],
+    capabilities: ["tool_use"],
     defaultCompletionOptions: SMARTAI_OLLAMA_DEFAULTS.completionOptions,
   },
   {
@@ -21,6 +22,7 @@ const defaultOllamaModels: AssistantUnrolled["models"] = [
     provider: SMARTAI_OLLAMA_DEFAULTS.provider,
     model: SMARTAI_OLLAMA_DEFAULTS.chatModels[1],
     roles: ["chat", "edit", "apply"],
+    capabilities: ["tool_use"],
     defaultCompletionOptions: SMARTAI_OLLAMA_DEFAULTS.completionOptions,
   },
   {

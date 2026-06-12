@@ -132,6 +132,18 @@ export type ToCoreFromIdeOrWebviewProtocol = {
     },
     GlobalContextModelSelections,
   ];
+  "config/getAutoModelSelection": [
+    { profileId: string },
+    { enabled: boolean; pool: "ollama" | "anthropic" | "openai" | "mixed" },
+  ];
+  "config/updateAutoModelSelection": [
+    {
+      profileId: string;
+      enabled?: boolean;
+      pool?: "ollama" | "anthropic" | "openai" | "mixed";
+    },
+    { enabled: boolean; pool: "ollama" | "anthropic" | "openai" | "mixed" },
+  ];
   "context/getContextItems": [
     {
       name: string;

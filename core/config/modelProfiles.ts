@@ -32,6 +32,11 @@ export interface ModelRoleConfig {
   apiBase?: string;
   title: string;
   description: string;
+  capabilities?: {
+    uploadImage?: boolean;
+    tools?: boolean;
+    nextEdit?: boolean;
+  };
 }
 
 export interface ModelProfile {
@@ -82,18 +87,21 @@ export const LOCAL_BALANCED_PROFILE: ModelProfile = {
       provider: "ollama",
       title: "Qwen2.5-Coder 7B (Chat)",
       description: "Fast, capable code model for chat and general assistance.",
+      capabilities: { tools: true },
     },
     edit: {
       model: "qwen2.5-coder:7b",
       provider: "ollama",
       title: "Qwen2.5-Coder 7B (Edit)",
       description: "Targeted code edits with minimal, precise changes.",
+      capabilities: { tools: true },
     },
     apply: {
       model: "qwen2.5-coder:7b",
       provider: "ollama",
       title: "Qwen2.5-Coder 7B (Apply)",
       description: "Applies generated code patches from chat context.",
+      capabilities: { tools: true },
     },
     autocomplete: {
       model: "qwen2.5-coder:1.5b",
@@ -135,31 +143,39 @@ export const LOCAL_PRO_PROFILE: ModelProfile = {
       model: "qwen3.6:27b",
       provider: "ollama",
       title: "Qwen 3.6 27B (Chat)",
-      description: "Large local code model with superior reasoning and generation quality.",
+      description:
+        "Large local code model with superior reasoning and generation quality.",
+      capabilities: { tools: true },
     },
     edit: {
       model: "qwen3.6:27b",
       provider: "ollama",
       title: "Qwen 3.6 27B (Edit)",
-      description: "High-quality targeted edits with deeper codebase understanding.",
+      description:
+        "High-quality targeted edits with deeper codebase understanding.",
+      capabilities: { tools: true },
     },
     apply: {
       model: "qwen3.6:27b",
       provider: "ollama",
       title: "Qwen 3.6 27B (Apply)",
       description: "Applies complex multi-file patches from chat context.",
+      capabilities: { tools: true },
     },
     agent: {
       model: "qwen3.6:27b",
       provider: "ollama",
       title: "Qwen 3.6 27B (Agent)",
-      description: "Agent-mode planning and tool use for multi-step coding tasks.",
+      description:
+        "Agent-mode planning and tool use for multi-step coding tasks.",
+      capabilities: { tools: true },
     },
     autocomplete: {
       model: "qwen2.5-coder:1.5b",
       provider: "ollama",
       title: "Qwen2.5-Coder 1.5B (Autocomplete)",
-      description: "Lightning-fast FIM autocomplete. Shared with Local Balanced.",
+      description:
+        "Lightning-fast FIM autocomplete. Shared with Local Balanced.",
     },
     embed: {
       model: "nomic-embed-text",
@@ -196,12 +212,14 @@ export const LOCAL_REASONING_PROFILE: ModelProfile = {
       provider: "ollama",
       title: "DeepSeek-R1 14B (Reasoning)",
       description: "Chain-of-thought reasoning model for complex tasks.",
+      capabilities: { nextEdit: true },
     },
     chat: {
       model: "deepseek-r1:14b",
       provider: "ollama",
       title: "DeepSeek-R1 14B (Chat)",
       description: "Reasoning-capable chat for math, algorithms, and logic.",
+      capabilities: { nextEdit: true },
     },
   },
   completionOptions: {
@@ -296,7 +314,8 @@ export const CLOUD_GLM_51_PROFILE: ModelProfile = {
       provider: "openai",
       apiBase: "https://open.bigmodel.cn/api/paas/v4",
       title: "GLM 5.1 (Chat)",
-      description: "Bilingual frontier model with strong Chinese/English coding.",
+      description:
+        "Bilingual frontier model with strong Chinese/English coding.",
     },
     edit: {
       model: "glm-5.1",
