@@ -929,15 +929,33 @@ class Ollama extends BaseLLM implements ModelInstaller {
           const { toolCalls: parsedToolCalls, remainingContent } =
             parseToolCallsFromOllamaContent(content);
           if (parsedToolCalls.length) {
-            chatMessage.content = remainingContent;
-            chatMessage.toolCalls = parsedToolCalls.map((tc) => ({
-              type: "function",
+            const mappedToolCalls = parsedToolCalls.map((tc) => ({
+              type: "function" as const,
               id: `tc_${uuidv4()}`,
               function: {
                 name: tc.name,
                 arguments: JSON.stringify(tc.arguments),
               },
             }));
+
+            // IMPORTANT: The GUI's streamUpdate reducer only processes the
+            // content branch OR the toolCalls branch per message — never both.
+            // If a single message carries both prose and toolCalls, the
+            // toolCalls are dropped. So we emit the prose (if any) and the
+            // tool calls as SEPARATE assistant messages.
+            const messages: ChatMessage[] = [];
+            if (thinkingMessage) {
+              messages.push(thinkingMessage);
+            }
+            if (remainingContent && remainingContent.trim()) {
+              messages.push({ role: "assistant", content: remainingContent });
+            }
+            messages.push({
+              role: "assistant",
+              content: "",
+              toolCalls: mappedToolCalls,
+            });
+            return messages;
           }
         }
 
