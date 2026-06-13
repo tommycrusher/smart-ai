@@ -109,7 +109,7 @@ export function OnboardingLocalTab({ isDialog }: OnboardingLocalTabProps) {
     void fetchDownloadedModels();
 
     return () => clearInterval(intervalId);
-  }, []);
+  }, [ollamaApiBase]); // Re-run when apiBase changes (config loaded)
 
   const onClickSubmitOnboarding = () => {
     submitOnboarding();
