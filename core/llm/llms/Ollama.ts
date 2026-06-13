@@ -383,9 +383,23 @@ class Ollama extends BaseLLM implements ModelInstaller {
 
   constructor(options: LLMOptions) {
     // Use Ollama config for apiBase if not explicitly provided
+    console.log(
+      "[Ollama] constructor options.apiBase:",
+      options.apiBase,
+      "model:",
+      options.model,
+    );
     if (!options.apiBase) {
       const ollamaConfig = getOllamaConfig();
       options.apiBase = ollamaConfig.apiBase;
+      console.log(
+        "[Ollama] using fallback apiBase:",
+        options.apiBase,
+        "mode:",
+        ollamaConfig.mode,
+      );
+    } else {
+      console.log("[Ollama] using provided apiBase:", options.apiBase);
     }
 
     super(options);
