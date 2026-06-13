@@ -517,7 +517,9 @@ export const PROVIDER_TOOL_SUPPORT: Record<string, (model: string) => boolean> =
   };
 
 export function isRecommendedAgentModel(modelName: string): boolean {
-  // AND behavior
+  const lower = modelName.toLowerCase();
+
+  // Cloud / API models (AND behavior)
   const recs: RegExp[][] = [
     [/o[134]/],
     [/deepseek/, /r1|reasoner/],
@@ -533,10 +535,51 @@ export function isRecommendedAgentModel(modelName: string): boolean {
     [/claude/, /[4-9]-[5-9]/],
   ];
   for (const combo of recs) {
-    if (combo.every((regex) => modelName.toLowerCase().match(regex))) {
+    if (combo.every((regex) => lower.match(regex))) {
       return true;
     }
   }
+
+  // Ollama models with known tool support (system-message or native)
+  const ollamaToolModels = [
+    "qwen3",
+    "qwen2.5",
+    "llama3.3",
+    "llama3.2",
+    "llama3.1",
+    "llama3-groq",
+    "mixtral",
+    "mistral",
+    "devstral",
+    "ministral",
+    "deepseek-coder-v2",
+    "deepseek-v2",
+    "deepseek-v3",
+    "command-r",
+    "command-a",
+    "gemma3",
+    "phi4",
+    "hermes3",
+    "granite3",
+    "granite-3",
+    "granite4",
+    "granite-4",
+    "aya-expanse",
+    "firefunction",
+    "exaone",
+    "gpt-oss",
+    "glm-4",
+    "glm-5",
+    "dolphin",
+    "nemotron",
+    "athene-v2",
+    "smollm2",
+    "cogito",
+  ];
+  if (ollamaToolModels.some((prefix) => lower.includes(prefix))) {
+    return true;
+  }
+
   return false;
 }
 export function modelSupportsNativeTools(modelDescription: ModelDescription) {

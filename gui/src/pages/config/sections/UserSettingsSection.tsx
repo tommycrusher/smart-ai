@@ -99,10 +99,10 @@ export function UserSettingsSection() {
   return (
     <div>
       <div className="flex flex-col">
-        <ConfigHeader title="User Settings" />
+        <ConfigHeader title={t("settings.userSettings")} />
         <div className="space-y-6">
           <div>
-            <ConfigHeader title="Chat" variant="sm" />
+            <ConfigHeader title={t("settings.chat")} variant="sm" />
             <Card>
               <div className="flex flex-col gap-4">
                 <UserSetting
@@ -158,7 +158,7 @@ export function UserSettingsSection() {
           </div>
 
           <div>
-            <ConfigHeader title="Telemetry" variant="sm" />
+            <ConfigHeader title={t("settings.telemetry")} variant="sm" />
             <Card>
               <div className="flex flex-col gap-4">
                 <UserSetting
@@ -176,7 +176,7 @@ export function UserSettingsSection() {
           </div>
 
           <div>
-            <ConfigHeader title="Appearance" variant="sm" />
+            <ConfigHeader title={t("settings.appearance")} variant="sm" />
             <Card>
               <div className="flex flex-col gap-4">
                 <UserSetting
@@ -207,7 +207,7 @@ export function UserSettingsSection() {
           </div>
 
           <div>
-            <ConfigHeader title="Autocomplete" variant="sm" />
+            <ConfigHeader title={t("settings.autocomplete")} variant="sm" />
             <Card>
               <div className="flex flex-col gap-4">
                 <UserSetting
@@ -266,7 +266,7 @@ export function UserSettingsSection() {
           </div>
 
           <div>
-            <ConfigHeader title="Experimental" variant="sm" />
+            <ConfigHeader title={t("settings.experimental")} variant="sm" />
             <Card>
               <Toggle
                 isOpen={showExperimental}
