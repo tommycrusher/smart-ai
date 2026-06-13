@@ -87,7 +87,7 @@ export async function* recursiveStream(
       yield chunk;
       const rendered = renderChatMessage(chunk);
       buffer += rendered;
-      totalTokens += countTokens(chunk.content);
+      totalTokens += countTokens(rendered);
 
       if (totalTokens >= safeTokens) {
         throw new Error(

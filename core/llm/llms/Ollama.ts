@@ -756,8 +756,20 @@ class Ollama extends BaseLLM implements ModelInstaller {
       for (let i = 0; i < chunks.length; i++) {
         const chunk = chunks[i];
         if (chunk.trim() !== "") {
+          let j: OllamaRawResponse;
           try {
-            const j = JSON.parse(chunk) as OllamaRawResponse;
+            j = JSON.parse(chunk) as OllamaRawResponse;
+          } catch (e) {
+            // A complete JSON line failed to parse. This usually means the
+            // line was split across network reads (e.g. a multi-byte UTF-8
+            // character or a long line). Instead of throwing — which would
+            // kill the stream and truncate the response mid-word — re-join
+            // this chunk and any remaining chunks back into the buffer so
+            // they can be completed by the next streamed value.
+            buffer = chunks.slice(i).join("\n") + "\n" + buffer;
+            break;
+          }
+          try {
             if ("error" in j) {
               throw new Error(j.error);
             }
@@ -767,6 +779,22 @@ class Ollama extends BaseLLM implements ModelInstaller {
             throw new Error(`Error parsing Ollama response: ${e} ${chunk}`);
           }
         }
+      }
+    }
+
+    // Process any remaining buffer after stream ends — the final chunk
+    // might not have ended with a newline.
+    if (buffer.trim() !== "") {
+      try {
+        const j = JSON.parse(buffer) as OllamaRawResponse;
+        if ("error" in j) {
+          throw new Error(j.error);
+        }
+        j.response ??= "";
+        yield j.response;
+      } catch {
+        // Incomplete final JSON — silently ignore, the response is already
+        // as complete as the network allowed.
       }
     }
   }
@@ -1110,6 +1138,28 @@ class Ollama extends BaseLLM implements ModelInstaller {
               );
             }
           }
+        }
+      }
+
+      // Process any trailing buffer after the stream ends. The final chunk
+      // might not have ended with a newline, so we try to parse whatever is left.
+      if (buffer.trim() !== "") {
+        try {
+          const j = JSON.parse(buffer) as OllamaChatResponse;
+          if (
+            !("error" in j) &&
+            !("type" in j) &&
+            "message" in j &&
+            j.message?.content
+          ) {
+            if (hasToolCallsInStream) {
+              accumulatedContent += j.message.content;
+            } else {
+              yield { role: "assistant", content: j.message.content };
+            }
+          }
+        } catch {
+          // Incomplete final JSON — silently ignore.
         }
       }
 

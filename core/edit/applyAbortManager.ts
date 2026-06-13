@@ -15,7 +15,7 @@ export class ApplyAbortManager {
 
   public get(id: string): AbortController {
     let controller = this.controllers.get(id);
-    if (!controller) {
+    if (!controller || controller.signal.aborted) {
       controller = new AbortController();
       this.controllers.set(id, controller);
     }

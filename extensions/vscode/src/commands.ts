@@ -9,9 +9,9 @@ import { Core } from "core/core";
 import { walkDirAsync } from "core/indexing/walkDir";
 import { isModelInstaller } from "core/llm";
 import {
-  type AutoProviderPool,
-  autoSelectModelsForAllRoles,
-  explainSelection,
+    type AutoProviderPool,
+    autoSelectModelsForAllRoles,
+    explainSelection,
 } from "core/llm/autoRouter";
 import { NextEditLoggingService } from "core/nextEdit/NextEditLoggingService";
 import { TrainingCaptureService } from "core/training";
@@ -19,9 +19,9 @@ import { GlobalContext } from "core/util/GlobalContext";
 import { startLocalLemonade } from "core/util/lemonadeHelper";
 import { startLocalOllama } from "core/util/ollamaHelper";
 import {
-  getConfigJsonPath,
-  getConfigYamlPath,
-  setConfigFilePermissions,
+    getConfigJsonPath,
+    getConfigYamlPath,
+    setConfigFilePermissions,
 } from "core/util/paths";
 import { Telemetry } from "core/util/posthog";
 import * as vscode from "vscode";
@@ -30,16 +30,16 @@ import * as YAML from "yaml";
 import { convertJsonToYamlConfig } from "../../../packages/config-yaml/dist";
 
 import {
-  getAutocompleteStatusBarDescription,
-  getAutocompleteStatusBarTitle,
-  getNextEditMenuItems,
-  getStatusBarStatus,
-  getStatusBarStatusFromQuickPickItemLabel,
-  handleNextEditToggle,
-  isNextEditToggleLabel,
-  quickPickStatusText,
-  setupStatusBar,
-  StatusBarStatus,
+    getAutocompleteStatusBarDescription,
+    getAutocompleteStatusBarTitle,
+    getNextEditMenuItems,
+    getStatusBarStatus,
+    getStatusBarStatusFromQuickPickItemLabel,
+    handleNextEditToggle,
+    isNextEditToggleLabel,
+    quickPickStatusText,
+    setupStatusBar,
+    StatusBarStatus,
 } from "./autocomplete/statusBar";
 import { processDiff } from "./diff/processDiff";
 import { VerticalDiffManager } from "./diff/vertical/manager";
@@ -48,9 +48,9 @@ import { QuickEdit, QuickEditShowParams } from "./quickEdit/QuickEditQuickPick";
 import { SmartAiConsoleWebviewViewProvider } from "./SmartAiConsoleWebviewViewProvider";
 import { SmartAiGUIWebviewViewProvider } from "./SmartAiGUIWebviewViewProvider";
 import {
-  addCodeToContextFromRange,
-  addEntireFileToContext,
-  addHighlightedCodeToContext,
+    addCodeToContextFromRange,
+    addEntireFileToContext,
+    addHighlightedCodeToContext,
 } from "./util/addCode";
 import { Battery } from "./util/battery";
 import { getMetaKeyLabel } from "./util/util";
@@ -225,10 +225,13 @@ const getCommandsMap: (
     vscode.commands.executeCommand("smartai.continueGUIView.focus");
 
     for (const uri of uris) {
-      const isDirectory = await vscode.workspace.fs
-        .stat(uri)
-        .then((stat) => stat.type === vscode.FileType.Directory)
-        .catch(() => false);
+      let isDirectory = false;
+      try {
+        const stat = await vscode.workspace.fs.stat(uri);
+        isDirectory = stat.type === vscode.FileType.Directory;
+      } catch {
+        isDirectory = false;
+      }
 
       if (isDirectory) {
         for await (const fileUri of walkDirAsync(uri.toString(), ide, {

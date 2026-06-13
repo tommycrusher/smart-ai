@@ -163,31 +163,43 @@ export class ApplyManager {
     const abortManager = ApplyAbortManager.getInstance();
     const abortController = abortManager.get(fileUri);
 
-    const { isInstantApply, diffLinesGenerator } = await applyCodeBlock(
-      editor.document.getText(),
-      text,
-      getUriPathBasename(fileUri),
-      llm,
-      abortController,
-    );
-
-    if (isInstantApply) {
-      await this.verticalDiffManager.streamDiffLines(
-        diffLinesGenerator,
-        isInstantApply,
-        streamId,
-        toolCallId,
-      );
-    } else {
-      await this.handleNonInstantDiff(
-        editor,
+    try {
+      const { isInstantApply, diffLinesGenerator } = await applyCodeBlock(
+        editor.document.getText(),
         text,
+        getUriPathBasename(fileUri),
         llm,
-        streamId,
-        this.verticalDiffManager,
-        toolCallId,
-        !this.modelIsTooFastForStreaming(llm.model),
+        abortController,
       );
+
+      if (isInstantApply) {
+        await this.verticalDiffManager.streamDiffLines(
+          diffLinesGenerator,
+          isInstantApply,
+          streamId,
+          toolCallId,
+        );
+      } else {
+        await this.handleNonInstantDiff(
+          editor,
+          text,
+          llm,
+          streamId,
+          this.verticalDiffManager,
+          toolCallId,
+          !this.modelIsTooFastForStreaming(llm.model),
+        );
+      }
+    } catch (e) {
+      void vscode.window.showErrorMessage(
+        `Error applying edit: ${e instanceof Error ? e.message : String(e)}`,
+      );
+      await this.webviewProtocol.request("updateApplyState", {
+        streamId,
+        status: "closed",
+        fileContent: text,
+        toolCallId,
+      });
     }
   }
 
