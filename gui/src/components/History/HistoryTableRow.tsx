@@ -11,6 +11,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Input } from "..";
 import { IdeMessengerContext } from "../../context/IdeMessenger";
+import { useI18n } from "../../i18n";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { exitEdit } from "../../redux/thunks/edit";
 import {
@@ -36,6 +37,7 @@ export function HistoryTableRow({
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const ideMessenger = useContext(IdeMessengerContext);
+  const { t } = useI18n();
 
   const [hovered, setHovered] = useState(false);
   const [editing, setEditing] = useState(false);
@@ -49,7 +51,6 @@ export function HistoryTableRow({
   }, [sessionMetadata]);
 
   const shareSession = async (sessionId: string) => {
-    // "session/share" is not supported in JetBrains yet
     if (shareSessionSupported) {
       await ideMessenger.request("session/share", {
         sessionId,
@@ -61,15 +62,12 @@ export function HistoryTableRow({
   const handleKeyUp = async (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       if (sessionTitleEditValue !== sessionMetadata.title) {
-        // Don't allow editing remote sessions
         if (isRemote) {
           setSessionTitleEditValue(sessionMetadata.title);
           setEditing(false);
           return;
         }
 
-        // imperfect solution of loading session just to update it
-        // but fine for now, pretty low latency
         const currentSession = await getSession(
           ideMessenger,
           sessionMetadata.sessionId,
@@ -95,7 +93,6 @@ export function HistoryTableRow({
       data-testid={`history-row-${index}`}
       className="hover:bg-input relative mb-2 box-border flex w-full cursor-pointer overflow-hidden rounded-lg p-3"
       onClick={async () => {
-        // Handle remote sessions - load remote session data
         if (isRemote) {
           const remoteSession = sessionMetadata as RemoteSessionMetadata;
           await dispatch(exitEdit({}));
@@ -109,7 +106,6 @@ export function HistoryTableRow({
           return;
         }
 
-        // Handle local sessions - load and navigate as before
         await dispatch(exitEdit({}));
         if (sessionMetadata.sessionId !== currentSessionId) {
           await dispatch(
@@ -142,15 +138,15 @@ export function HistoryTableRow({
             </span>
             {isRemote && (
               <span className="inline-flex items-center rounded-full bg-blue-100 px-2 py-1 text-xs font-medium text-blue-800 dark:bg-blue-900/20 dark:text-blue-300">
-                Remote
+                {t("history.remote")}
               </span>
             )}
 
             {sessionMetadata.messageCount !== undefined && (
               <ToolTip
-                content={`${sessionMetadata.messageCount} message${
-                  sessionMetadata.messageCount === 1 ? " is" : "s are"
-                } present in this session`}
+                content={t("history.messageCount", {
+                  count: sessionMetadata.messageCount,
+                })}
               >
                 <span className="bg-vsc-background text-secondary-foreground ml-auto inline-flex items-center rounded-full px-2 py-1 text-xs font-medium">
                   {sessionMetadata.messageCount}
@@ -164,17 +160,6 @@ export function HistoryTableRow({
           <span className="line-clamp-1 break-all text-xs">
             {getUriPathBasename(sessionMetadata.workspaceDirectory || "")}
           </span>
-          {/* Uncomment to show the date */}
-          {/* <span className="inline-block ml-auto">
-                {date.toLocaleString("en-US", {
-                  year: "2-digit",
-                  month: "2-digit",
-                  day: "2-digit",
-                  hour: "numeric",
-                  minute: "2-digit",
-                  hour12: true,
-                })}
-              </span> */}
         </div>
       </td>
 
@@ -182,7 +167,7 @@ export function HistoryTableRow({
         <td className="bg-input absolute right-2 top-12 ml-auto flex -translate-y-1/2 transform items-center gap-x-1 rounded-full px-2 py-1 shadow-md">
           {isRemote ? (
             <HeaderButtonWithToolTip
-              text="Open in browser"
+              text={t("history.openInBrowser")}
               onClick={async (e) => {
                 e.stopPropagation();
                 await ideMessenger.request("controlPlane/openUrl", {
@@ -195,7 +180,7 @@ export function HistoryTableRow({
           ) : (
             <>
               <HeaderButtonWithToolTip
-                text="Edit"
+                text={t("history.edit")}
                 onClick={async (e) => {
                   e.stopPropagation();
                   setEditing(true);
@@ -205,7 +190,7 @@ export function HistoryTableRow({
               </HeaderButtonWithToolTip>
               {shareSessionSupported && (
                 <HeaderButtonWithToolTip
-                  text="Save Chat as Markdown"
+                  text={t("history.saveAsMarkdown")}
                   onClick={async (e) => {
                     e.stopPropagation();
                     await shareSession(sessionMetadata.sessionId);
@@ -215,7 +200,7 @@ export function HistoryTableRow({
                 </HeaderButtonWithToolTip>
               )}
               <HeaderButtonWithToolTip
-                text="Delete"
+                text={t("history.delete")}
                 onClick={async (e) => {
                   e.stopPropagation();
                   await dispatch(deleteSession(sessionMetadata.sessionId));

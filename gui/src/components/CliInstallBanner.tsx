@@ -1,20 +1,18 @@
 import { CommandLineIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useContext, useEffect, useRef, useState } from "react";
+import { useI18n } from "../i18n";
+import { getPlatform } from "../util";
+import { getLocalStorage, setLocalStorage } from "../util/localStorage";
 import { CloseButton } from ".";
 import { IdeMessengerContext } from "../context/IdeMessenger";
 import useCopy from "../hooks/useCopy";
-import { getPlatform } from "../util";
-import { getLocalStorage, setLocalStorage } from "../util/localStorage";
 import { CopyButton } from "./StyledMarkdownPreview/StepContainerPreToolbar/CopyButton";
 import { RunInTerminalButton } from "./StyledMarkdownPreview/StepContainerPreToolbar/RunInTerminalButton";
 import { Card } from "./ui";
 
 interface CliInstallBannerProps {
-  /** Number of sessions user has had - banner shows only if >= sessionThreshold */
   sessionCount?: number;
-  /** Minimum sessions before showing banner (default: always show) */
   sessionThreshold?: number;
-  /** If true, dismissal is permanent via localStorage (default: session only) */
   permanentDismissal?: boolean;
 }
 
@@ -24,6 +22,7 @@ export function CliInstallBanner({
   permanentDismissal = false,
 }: CliInstallBannerProps = {}) {
   const ideMessenger = useContext(IdeMessengerContext);
+  const { t } = useI18n();
   const [cliInstalled, setCliInstalled] = useState<boolean | null>(null);
   const [dismissed, setDismissed] = useState(false);
   const commandTextRef = useRef<HTMLSpanElement>(null);
@@ -31,7 +30,6 @@ export function CliInstallBanner({
   const [showCopiedMessage, setShowCopiedMessage] = useState(false);
 
   const handleCommandClick = () => {
-    // Select the text
     if (commandTextRef.current) {
       const selection = window.getSelection();
       const range = document.createRange();
@@ -39,16 +37,14 @@ export function CliInstallBanner({
       selection?.removeAllRanges();
       selection?.addRange(range);
     }
-    // Copy to clipboard
+
     copyText();
 
-    // Show "Copied!" message for 3 seconds
     setShowCopiedMessage(true);
     setTimeout(() => setShowCopiedMessage(false), 3000);
   };
 
   useEffect(() => {
-    // Check if user has permanently dismissed the banner
     if (permanentDismissal) {
       const hasDismissed = getLocalStorage("hasDismissedCliInstallBanner");
       if (hasDismissed) {
@@ -60,18 +56,12 @@ export function CliInstallBanner({
     const checkCliInstallation = async () => {
       try {
         const platform = getPlatform();
-        // Use 'which' on mac/linux, 'where' on windows
         const command = platform === "windows" ? "where cn" : "which cn";
-
         const [stdout, stderr] = await ideMessenger.ide.subprocess(command);
-
-        // If stdout has content (path to cn), it's installed
-        // If empty or stderr has "not found", it's not installed
         const isInstalled =
           stdout.trim().length > 0 && !stderr.includes("not found");
         setCliInstalled(isInstalled);
       } catch (error) {
-        // If subprocess throws an error, assume CLI is not installed
         setCliInstalled(false);
       }
     };
@@ -86,11 +76,6 @@ export function CliInstallBanner({
     }
   };
 
-  // Don't show if:
-  // - Still loading CLI status
-  // - CLI is already installed
-  // - User has dismissed it
-  // - Session threshold not met (if threshold is set)
   if (
     cliInstalled === null ||
     cliInstalled === true ||
@@ -111,15 +96,10 @@ export function CliInstallBanner({
           <div>
             <div className="text-foreground flex items-center gap-2 font-medium">
               <CommandLineIcon className="h-5 w-5 flex-shrink-0 text-gray-400" />
-              Try out the Smart AI CLI
+              {t("cli.installTitle")}
             </div>
             <div className="text-description mt-1 text-sm">
-              Use{" "}
-              <code className="bg-vsc-background rounded px-1.5 py-0.5">
-                cn
-              </code>{" "}
-              in your terminal interactively and then deploy Continuous AI
-              workflows.{" "}
+              {t("cli.installBody", { command: "cn" })}{" "}
               <span
                 onClick={() =>
                   ideMessenger.post(
@@ -129,7 +109,7 @@ export function CliInstallBanner({
                 }
                 className="cursor-pointer underline hover:brightness-125"
               >
-                Learn more.
+                {t("cli.learnMore")}
               </span>
             </div>
           </div>
@@ -146,7 +126,7 @@ export function CliInstallBanner({
                 </span>
                 {showCopiedMessage && (
                   <span className="bg-editor rounded-l-default absolute inset-0 flex items-center justify-center px-2 text-xs font-medium">
-                    Copied!
+                    {t("cli.copied")}
                   </span>
                 )}
               </div>

@@ -4,6 +4,7 @@ import {
   Cog6ToothIcon,
   CubeIcon,
   PlusIcon,
+  SparklesIcon,
 } from "@heroicons/react/24/outline";
 import { AutoProviderPool } from "core/llm/autoRouter";
 import { useContext, useEffect, useRef, useState } from "react";
@@ -11,6 +12,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/Auth";
 import { IdeMessengerContext } from "../../context/IdeMessenger";
 import { AddModelForm } from "../../forms/AddModelForm";
+import { useI18n } from "../../i18n";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { setDialogMessage, setShowDialog } from "../../redux/slices/uiSlice";
 import { updateSelectedModelByRole } from "../../redux/thunks/updateSelectedModelByRole";
@@ -52,7 +54,6 @@ function modelSelectTitle(model: any): string {
   return model?.class_name;
 }
 
-/**makeshift way to close the headlessui listbox due to absence of open state on the listbox */
 function closeDropDown(button: HTMLButtonElement | null) {
   if (!button) return;
   button.classList.add("hidden");
@@ -68,6 +69,7 @@ function ModelOption({
   isSelected,
 }: ModelOptionProps) {
   const navigate = useNavigate();
+  const { t } = useI18n();
 
   function handleOptionClick(e: any) {
     if (showMissingApiKeyMsg) {
@@ -96,12 +98,12 @@ function ModelOption({
             {option.title}
             {option.isAutoDetected && (
               <span className="text-description-muted ml-1.5 text-[10px] italic">
-                (autodetected)
+                {t("modelSelect.autodetected")}
               </span>
             )}
             {showMissingApiKeyMsg && (
               <span className="ml-1.5 text-[10px] italic">
-                (Missing API key)
+                {t("models.missingApiKey")}
               </span>
             )}
           </span>
@@ -123,6 +125,7 @@ function ModelSelect() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const ideMessenger = useContext(IdeMessengerContext);
+  const { t } = useI18n();
 
   const isInEdit = useAppSelector((store) => store.session.isInEdit);
   const config = useAppSelector((state) => state.config.config);
@@ -150,7 +153,6 @@ function ModelSelect() {
     allModels = config.modelsByRole.chat;
   }
 
-  // Sort so that options without an API key are at the end
   useEffect(() => {
     const alphaSort = options.sort((a, b) => a.title.localeCompare(b.title));
     const enabledOptions = alphaSort.filter((option) => option.apiKey !== "");
@@ -175,7 +177,6 @@ function ModelSelect() {
     );
   }, [allModels]);
 
-  // Load auto model selection config
   useEffect(() => {
     if (!selectedProfile) return;
     void (async () => {
@@ -194,7 +195,7 @@ function ModelSelect() {
       if (
         event.key === "'" &&
         isMetaEquivalentKeyPressed(event as any) &&
-        !event.shiftKey // To prevent collisions w/ assistant toggle logic
+        !event.shiftKey
       ) {
         if (!selectedProfile) {
           return;
@@ -222,7 +223,7 @@ function ModelSelect() {
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [options, selectedModel]);
+  }, [dispatch, options, selectedModel, selectedProfile]);
 
   function onClickAddModel(e: MouseEvent) {
     e.stopPropagation();
@@ -273,7 +274,7 @@ function ModelSelect() {
           className="text-description h-[18px] gap-1 border-none"
         >
           <span className="line-clamp-1 break-all hover:brightness-110">
-            {modelSelectTitle(selectedModel) || "Select model"}
+            {modelSelectTitle(selectedModel) || t("models.selectModelShort")}
           </span>
           <ChevronDownIcon
             className="hidden h-2 w-2 flex-shrink-0 hover:brightness-110 min-[200px]:flex"
@@ -282,7 +283,9 @@ function ModelSelect() {
         </ListboxButton>
         <ListboxOptions className="min-w-[160px]">
           <div className="flex items-center justify-between px-1.5 py-1">
-            <span className="text-description text-xs font-medium">Models</span>
+            <span className="text-description text-xs font-medium">
+              {t("models.title")}
+            </span>
             <div className="flex items-center gap-0.5">
               <Button
                 onClick={(e) => {
@@ -302,11 +305,11 @@ function ModelSelect() {
             {isConfigLoading ? (
               <div className="text-description flex items-center gap-2 px-2 pb-2 pt-1 text-xs">
                 <ArrowPathIcon className="animate-spin-slow h-3 w-3" />
-                <span>Loading config</span>
+                <span>{t("modelSelect.loadingConfig")}</span>
               </div>
             ) : hasNoModels ? (
               <div className="text-description-muted px-2 py-4 text-center text-sm">
-                No models configured
+                {t("modelSelect.noModels")}
               </div>
             ) : (
               sortedOptions.map((option, idx) => (
@@ -327,7 +330,7 @@ function ModelSelect() {
               <div className="flex flex-col gap-1 px-2 py-1.5">
                 <div className="text-description flex items-center gap-1.5 text-xs font-medium">
                   <SparklesIcon className="h-3 w-3" />
-                  Auto Model Router
+                  {t("modelSelect.autoRouter")}
                 </div>
                 <label className="text-description-muted text-2xs flex cursor-pointer items-center gap-1.5">
                   <input
@@ -349,12 +352,12 @@ function ModelSelect() {
                       }
                     }}
                   />
-                  Enable auto-select
+                  {t("modelSelect.enableAutoSelect")}
                 </label>
                 {autoRouter.enabled && (
                   <div className="flex items-center gap-1.5">
                     <span className="text-description-muted text-2xs">
-                      Pool:
+                      {t("modelSelect.pool")}
                     </span>
                     <select
                       className="bg-vsc-input-background text-description border-command-border text-2xs h-5 rounded px-1"
@@ -373,10 +376,10 @@ function ModelSelect() {
                         }
                       }}
                     >
-                      <option value="ollama">Ollama (local)</option>
-                      <option value="anthropic">Anthropic</option>
-                      <option value="openai">OpenAI</option>
-                      <option value="mixed">Mixed (best)</option>
+                      <option value="ollama">{t("modelSelect.poolOllama")}</option>
+                      <option value="anthropic">{t("modelSelect.poolAnthropic")}</option>
+                      <option value="openai">{t("modelSelect.poolOpenAI")}</option>
+                      <option value="mixed">{t("modelSelect.poolMixed")}</option>
                     </select>
                   </div>
                 )}
@@ -394,7 +397,7 @@ function ModelSelect() {
                   >
                     <span className="text-description text-2xs flex flex-row items-center">
                       <PlusIcon className="mr-1.5 h-3.5 w-3.5" />
-                      Add Chat model
+                      {t("models.addChatModel")}
                     </span>
                   </ListboxOption>
                 </>
@@ -403,7 +406,9 @@ function ModelSelect() {
               <Divider className="!my-0" />
               <div className="text-description flex items-center justify-start p-2">
                 <span className="block" style={{ fontSize: tinyFont }}>
-                  <code>{getMetaKeyLabel()}'</code> to toggle model
+                  {t("modelSelect.toggleHint", {
+                    keyCombo: `${getMetaKeyLabel()}'`,
+                  })}
                 </span>
               </div>
             </>

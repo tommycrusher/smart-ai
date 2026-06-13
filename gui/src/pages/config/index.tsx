@@ -2,13 +2,18 @@ import { isOnPremSession } from "core/control-plane/AuthTypes";
 import React from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { AssistantAndOrgListbox } from "../../components/AssistantAndOrgListbox";
+import { CliInstallBanner } from "../../components/CliInstallBanner";
 import Alert from "../../components/gui/Alert";
 import { Divider } from "../../components/ui/Divider";
 import { TabGroup } from "../../components/ui/TabGroup";
 import { useAuth } from "../../context/Auth";
 import { useNavigationListener } from "../../hooks/useNavigationListener";
-import { bottomTabSections, getAllTabs, topTabSections } from "./configTabs";
-import { CliInstallBanner } from "../../components/CliInstallBanner";
+import { useI18n } from "../../i18n";
+import {
+  getAllTabs,
+  getBottomTabSections,
+  getTopTabSections,
+} from "./configTabs";
 import { AccountDropdown } from "./features/account/AccountDropdown";
 
 function ConfigPage() {
@@ -17,8 +22,12 @@ function ConfigPage() {
   const [searchParams] = useSearchParams();
   const activeTab = searchParams.get("tab") || "settings";
   const { session, organizations } = useAuth();
+  const { t } = useI18n();
 
-  const allTabs = getAllTabs();
+  const topTabSections = React.useMemo(() => getTopTabSections(t), [t]);
+  const bottomTabSections = React.useMemo(() => getBottomTabSections(t), [t]);
+  const allTabs = React.useMemo(() => getAllTabs(t), [t]);
+
   const shouldRenderOrgInfo =
     session && organizations.length > 1 && !isOnPremSession(session);
 
@@ -80,10 +89,9 @@ function ConfigPage() {
         <div className="block px-4 py-4 sm:hidden">
           <Alert type="warning" className="max-w-md">
             <div className="flex flex-col">
-              <div className="font-medium">Screen width too small</div>
+              <div className="font-medium">{t("settings.screenWidthTooSmall")}</div>
               <div className="text-description mt-1 text-sm">
-                To view settings, please expand the sidebar by dragging the
-                left/right border
+                {t("settings.expandSidebarHint")}
               </div>
             </div>
           </Alert>

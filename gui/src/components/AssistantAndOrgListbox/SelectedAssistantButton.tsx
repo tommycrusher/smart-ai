@@ -1,6 +1,7 @@
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
 import { ArrowPathIcon } from "@heroicons/react/24/solid";
 import type { ProfileDescription } from "core/config/ConfigHandler";
+import { useI18n } from "../../i18n";
 import { useAppSelector } from "../../redux/hooks";
 import { fontSize } from "../../util";
 import { cn } from "../../util/cn";
@@ -17,6 +18,7 @@ export function SelectedAssistantButton({
   variant,
 }: SelectedAssistantButtonProps) {
   const configLoading = useAppSelector((store) => store.config.loading);
+  const { t } = useI18n();
 
   const isSidebar = variant === "sidebar";
   const iconSize = isSidebar ? "h-4 w-4" : "h-3 w-3";
@@ -34,7 +36,7 @@ export function SelectedAssistantButton({
       >
         <div className="flex min-w-0 flex-1 flex-row items-center gap-2">
           {selectedProfile === null ? (
-            "Set up config file"
+            t("assistant.setUpConfigFile")
           ) : configLoading ? (
             <span className="text-description flex flex-row items-center">
               <ArrowPathIcon
@@ -43,7 +45,7 @@ export function SelectedAssistantButton({
                   configLoading && "animate-spin-slow",
                 )}
               />
-              Loading
+              {t("assistant.loading")}
             </span>
           ) : (
             <>

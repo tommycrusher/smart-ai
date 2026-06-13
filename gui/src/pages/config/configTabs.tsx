@@ -34,13 +34,15 @@ interface TabSection {
   className?: string;
 }
 
-export const topTabSections: TabSection[] = [
+type TranslateFn = (key: string, params?: Record<string, string | number>) => string;
+
+export const getTopTabSections = (t: TranslateFn): TabSection[] => [
   {
     id: "top",
     tabs: [
       {
         id: "back",
-        label: "Back",
+        label: t("tabs.back"),
         component: <div />,
         icon: <ArrowLeftIcon className="xs:h-4 xs:w-4 h-3 w-3 flex-shrink-0" />,
       },
@@ -52,7 +54,7 @@ export const topTabSections: TabSection[] = [
     tabs: [
       {
         id: "models",
-        label: "Models",
+        label: t("tabs.models"),
         component: (
           <ConfigSection>
             <ModelsSection />
@@ -62,7 +64,7 @@ export const topTabSections: TabSection[] = [
       },
       {
         id: "rules",
-        label: "Rules",
+        label: t("tabs.rules"),
         component: (
           <ConfigSection>
             <RulesSection />
@@ -72,7 +74,7 @@ export const topTabSections: TabSection[] = [
       },
       {
         id: "tools",
-        label: "Tools",
+        label: t("tabs.tools"),
         component: (
           <ConfigSection>
             <ToolsSection />
@@ -90,7 +92,7 @@ export const topTabSections: TabSection[] = [
     tabs: [
       {
         id: "configs",
-        label: "Configs",
+        label: t("tabs.configs"),
         component: (
           <ConfigSection>
             <ConfigsSection />
@@ -100,7 +102,7 @@ export const topTabSections: TabSection[] = [
       },
       {
         id: "organizations",
-        label: "Organizations",
+        label: t("tabs.organizations"),
         component: (
           <ConfigSection>
             <OrganizationsSection />
@@ -118,7 +120,7 @@ export const topTabSections: TabSection[] = [
     tabs: [
       {
         id: "indexing",
-        label: "Indexing",
+        label: t("tabs.indexing"),
         component: (
           <ConfigSection>
             <IndexingSettingsSection />
@@ -132,13 +134,13 @@ export const topTabSections: TabSection[] = [
   },
 ];
 
-export const bottomTabSections: TabSection[] = [
+export const getBottomTabSections = (t: TranslateFn): TabSection[] => [
   {
     id: "bottom",
     tabs: [
       {
         id: "settings",
-        label: "Settings",
+        label: t("tabs.settings"),
         component: (
           <ConfigSection>
             <UserSettingsSection />
@@ -148,7 +150,7 @@ export const bottomTabSections: TabSection[] = [
       },
       {
         id: "help",
-        label: "Help",
+        label: t("tabs.help"),
         component: (
           <ConfigSection>
             <HelpSection />
@@ -162,8 +164,8 @@ export const bottomTabSections: TabSection[] = [
   },
 ];
 
-export const getAllTabs = (): TabOption[] => {
-  return [...topTabSections, ...bottomTabSections].flatMap(
+export const getAllTabs = (t: TranslateFn): TabOption[] => {
+  return [...getTopTabSections(t), ...getBottomTabSections(t)].flatMap(
     (section) => section.tabs,
   );
 };

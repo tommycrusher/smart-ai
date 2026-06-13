@@ -1,23 +1,22 @@
+import { XMarkIcon } from "@heroicons/react/24/solid";
 import { BaseSessionMetadata } from "core";
 import type { RemoteSessionMetadata } from "core/control-plane/client";
 import MiniSearch from "minisearch";
 import React, {
-    Fragment,
-    useContext,
-    useEffect,
-    useMemo,
-    useRef,
-    useState,
+  Fragment,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
 } from "react";
-import Shortcut from "../gui/Shortcut";
-
-import { XMarkIcon } from "@heroicons/react/24/solid";
 import { useNavigate } from "react-router-dom";
 import { IdeMessengerContext } from "../../context/IdeMessenger";
+import { useI18n } from "../../i18n";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import {
-    newSession,
-    setAllSessionMetadata,
+  newSession,
+  setAllSessionMetadata,
 } from "../../redux/slices/sessionSlice";
 import { setDialogMessage, setShowDialog } from "../../redux/slices/uiSlice";
 import { refreshSessionMetadata } from "../../redux/thunks/session";
@@ -33,6 +32,7 @@ export function History() {
   const navigate = useNavigate();
   const searchInputRef = React.useRef<HTMLInputElement>(null);
   const ideMessenger = useContext(IdeMessengerContext);
+  const { t } = useI18n();
 
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -71,30 +71,25 @@ export function History() {
     | BaseSessionMetadata
     | RemoteSessionMetadata
   )[] = useMemo(() => {
-    // 1. Exact phrase matching
     const exactResults = minisearch.search(searchTerm, {
       fuzzy: false,
     });
 
-    // 2. Fuzzy matching with higher tolerance
     const fuzzyResults = minisearch.search(searchTerm, {
       fuzzy: 0.3,
     });
 
-    // 3. Prefix matching for partial words
     const prefixResults = minisearch.search(searchTerm, {
       prefix: true,
       fuzzy: 0.2,
     });
 
-    // Combine results, with exact matches having higher priority
     const allResults = [
       ...exactResults.map((r) => ({ ...r, priority: 3 })),
       ...fuzzyResults.map((r) => ({ ...r, priority: 2 })),
       ...prefixResults.map((r) => ({ ...r, priority: 1 })),
     ];
 
-    // Remove duplicates while preserving highest priority
     const uniqueResultsMap = new Map<string, any>();
     allResults.forEach((result) => {
       const existing = uniqueResultsMap.get(result.id);
@@ -127,17 +122,12 @@ export function History() {
     dispatch(
       setDialogMessage(
         <ConfirmationDialog
-          title={`Clear sessions`}
-          text={`Are you sure you want to permanently delete all chat sessions, including the current chat session?`}
+          title={t("history.clearDialogTitle")}
+          text={t("history.clearDialogText")}
           onConfirm={async () => {
-            // optimistic update
             dispatch(setAllSessionMetadata([]));
-
-            // actual update + refresh
             await ideMessenger.request("history/clear", undefined);
             void dispatch(refreshSessionMetadata({}));
-
-            // start a new session
             dispatch(newSession());
             navigate(ROUTES.HOME);
           }}
@@ -156,7 +146,7 @@ export function History() {
         <input
           className="bg-vsc-input-background text-vsc-foreground flex-1 rounded-md border border-none py-1 pl-2 pr-8 text-sm outline-none focus:outline-none"
           ref={searchInputRef}
-          placeholder="Search past sessions"
+          placeholder={t("history.searchPlaceholder")}
           type="text"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
@@ -177,15 +167,11 @@ export function History() {
       <div className="thin-scrollbar flex w-full flex-1 flex-col overflow-y-auto">
         {filteredAndSortedSessions.length === 0 && (
           <div className="m-3 text-center">
-            {isSessionMetadataLoading ? (
-              "Loading Sessions..."
-            ) : (
-              <>
-                No past sessions found. To start a new session, either click the
-                "+" button or use the keyboard shortcut:{" "}
-                <Shortcut>meta L</Shortcut>
-              </>
-            )}
+            {isSessionMetadataLoading
+              ? t("history.loading")
+              : t("history.empty", {
+                  shortcut: `${platform === "mac" ? "⌘" : "Ctrl"} L`,
+                })}
           </div>
         )}
 
@@ -215,13 +201,13 @@ export function History() {
 
       <div className="border-border flex flex-col items-end justify-center border-0 border-t border-solid px-2 py-3 text-xs">
         <Button variant="secondary" size="sm" onClick={showClearSessionsDialog}>
-          Clear chats
+          {t("history.clearChats")}
         </Button>
         <span
           className="text-description text-2xs"
           data-testid="history-sessions-note"
         >
-          Chat history is saved to{" "}
+          {t("history.savedTo")}{" "}
           <span className="italic">
             {platform === "windows"
               ? "%USERPROFILE%/.smart-ai"

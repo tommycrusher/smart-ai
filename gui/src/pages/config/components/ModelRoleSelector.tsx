@@ -1,3 +1,4 @@
+import { ModelRole } from "@smartai/config-yaml";
 import {
   CheckIcon,
   ChevronUpDownIcon,
@@ -16,9 +17,11 @@ import {
   Transition,
 } from "../../../components/ui";
 import { IdeMessengerContext } from "../../../context/IdeMessenger";
+import { useI18n } from "../../../i18n";
 import { fontSize } from "../../../util";
 
 interface ModelRoleSelectorProps {
+  role: ModelRole;
   models: ModelDescription[];
   selectedModel: ModelDescription | null;
   onSelect: (model: ModelDescription | null) => void;
@@ -29,6 +32,7 @@ interface ModelRoleSelectorProps {
 }
 
 const ModelRoleSelector = ({
+  role,
   models,
   selectedModel,
   onSelect,
@@ -38,6 +42,7 @@ const ModelRoleSelector = ({
   hideTitle = false,
 }: ModelRoleSelectorProps) => {
   const ideMessenger = useContext(IdeMessengerContext);
+  const { t } = useI18n();
 
   const noConfiguredModels = models.every(
     (model) => model.configurationStatus !== LLMConfigurationStatuses.VALID,
@@ -74,7 +79,7 @@ const ModelRoleSelector = ({
               className="bg-input border-command-border hover:bg-list-active hover:text-list-active-foreground text-description w-full justify-between rounded border px-2 py-1.5 underline hover:underline"
             >
               <span className="line-clamp-1" style={{ fontSize: fontSize(-1) }}>
-                Setup {displayName} model
+                {t("models.setupModel", { role: displayName })}
               </span>
             </ListboxButton>
           ) : (
@@ -85,18 +90,21 @@ const ModelRoleSelector = ({
               >
                 {models.length === 0 || noConfiguredModels ? (
                   <span className="text-lightgray line-clamp-1 italic">
-                    {`No ${models.length === 0 ? "" : "valid "}${displayName} models${
-                      ["Chat", "Apply", "Edit"].includes(displayName)
-                        ? ". Using Chat model"
-                        : ""
-                    }`}
+                    {t("models.noValidModels", {
+                      role: displayName,
+                      valid: models.length === 0 ? "" : "valid ",
+                      suffix: ["chat", "apply", "edit"].includes(role)
+                        ? t("models.fallbackChat")
+                        : "",
+                    })}
                   </span>
                 ) : (
                   <span
                     className="line-clamp-1"
                     style={{ fontSize: fontSize(-1) }}
                   >
-                    {selectedModel?.title ?? `Select ${displayName} model`}
+                    {selectedModel?.title ??
+                      t("models.selectModel", { role: displayName })}
                   </span>
                 )}
 
@@ -117,18 +125,18 @@ const ModelRoleSelector = ({
                       const isConfigInvalid =
                         option.configurationStatus !==
                         LLMConfigurationStatuses.VALID;
-                      let invalidMessage = "(Invalid config)";
+                      let invalidMessage = t("models.invalidConfig");
                       if (
                         option.configurationStatus ===
                         LLMConfigurationStatuses.MISSING_ENV_SECRET
                       ) {
-                        invalidMessage = "(Missing env secret)";
+                        invalidMessage = t("models.missingEnvSecret");
                       }
                       if (
                         option.configurationStatus ===
                         LLMConfigurationStatuses.MISSING_API_KEY
                       ) {
-                        invalidMessage = "(Missing API Key)";
+                        invalidMessage = t("models.missingApiKey");
                       }
 
                       return (

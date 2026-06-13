@@ -8,6 +8,7 @@ import { useContext, useEffect, useState } from "react";
 import { Card, Toggle, useFontSize } from "../../../components/ui";
 import { useAuth } from "../../../context/Auth";
 import { IdeMessengerContext } from "../../../context/IdeMessenger";
+import { useI18n } from "../../../i18n";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { updateConfig } from "../../../redux/slices/configSlice";
 import { selectCurrentOrg } from "../../../redux/slices/profilesSlice";
@@ -17,27 +18,21 @@ import { SmartAiFeaturesMenu } from "../components/SmartAiFeaturesMenu";
 import { UserSetting } from "../components/UserSetting";
 
 export function UserSettingsSection() {
-  /////// User settings section //////
   const dispatch = useAppDispatch();
   const ideMessenger = useContext(IdeMessengerContext);
   const config = useAppSelector((state) => state.config.config);
   const currentOrg = useAppSelector(selectCurrentOrg);
+  const { t, locale, setLocale } = useI18n();
 
   const [showExperimental, setShowExperimental] = useState(false);
   const { session } = useAuth();
 
   function handleUpdate(sharedConfig: SharedConfigSchema) {
-    // Optimistic update
     const updatedConfig = modifyAnyConfigWithSharedConfig(config, sharedConfig);
     dispatch(updateConfig(updatedConfig));
-    // IMPORTANT no need for model role updates (separate logic for selected model roles)
-    // simply because this function won't be used to update model roles
-
-    // Actual update to core which propagates back with config update event
     ideMessenger.post("config/updateSharedConfig", sharedConfig);
   }
 
-  // Disable autocomplete
   const disableAutocompleteInFiles = (
     config.tabAutocompleteOptions?.disableInFiles ?? []
   ).join(", ");
@@ -46,18 +41,15 @@ export function UserSettingsSection() {
   );
 
   useEffect(() => {
-    // Necessary so that reformatted/trimmed values don't cause dirty state
     setFormDisableAutocomplete(disableAutocompleteInFiles);
   }, [disableAutocompleteInFiles]);
 
-  // Workspace prompts
   const promptPath = config.experimental?.promptPath || "";
 
   const handleEnableStaticContextualizationToggle = (value: boolean) => {
     handleUpdate({ enableStaticContextualization: value });
   };
 
-  // TODO defaults are in multiple places, should be consolidated and probably not explicit here
   const showSessionTabs = config.ui?.showSessionTabs ?? false;
   const continueAfterToolRejection =
     config.ui?.continueAfterToolRejection ?? false;
@@ -109,7 +101,6 @@ export function UserSettingsSection() {
       <div className="flex flex-col">
         <ConfigHeader title="User Settings" />
         <div className="space-y-6">
-          {/* Chat Interface Settings */}
           <div>
             <ConfigHeader title="Chat" variant="sm" />
             <Card>
@@ -166,7 +157,6 @@ export function UserSettingsSection() {
             </Card>
           </div>
 
-          {/* Telemetry Settings */}
           <div>
             <ConfigHeader title="Telemetry" variant="sm" />
             <Card>
@@ -185,7 +175,6 @@ export function UserSettingsSection() {
             </Card>
           </div>
 
-          {/* Appearance Settings */}
           <div>
             <ConfigHeader title="Appearance" variant="sm" />
             <Card>
@@ -202,11 +191,21 @@ export function UserSettingsSection() {
                   min={7}
                   max={50}
                 />
+                <UserSetting
+                  type="select"
+                  title={t("settings.language")}
+                  description="Choose the interface language."
+                  value={locale}
+                  onChange={(value) => setLocale(value as "en" | "pl")}
+                  options={[
+                    { label: t("settings.languageEnglish"), value: "en" },
+                    { label: t("settings.languagePolish"), value: "pl" },
+                  ]}
+                />
               </div>
             </Card>
           </div>
 
-          {/* Autocomplete Settings */}
           <div>
             <ConfigHeader title="Autocomplete" variant="sm" />
             <Card>
@@ -266,7 +265,6 @@ export function UserSettingsSection() {
             </Card>
           </div>
 
-          {/* Experimental Settings */}
           <div>
             <ConfigHeader title="Experimental" variant="sm" />
             <Card>

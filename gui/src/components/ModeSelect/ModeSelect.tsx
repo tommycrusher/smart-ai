@@ -34,6 +34,9 @@ export function ModeSelect() {
     return selectedProfile?.profileType === "local";
   }, [selectedProfile]);
 
+  const showAgentCompatibilityWarning =
+    isGoodAtAgentMode === false && !isLocalAgent;
+
   const { mainEditor } = useMainEditor();
   const metaKeyLabel = useMemo(() => {
     return getMetaKeyLabel();
@@ -45,16 +48,15 @@ export function ModeSelect() {
     } else if (mode === "plan") {
       dispatch(setMode("agent"));
     } else if (mode === "agent") {
-      // Skip background mode if local agent is selected
       dispatch(setMode(isLocalAgent ? "chat" : "background"));
     } else {
       dispatch(setMode("chat"));
     }
-    // Only focus main editor if another one doesn't already have focus
+
     if (!document.activeElement?.classList?.contains("ProseMirror")) {
       mainEditor?.commands.focus();
     }
-  }, [mode, mainEditor, isLocalAgent]);
+  }, [dispatch, mode, mainEditor, isLocalAgent]);
 
   const selectMode = useCallback(
     (newMode: MessageModes) => {
@@ -63,10 +65,9 @@ export function ModeSelect() {
       }
 
       dispatch(setMode(newMode));
-
       mainEditor?.commands.focus();
     },
-    [mode, mainEditor],
+    [dispatch, mode, mainEditor],
   );
 
   useEffect(() => {
@@ -81,25 +82,20 @@ export function ModeSelect() {
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, [cycleMode]);
 
-  // Auto-switch from background mode when local agent is selected
   useEffect(() => {
     if (mode === "background" && isLocalAgent) {
       dispatch(setMode("agent"));
     }
   }, [mode, isLocalAgent, dispatch]);
 
-  const notGreatAtAgent = (mode: string) => (
-    <>
-      <ToolTip
-        style={{
-          zIndex: 200001, // in front of listbox
-        }}
-        className="flex items-center gap-1"
-        content={`${mode} might not work well with this model.`}
-      >
-        <ExclamationTriangleIcon className="text-warning h-2.5 w-2.5" />
-      </ToolTip>
-    </>
+  const compatibilityHint = (modeLabel: string) => (
+    <ToolTip
+      style={{ zIndex: 200001 }}
+      className="flex items-center gap-1"
+      content={`${modeLabel} may have limited quality with this model.`}
+    >
+      <InformationCircleIcon className="text-description-muted h-2.5 w-2.5" />
+    </ToolTip>
   );
 
   return (
@@ -128,13 +124,8 @@ export function ModeSelect() {
           <ListboxOption value="chat">
             <div className="flex flex-row items-center gap-1.5">
               <ModeIcon mode="chat" />
-              <span className="">Chat</span>
-              <ToolTip
-                style={{
-                  zIndex: 200001,
-                }}
-                content="All tools disabled"
-              >
+              <span>Chat</span>
+              <ToolTip style={{ zIndex: 200001 }} content="All tools disabled">
                 <InformationCircleIcon
                   data-tooltip-id="chat-tip"
                   className="h-2.5 w-2.5 flex-shrink-0"
@@ -148,57 +139,42 @@ export function ModeSelect() {
             </div>
             {mode === "chat" && <CheckIcon className="ml-auto h-3 w-3" />}
           </ListboxOption>
-          <ListboxOption value="plan" className={"gap-1"}>
+
+          <ListboxOption value="plan" className="gap-1">
             <div className="flex flex-row items-center gap-1.5">
               <ModeIcon mode="plan" />
-              <span className="">Plan</span>
-              <ToolTip
-                style={{
-                  zIndex: 200001,
-                }}
-                content="Read-only/MCP tools available"
-              >
+              <span>Plan</span>
+              <ToolTip style={{ zIndex: 200001 }} content="Read-only/MCP tools available">
                 <InformationCircleIcon className="h-2.5 w-2.5 flex-shrink-0" />
               </ToolTip>
             </div>
-            {!isGoodAtAgentMode && notGreatAtAgent("Plan")}
+            {showAgentCompatibilityWarning && compatibilityHint("Plan")}
             <CheckIcon
               className={`ml-auto h-3 w-3 ${mode === "plan" ? "" : "opacity-0"}`}
             />
           </ListboxOption>
 
-          <ListboxOption value="agent" className={"gap-1"}>
+          <ListboxOption value="agent" className="gap-1">
             <div className="flex flex-row items-center gap-1.5">
               <ModeIcon mode="agent" />
-              <span className="">Agent</span>
-              <ToolTip
-                style={{
-                  zIndex: 200001,
-                }}
-                content="All tools available"
-              >
+              <span>Agent</span>
+              <ToolTip style={{ zIndex: 200001 }} content="All tools available">
                 <InformationCircleIcon className="h-2.5 w-2.5 flex-shrink-0" />
               </ToolTip>
             </div>
-            {!isGoodAtAgentMode && notGreatAtAgent("Agent")}
+            {showAgentCompatibilityWarning && compatibilityHint("Agent")}
             <CheckIcon
               className={`ml-auto h-3 w-3 ${mode === "agent" ? "" : "opacity-0"}`}
             />
           </ListboxOption>
 
-          <ListboxOption
-            value="background"
-            className={"gap-1"}
-            disabled={isLocalAgent}
-          >
+          <ListboxOption value="background" className="gap-1" disabled={isLocalAgent}>
             <div className="flex flex-row items-center gap-1.5">
               <ModeIcon mode="background" />
-              <span className="">Background</span>
+              <span>Background</span>
               <ToolTip
-                style={{
-                  zIndex: 200001,
-                }}
-                content={"Background mode cannot be used with local agents."}
+                style={{ zIndex: 200001 }}
+                content="Background mode cannot be used with local agents."
               >
                 <InformationCircleIcon className="h-2.5 w-2.5 flex-shrink-0" />
               </ToolTip>

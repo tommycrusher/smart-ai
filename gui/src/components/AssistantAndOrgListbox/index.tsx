@@ -9,6 +9,7 @@ import { useContext, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/Auth";
 import { IdeMessengerContext } from "../../context/IdeMessenger";
+import { useI18n } from "../../i18n";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import {
   selectCurrentOrg,
@@ -41,6 +42,7 @@ export function AssistantAndOrgListbox({
   const listboxRef = useRef<HTMLDivElement>(null);
   const currentOrg = useAppSelector(selectCurrentOrg);
   const ideMessenger = useContext(IdeMessengerContext);
+  const { t } = useI18n();
   const {
     profiles,
     selectedProfile,
@@ -56,7 +58,6 @@ export function AssistantAndOrgListbox({
     session && organizations.length > 1 && !isOnPremSession(session);
 
   function close() {
-    // Close the listbox by clicking outside or programmatically
     const event = new KeyboardEvent("keydown", { key: "Escape" });
     document.dispatchEvent(event);
   }
@@ -90,16 +91,6 @@ export function AssistantAndOrgListbox({
     close();
   }
 
-  function onRulesConfig() {
-    navigate(CONFIG_ROUTES.RULES);
-    close();
-  }
-
-  function onToolsConfig() {
-    navigate(CONFIG_ROUTES.TOOLS);
-    close();
-  }
-
   useEffect(() => {
     let lastToggleTime = 0;
     const DEBOUNCE_MS = 800;
@@ -116,7 +107,6 @@ export function AssistantAndOrgListbox({
           lastToggleTime = now;
 
           const profileIds = profiles?.map((profile) => profile.id) ?? [];
-          // In case of 1 or 0 profiles just does nothing
           if (profileIds.length < 2) {
             return;
           }
@@ -126,7 +116,6 @@ export function AssistantAndOrgListbox({
             const nextIndex = (curIndex + 1) % profileIds.length;
             nextId = profileIds[nextIndex];
           }
-          // Optimistic update
           dispatch(setSelectedProfile(nextId));
           ideMessenger.post("didChangeSelectedProfile", {
             id: nextId,
@@ -139,7 +128,7 @@ export function AssistantAndOrgListbox({
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [currentOrg, selectedProfile]);
+  }, [currentOrg, dispatch, ideMessenger, profiles, selectedProfile]);
 
   return (
     <Listbox>
@@ -155,7 +144,7 @@ export function AssistantAndOrgListbox({
           >
             <div className="flex items-center justify-between px-1.5 py-1">
               <span className="text-description text-xs font-medium">
-                Configs
+                {t("assistant.configs")}
               </span>
               <div className="flex items-center gap-0.5">
                 <Button
@@ -193,7 +182,7 @@ export function AssistantAndOrgListbox({
                 <Divider className="!mb-0.5 !mt-0" />
                 <div className="flex items-center justify-between px-1.5 py-1">
                   <span className="text-description text-xs font-medium">
-                    Organizations
+                    {t("assistant.organizations")}
                   </span>
                   <div className="flex items-center gap-0.5">
                     <Button
@@ -227,7 +216,6 @@ export function AssistantAndOrgListbox({
               </>
             )}
 
-            {/* Settings Section */}
             {variant !== "sidebar" && (
               <div>
                 <Button
@@ -246,7 +234,7 @@ export function AssistantAndOrgListbox({
                         configLoading && "animate-spin-slow",
                       )}
                     />
-                    <span className="text-2xs">Reload</span>
+                    <span className="text-2xs">{t("assistant.reload")}</span>
                   </div>
                 </Button>
                 {session ? (
@@ -262,7 +250,7 @@ export function AssistantAndOrgListbox({
                   >
                     <div className="flex w-full items-center">
                       <ArrowRightStartOnRectangleIcon className="ml-1.5 mr-2 h-3.5 w-3.5 flex-shrink-0" />
-                      <span className="text-2xs">Log out</span>
+                      <span className="text-2xs">{t("assistant.logOut")}</span>
                     </div>
                   </Button>
                 ) : (
@@ -278,7 +266,7 @@ export function AssistantAndOrgListbox({
                   >
                     <div className="flex w-full items-center">
                       <ArrowRightStartOnRectangleIcon className="ml-1.5 mr-2 h-3.5 w-3.5 flex-shrink-0 rotate-180" />
-                      <span className="text-2xs">Log in</span>
+                      <span className="text-2xs">{t("assistant.logIn")}</span>
                     </div>
                   </Button>
                 )}
@@ -287,11 +275,12 @@ export function AssistantAndOrgListbox({
               </div>
             )}
 
-            {/* Bottom Actions */}
             <div>
               <div className="text-description flex items-center justify-start px-2 py-1">
                 <span className="block" style={{ fontSize: tinyFont }}>
-                  <code>{getMetaKeyLabel()} ⇧ '</code> to toggle config
+                  {t("assistant.toggleHint", {
+                    keyCombo: `${getMetaKeyLabel()} ⇧ '`,
+                  })}
                 </span>
               </div>
             </div>

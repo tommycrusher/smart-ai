@@ -6,6 +6,7 @@ import {
 import React from "react";
 import ToggleSwitch from "../../../components/gui/Switch";
 import { ToolTip } from "../../../components/gui/Tooltip";
+import { useI18n } from "../../../i18n";
 import {
   Listbox,
   ListboxButton,
@@ -60,6 +61,7 @@ type UserSettingProps =
 
 export function UserSetting(props: UserSettingProps) {
   const { title, description, disabled = false } = props;
+  const { t } = useI18n();
 
   const renderControl = () => {
     switch (props.type) {
@@ -81,11 +83,9 @@ export function UserSetting(props: UserSettingProps) {
               value={props.value}
               onChange={(e) => {
                 const value = Number(e.target.value);
-                // Allow temporary invalid values during input
                 props.onChange(value);
               }}
               onBlur={(e) => {
-                // Apply min/max constraints when input loses focus
                 const value = Number(e.target.value);
                 const min = props.min ?? 0;
                 const max = props.max ?? 100;
@@ -97,7 +97,6 @@ export function UserSetting(props: UserSettingProps) {
                 }
               }}
               onKeyDown={(e) => {
-                // Apply constraints when user presses Enter
                 if (e.key === "Enter") {
                   const value = Number(e.currentTarget.value);
                   const min = props.min ?? 0;
@@ -109,7 +108,6 @@ export function UserSetting(props: UserSettingProps) {
                     props.onChange(max);
                   }
 
-                  // Blur the input to complete the editing
                   e.currentTarget.blur();
                 }
               }}
@@ -173,12 +171,12 @@ export function UserSetting(props: UserSettingProps) {
                 </div>
                 {props.isDirty && (
                   <div className="flex flex-row items-center gap-1">
-                    <ToolTip content="Save">
+                    <ToolTip content={t("common.save")}>
                       <div onClick={props.onSubmit} className="cursor-pointer">
                         <CheckIcon className="h-4 w-4 text-green-500 hover:opacity-80" />
                       </div>
                     </ToolTip>
-                    <ToolTip content="Cancel">
+                    <ToolTip content={t("common.cancel")}>
                       <div onClick={props.onCancel} className="cursor-pointer">
                         <XMarkIcon className="h-4 w-4 text-red-500 hover:opacity-80" />
                       </div>
@@ -208,7 +206,6 @@ export function UserSetting(props: UserSettingProps) {
     }
   };
 
-  // Use vertical layout for input types, horizontal for others
   const isInputType = props.type === "input";
 
   if (isInputType) {

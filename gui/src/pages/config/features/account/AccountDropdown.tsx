@@ -17,10 +17,12 @@ import {
 import { Divider } from "../../../../components/ui/Divider";
 import { useAuth } from "../../../../context/Auth";
 import { IdeMessengerContext } from "../../../../context/IdeMessenger";
+import { useI18n } from "../../../../i18n";
 
 export function AccountDropdown() {
   const { session, logout, login } = useAuth();
   const ideMessenger = useContext(IdeMessengerContext);
+  const { t } = useI18n();
 
   if (isOnPremSession(session)) {
     return null;
@@ -28,7 +30,7 @@ export function AccountDropdown() {
 
   if (!session) {
     return (
-      <ToolTip content="Log in" className="text-xs md:!hidden">
+      <ToolTip content={t("assistant.logIn")} className="text-xs md:!hidden">
         <Button
           variant="ghost"
           className="text-description flex w-full flex-row items-center gap-2 px-2 py-1.5"
@@ -36,7 +38,7 @@ export function AccountDropdown() {
         >
           <UserCircleIconOutline className="xs:h-4 xs:w-4 h-3 w-3 flex-shrink-0" />
           <span className="text-description hidden text-xs md:block">
-            Log in
+            {t("assistant.logIn")}
           </span>
         </Button>
       </ToolTip>
@@ -64,7 +66,6 @@ export function AccountDropdown() {
               </div>
             </ListboxButton>
             <ListboxOptions anchor="right end">
-              {/* Account info section for small screens */}
               <div className="md:hidden">
                 <div className="flex items-center gap-2 px-2 py-1">
                   <UserCircleIconSolid className="h-5 w-5 flex-shrink-0" />
@@ -88,14 +89,14 @@ export function AccountDropdown() {
               >
                 <div className="flex items-center gap-2 py-0.5">
                   <Cog6ToothIcon className="h-3.5 w-3.5" />
-                  <span>Manage Account</span>
+                  <span>{t("assistant.manageAccount")}</span>
                 </div>
               </ListboxOption>
 
               <ListboxOption onClick={logout} value="logout">
                 <div className="flex items-center gap-2 py-0.5">
                   <ArrowRightStartOnRectangleIcon className="h-3.5 w-3.5" />
-                  <span>Log out</span>
+                  <span>{t("assistant.logOut")}</span>
                 </div>
               </ListboxOption>
             </ListboxOptions>

@@ -3,6 +3,7 @@ import ReactDOM from "react-dom/client";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import App from "./App";
+import { I18nProvider } from "./i18n";
 import "./index.css";
 import { persistor, store } from "./redux/store";
 
@@ -16,7 +17,9 @@ import { persistor, store } from "./redux/store";
     <React.StrictMode>
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
-          <App />
+          <I18nProvider>
+            <App />
+          </I18nProvider>
         </PersistGate>
       </Provider>
     </React.StrictMode>,

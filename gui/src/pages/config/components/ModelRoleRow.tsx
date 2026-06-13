@@ -4,6 +4,7 @@ import { ModelDescription } from "core";
 import { ReactNode } from "react";
 import { ToolTip } from "../../../components/gui/Tooltip";
 import { Button } from "../../../components/ui";
+import { useI18n } from "../../../i18n";
 import ModelRoleSelector from "./ModelRoleSelector";
 
 interface ModelRoleRowProps {
@@ -29,6 +30,8 @@ export function ModelRoleRow({
   setupURL,
   shortcut,
 }: ModelRoleRowProps) {
+  const { t } = useI18n();
+
   return (
     <div className="py-6 first:pt-0 last:pb-0">
       <div className="mb-2">
@@ -41,6 +44,7 @@ export function ModelRoleRow({
       <div className="flex items-center gap-2">
         <div className="flex-1">
           <ModelRoleSelector
+            role={role}
             displayName={displayName}
             description={description}
             models={models}
@@ -51,7 +55,7 @@ export function ModelRoleRow({
           />
         </div>
         {selectedModel && (
-          <ToolTip content="Configure">
+          <ToolTip content={t("models.configure")}>
             <Button
               variant="ghost"
               size="sm"

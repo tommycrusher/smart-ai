@@ -7,10 +7,11 @@ import { Card, Divider, Toggle } from "../../../components/ui";
 import { useAuth } from "../../../context/Auth";
 import { IdeMessengerContext } from "../../../context/IdeMessenger";
 import { AddModelForm } from "../../../forms/AddModelForm";
+import { useI18n } from "../../../i18n";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { setDialogMessage, setShowDialog } from "../../../redux/slices/uiSlice";
 import { updateSelectedModelByRole } from "../../../redux/thunks/updateSelectedModelByRole";
-import { getMetaKeyLabel, isJetBrains } from "../../../util";
+import { isJetBrains } from "../../../util";
 import { ConfigHeader } from "../components/ConfigHeader";
 import { ModelRoleRow } from "../components/ModelRoleRow";
 
@@ -34,10 +35,10 @@ export function ModelsSection() {
   const { selectedProfile } = useAuth();
   const dispatch = useAppDispatch();
   const ideMessenger = useContext(IdeMessengerContext);
+  const { t } = useI18n();
 
   const config = useAppSelector((state) => state.config.config);
   const jetbrains = isJetBrains();
-  const metaKey = getMetaKeyLabel();
   const [showAdditionalRoles, setShowAdditionalRoles] = useState(false);
 
   function handleRoleUpdate(role: ModelRole, model: ModelDescription | null) {
@@ -81,15 +82,15 @@ export function ModelsSection() {
   return (
     <div className="space-y-4">
       <ConfigHeader
-        title="Models"
+        title={t("models.title")}
         onAddClick={handleAddModel}
-        addButtonTooltip="Add model"
+        addButtonTooltip={t("models.addModel")}
       />
 
       <Card>
         <ModelRoleRow
           role="chat"
-          displayName="Chat"
+          displayName={t("models.roles.chat")}
           shortcut={
             <span className="text-2xs text-description-muted">
               (<Shortcut>{`cmd ${jetbrains ? "J" : "L"}`}</Shortcut>)
@@ -97,14 +98,14 @@ export function ModelsSection() {
           }
           description={
             <span>
-              Used in Chat, Plan, Agent mode (
+              {t("models.chat.descriptionPrefix")} (
               <a
                 href={MODEL_DOCS_URLS.chat.learnMore}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-inherit underline hover:brightness-125"
               >
-                Learn more
+                {t("common.learnMore")}
               </a>
               )
             </span>
@@ -120,17 +121,17 @@ export function ModelsSection() {
 
         <ModelRoleRow
           role="autocomplete"
-          displayName="Autocomplete"
+          displayName={t("models.roles.autocomplete")}
           description={
             <span>
-              Used in inline code completions as you type (
+              {t("models.autocomplete.descriptionPrefix")} (
               <a
                 href={MODEL_DOCS_URLS.autocomplete.learnMore}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-inherit underline hover:brightness-125"
               >
-                Learn more
+                {t("common.learnMore")}
               </a>
               )
             </span>
@@ -142,13 +143,12 @@ export function ModelsSection() {
           setupURL={MODEL_DOCS_URLS.autocomplete.setup}
         />
 
-        {/* Jetbrains has a model selector inline */}
         {!jetbrains && (
           <>
             <Divider />
             <ModelRoleRow
               role="edit"
-              displayName="Edit"
+              displayName={t("models.roles.edit")}
               shortcut={
                 <span className="text-2xs text-description-muted">
                   (<Shortcut>cmd I</Shortcut>)
@@ -156,14 +156,14 @@ export function ModelsSection() {
               }
               description={
                 <span>
-                  Used to transform a selected section of code (
+                  {t("models.edit.descriptionPrefix")} (
                   <a
                     href={MODEL_DOCS_URLS.edit.learnMore}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-inherit underline hover:brightness-125"
                   >
-                    Learn more
+                    {t("common.learnMore")}
                   </a>
                   )
                 </span>
@@ -182,14 +182,14 @@ export function ModelsSection() {
         <Toggle
           isOpen={showAdditionalRoles}
           onToggle={() => setShowAdditionalRoles(!showAdditionalRoles)}
-          title="Additional model roles"
-          subtitle="Apply, Embed, Rerank"
+          title={t("models.additionalRoles")}
+          subtitle={t("models.additionalRolesSubtitle")}
         >
           <div className="flex flex-col">
             <ModelRoleRow
               role="apply"
-              displayName="Apply"
-              description="Used to apply generated codeblocks to files"
+              displayName={t("models.roles.apply")}
+              description={t("models.apply.description")}
               models={config.modelsByRole.apply}
               selectedModel={config.selectedModelByRole.apply ?? undefined}
               onSelect={(model) => handleRoleUpdate("apply", model)}
@@ -201,8 +201,8 @@ export function ModelsSection() {
 
             <ModelRoleRow
               role="embed"
-              displayName="Embed"
-              description="Used to generate and query embeddings for the @codebase and @docs context providers"
+              displayName={t("models.roles.embed")}
+              description={t("models.embed.description")}
               models={config.modelsByRole.embed}
               selectedModel={config.selectedModelByRole.embed ?? undefined}
               onSelect={(model) => handleRoleUpdate("embed", model)}
@@ -214,8 +214,8 @@ export function ModelsSection() {
 
             <ModelRoleRow
               role="rerank"
-              displayName="Rerank"
-              description="Used for reranking results from the @codebase and @docs context providers"
+              displayName={t("models.roles.rerank")}
+              description={t("models.rerank.description")}
               models={config.modelsByRole.rerank}
               selectedModel={config.selectedModelByRole.rerank ?? undefined}
               onSelect={(model) => handleRoleUpdate("rerank", model)}
