@@ -910,15 +910,29 @@ class Ollama extends BaseLLM implements ModelInstaller {
 
         if (toolCalls?.length) {
           // Smart AI handles the response as a tool call delta but
-          // But ollama returns the full object in one response with no streaming
-          chatMessage.toolCalls = toolCalls.map((tc) => ({
-            type: "function",
-            id: `tc_${uuidv4()}`, // Generate a proper UUID with a prefix
-            function: {
-              name: tc.function.name,
-              arguments: JSON.stringify(tc.function.arguments),
-            },
-          }));
+          // But ollama returns the full object in one response with no streaming.
+          // IMPORTANT: Emit separate messages because GUI's streamUpdate reducer
+          // processes content OR toolCalls per message, never both.
+          const messages: ChatMessage[] = [];
+          if (thinkingMessage) {
+            messages.push(thinkingMessage);
+          }
+          if (content && content.trim()) {
+            messages.push({ role: "assistant", content });
+          }
+          messages.push({
+            role: "assistant",
+            content: "",
+            toolCalls: toolCalls.map((tc) => ({
+              type: "function" as const,
+              id: `tc_${uuidv4()}`,
+              function: {
+                name: tc.function.name,
+                arguments: JSON.stringify(tc.function.arguments),
+              },
+            })),
+          });
+          return messages;
         } else if (content) {
           // Fallback: some models (qwen2.5-coder, deepseek-coder) emit tool
           // calls as raw JSON in content instead of the native tool_calls
@@ -1041,6 +1055,8 @@ class Ollama extends BaseLLM implements ModelInstaller {
               }
 
               // If we've seen tool calls in previous chunks, keep accumulating
+              // BUT still yield content chunks so the UI shows progress.
+              // Note: This is the SECOND pass for chunks after tool calls detected.
               if (
                 hasToolCallsInStream &&
                 !("error" in j) &&
@@ -1049,6 +1065,8 @@ class Ollama extends BaseLLM implements ModelInstaller {
               ) {
                 if (j.message?.content) {
                   accumulatedContent += j.message.content;
+                  // Yield content progressively so UI doesn't appear stuck
+                  yield { role: "assistant", content: j.message.content };
                 }
                 if (j.message?.thinking) {
                   accumulatedThinking += j.message.thinking;
@@ -1081,7 +1099,9 @@ class Ollama extends BaseLLM implements ModelInstaller {
         }
       }
 
-      // If we accumulated tool calls during streaming, emit them now
+      // If we accumulated tool calls during streaming, emit them now.
+      // IMPORTANT: GUI's streamUpdate processes content OR toolCalls per message,
+      // never both. So we emit content (if any) and tool calls as separate messages.
       if (hasToolCallsInStream && accumulatedToolCalls.length > 0) {
         if (accumulatedThinking) {
           const thinkingMessage: ThinkingChatMessage = {
@@ -1091,9 +1111,15 @@ class Ollama extends BaseLLM implements ModelInstaller {
           yield thinkingMessage;
         }
 
-        const chatMessage: ChatMessage = {
+        // First emit any accumulated content as a separate message
+        if (accumulatedContent && accumulatedContent.trim()) {
+          yield { role: "assistant", content: accumulatedContent };
+        }
+
+        // Then emit tool calls as a separate message (GUI can't handle both in one)
+        yield {
           role: "assistant",
-          content: accumulatedContent,
+          content: "",
           toolCalls: accumulatedToolCalls.map((tc) => ({
             type: "function" as const,
             id: `tc_${uuidv4()}`,
@@ -1103,15 +1129,20 @@ class Ollama extends BaseLLM implements ModelInstaller {
             },
           })),
         };
-        yield chatMessage;
       } else if (hasToolCallsInStream && accumulatedContent) {
         // Stream had tool_calls markers but none parsed — try content-based fallback
         const { toolCalls: parsedToolCalls, remainingContent } =
           parseToolCallsFromOllamaContent(accumulatedContent);
         if (parsedToolCalls.length) {
-          const chatMessage: ChatMessage = {
+          // IMPORTANT: GUI's streamUpdate processes content OR toolCalls per
+          // message. Emit them separately.
+          const messages: ChatMessage[] = [];
+          if (remainingContent && remainingContent.trim()) {
+            messages.push({ role: "assistant", content: remainingContent });
+          }
+          messages.push({
             role: "assistant",
-            content: remainingContent,
+            content: "",
             toolCalls: parsedToolCalls.map((tc) => ({
               type: "function" as const,
               id: `tc_${uuidv4()}`,
@@ -1120,8 +1151,10 @@ class Ollama extends BaseLLM implements ModelInstaller {
                 arguments: JSON.stringify(tc.arguments),
               },
             })),
-          };
-          yield chatMessage;
+          });
+          for (const msg of messages) {
+            yield msg;
+          }
         } else {
           yield { role: "assistant", content: accumulatedContent };
         }
