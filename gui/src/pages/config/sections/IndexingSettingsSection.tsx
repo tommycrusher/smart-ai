@@ -85,22 +85,22 @@ export function IndexingSettingsSection() {
     <>
       <ConfigHeader title="Indexing" />
 
-      <Alert type="warning" className="mb-6">
+      <Alert type="info" className="mb-6">
         <div className="space-y-4">
           <div>
-            <div className="-mt-0.5 text-sm font-medium">
-              Indexing has been deprecated
-            </div>
+            <div className="-mt-0.5 text-sm font-medium">Codebase indexing</div>
             <div className="mt-1 text-xs">
-              Learn how to{" "}
+              Indexing enables fast search and context retrieval for your
+              codebase. You can also use{" "}
               <a
                 href="https://docs.smart-ai.dev/guides/codebase-documentation-awareness"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-inherit underline hover:brightness-125"
               >
-                make your agent aware of your codebase and documentation
-              </a>
+                tool-based codebase awareness
+              </a>{" "}
+              as an alternative or complement.
             </div>
           </div>
           <Divider className="border-inherit" />

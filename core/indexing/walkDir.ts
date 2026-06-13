@@ -131,7 +131,12 @@ class DFSWalker {
         entries = await cachedListdir.entries;
         listDirCacheHits++;
       } else {
-        const promise = this.ide.listDir(cur.walkableEntry.uri);
+        const promise = this.ide.listDir(cur.walkableEntry.uri).catch((err) => {
+          // Silently skip directories we cannot read (e.g. permission denied).
+          // This prevents the entire walk from failing when encountering
+          // protected system or addon directories.
+          return [] as [string, FileType][];
+        });
         walkDirCache.dirListCache.set(cur.walkableEntry.uri, {
           time: Date.now(),
           entries: promise,
@@ -309,9 +314,7 @@ export async function getIgnoreContext(
   // Find ignore files and get ignore arrays from their contexts
   // These are done separately so that .smartaiignore can override .gitignore
   const gitIgnoreFile = dirFiles.find((name) => name === ".gitignore");
-  const continueIgnoreFile = dirFiles.find(
-    (name) => name === ".smartaiignore",
-  );
+  const continueIgnoreFile = dirFiles.find((name) => name === ".smartaiignore");
 
   const getGitIgnorePatterns = async () => {
     if (gitIgnoreFile) {

@@ -200,8 +200,22 @@ void (async () => {
     if (!isMacTarget) rimrafSync(path.join(onnxBase, "darwin"));
     if (!isLinuxTarget) rimrafSync(path.join(onnxBase, "linux"));
     if (!isWinTarget) rimrafSync(path.join(onnxBase, "win32"));
-    // Drop large CUDA/TensorRT providers we don't ship
+    // Prune non-target architectures within the target platform
+    if (isMacTarget) {
+      if (targetArch !== "arm64" && fs.existsSync(path.join(onnxBase, "darwin", "arm64"))) {
+        rimrafSync(path.join(onnxBase, "darwin", "arm64"));
+      }
+      if (targetArch !== "x64" && fs.existsSync(path.join(onnxBase, "darwin", "x64"))) {
+        rimrafSync(path.join(onnxBase, "darwin", "x64"));
+      }
+    }
     if (isLinuxTarget) {
+      if (targetArch !== "arm64" && fs.existsSync(path.join(onnxBase, "linux", "arm64"))) {
+        rimrafSync(path.join(onnxBase, "linux", "arm64"));
+      }
+      if (targetArch !== "x64" && fs.existsSync(path.join(onnxBase, "linux", "x64"))) {
+        rimrafSync(path.join(onnxBase, "linux", "x64"));
+      }
       for (const f of [
         "libonnxruntime_providers_cuda.so",
         "libonnxruntime_providers_shared.so",
@@ -209,6 +223,14 @@ void (async () => {
       ]) {
         const fp = path.join(onnxBase, "linux", targetArch, f);
         if (fs.existsSync(fp)) fs.rmSync(fp);
+      }
+    }
+    if (isWinTarget) {
+      if (targetArch !== "arm64" && fs.existsSync(path.join(onnxBase, "win32", "arm64"))) {
+        rimrafSync(path.join(onnxBase, "win32", "arm64"));
+      }
+      if (targetArch !== "x64" && fs.existsSync(path.join(onnxBase, "win32", "x64"))) {
+        rimrafSync(path.join(onnxBase, "win32", "x64"));
       }
     }
   }

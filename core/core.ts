@@ -384,7 +384,7 @@ export class Core {
       const { config } = await this.configHandler.loadConfig();
       const allModels = Object.values(config?.modelsByRole ?? {}).flat();
       const existing = allModels.find(
-        (m) => m.provider === model.provider && m.model === model.model,
+        (m) => m.providerName === model.provider && m.model === model.model,
       );
       if (existing) {
         void this.ide.showToast(
@@ -1441,7 +1441,7 @@ export class Core {
           // Find the first Ollama model in config to get the correct apiBase
           // (user may be running Ollama on a non-default port like 11435)
           const ollamaModel = config.modelsByRole.chat.find(
-            (m) => m.provider === "ollama",
+            (m) => m.providerName === "ollama",
           );
           const apiBase = ollamaModel?.apiBase;
           const models = await new Ollama({ model: "", apiBase }).listModels();

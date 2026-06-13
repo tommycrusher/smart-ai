@@ -26,6 +26,7 @@
   },
   "dependencies": {
     "@ai-sdk/deepseek": "^2.0.20",
-    "@typescript-eslint/eslint-plugin": "^8.61.0"
+    "@typescript-eslint/eslint-plugin": "^8.61.0",
+    "extend": "^3.0.2"
   }
 }

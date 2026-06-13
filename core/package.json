@@ -14,6 +14,7 @@
     "sentry:sourcemaps": "sentry-cli sourcemaps inject --org continue-xd --project continue ./dist && sentry-cli sourcemaps upload --org continue-xd --project continue ./dist"
   },
   "type": "module",
+  "main": "dist/index.js",
   "author": "Smart AI",
   "license": "Apache-2.0",
   "devDependencies": {
