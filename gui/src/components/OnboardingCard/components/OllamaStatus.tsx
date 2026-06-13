@@ -11,11 +11,17 @@ import OllamaCompletedStep from "./OllamaCompletedStep";
 
 interface OllamaStatusProps {
   isOllamaConnected: boolean;
+  apiBase?: string;
 }
 
 const downloadUrl = providers.ollama!.downloadUrl!;
 
-export function OllamaStatus({ isOllamaConnected }: OllamaStatusProps) {
+export function OllamaStatus({
+  isOllamaConnected,
+  apiBase = "http://localhost:11434",
+}: OllamaStatusProps) {
+  // Extract host from apiBase for display
+  const ollamaHost = apiBase?.replace(/\/$/, "") ?? "http://localhost:11434";
   const ideMessenger = useContext(IdeMessengerContext);
 
   const [status, setStatus] = useState<OllamaConnectionStatuses>(
@@ -48,14 +54,14 @@ export function OllamaStatus({ isOllamaConnected }: OllamaStatusProps) {
       return (
         <div className="flex items-center justify-between">
           <p className="lines mr-1 w-3/4 font-mono text-sm">
-            Checking for connection to Ollama at http://localhost:11434
+            Checking for connection to Ollama at {ollamaHost}
           </p>
           <ArrowPathIcon className="animate-spin-slow mr-1 h-3 w-3" />
         </div>
       );
     case OllamaConnectionStatuses.Connected:
       return (
-        <OllamaCompletedStep text="Ollama is running at http://localhost:11434" />
+        <OllamaCompletedStep text={`Ollama is running at ${ollamaHost}`} />
       );
   }
 }

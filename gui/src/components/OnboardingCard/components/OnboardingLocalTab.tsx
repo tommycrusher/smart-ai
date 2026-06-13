@@ -35,6 +35,12 @@ export function OnboardingLocalTab({ isDialog }: OnboardingLocalTabProps) {
     string[]
   >([]);
   const { selectedProfile } = useAuth();
+  const config = useAppSelector((store) => store.config.config);
+
+  // Get apiBase from first Ollama model in config, fallback to default
+  const ollamaApiBase =
+    config?.modelsByRole?.chat?.find((m) => m.providerName === "ollama")
+      ?.apiBase ?? "http://localhost:11434";
 
   const [isOllamaConnected, setIsOllamaConnected] = useState(false);
 
@@ -143,7 +149,10 @@ export function OnboardingLocalTab({ isDialog }: OnboardingLocalTabProps) {
             <p className="text-foreground mb-0 text-base font-bold leading-tight">
               Install Ollama
             </p>
-            <OllamaStatus isOllamaConnected={isOllamaConnected} />
+            <OllamaStatus
+              isOllamaConnected={isOllamaConnected}
+              apiBase={ollamaApiBase}
+            />
           </div>
 
           <OllamaModelDownload

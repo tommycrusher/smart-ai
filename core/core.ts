@@ -1438,7 +1438,13 @@ export class Core {
         return await model.listModels();
       } else {
         if (msg.data.title === "Ollama") {
-          const models = await new Ollama({ model: "" }).listModels();
+          // Find the first Ollama model in config to get the correct apiBase
+          // (user may be running Ollama on a non-default port like 11435)
+          const ollamaModel = config.modelsByRole.chat.find(
+            (m) => m.providerName === "ollama",
+          );
+          const apiBase = ollamaModel?.apiBase;
+          const models = await new Ollama({ model: "", apiBase }).listModels();
           return models;
         } else if (msg.data.title === "Lemonade") {
           const models = await new Lemonade({ model: "" }).listModels();
