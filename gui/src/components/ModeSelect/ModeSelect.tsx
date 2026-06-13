@@ -34,8 +34,20 @@ export function ModeSelect() {
     return selectedProfile?.profileType === "local";
   }, [selectedProfile]);
 
+  // Ollama models work unconditionally with all modes via native or
+  // system-message tools, so never show compatibility warnings for them.
+  const isOllama = useMemo(() => {
+    if (!selectedModel) {
+      return false;
+    }
+    return (
+      selectedModel.provider === "ollama" ||
+      selectedModel.underlyingProviderName === "ollama"
+    );
+  }, [selectedModel]);
+
   const showAgentCompatibilityWarning =
-    isGoodAtAgentMode === false && !isLocalAgent;
+    !isOllama && isGoodAtAgentMode === false && !isLocalAgent;
 
   const { mainEditor } = useMainEditor();
   const metaKeyLabel = useMemo(() => {
@@ -48,7 +60,7 @@ export function ModeSelect() {
     } else if (mode === "plan") {
       dispatch(setMode("agent"));
     } else if (mode === "agent") {
-      dispatch(setMode(isLocalAgent ? "chat" : "background"));
+      dispatch(setMode(isLocalAgent && !isOllama ? "chat" : "background"));
     } else {
       dispatch(setMode("chat"));
     }
@@ -56,7 +68,7 @@ export function ModeSelect() {
     if (!document.activeElement?.classList?.contains("ProseMirror")) {
       mainEditor?.commands.focus();
     }
-  }, [dispatch, mode, mainEditor, isLocalAgent]);
+  }, [dispatch, mode, mainEditor, isLocalAgent, isOllama]);
 
   const selectMode = useCallback(
     (newMode: MessageModes) => {
@@ -83,10 +95,10 @@ export function ModeSelect() {
   }, [cycleMode]);
 
   useEffect(() => {
-    if (mode === "background" && isLocalAgent) {
+    if (mode === "background" && !isOllama && isLocalAgent) {
       dispatch(setMode("agent"));
     }
-  }, [mode, isLocalAgent, dispatch]);
+  }, [mode, isOllama, isLocalAgent, dispatch]);
 
   const compatibilityHint = (modeLabel: string) => (
     <ToolTip
@@ -144,7 +156,10 @@ export function ModeSelect() {
             <div className="flex flex-row items-center gap-1.5">
               <ModeIcon mode="plan" />
               <span>Plan</span>
-              <ToolTip style={{ zIndex: 200001 }} content="Read-only/MCP tools available">
+              <ToolTip
+                style={{ zIndex: 200001 }}
+                content="Read-only/MCP tools available"
+              >
                 <InformationCircleIcon className="h-2.5 w-2.5 flex-shrink-0" />
               </ToolTip>
             </div>
@@ -168,18 +183,26 @@ export function ModeSelect() {
             />
           </ListboxOption>
 
-          <ListboxOption value="background" className="gap-1" disabled={isLocalAgent}>
+          <ListboxOption
+            value="background"
+            className="gap-1"
+            disabled={!isOllama && isLocalAgent}
+          >
             <div className="flex flex-row items-center gap-1.5">
               <ModeIcon mode="background" />
               <span>Background</span>
               <ToolTip
                 style={{ zIndex: 200001 }}
-                content="Background mode cannot be used with local agents."
+                content={
+                  isOllama
+                    ? "All tools available in background"
+                    : "Background mode cannot be used with local agents."
+                }
               >
                 <InformationCircleIcon className="h-2.5 w-2.5 flex-shrink-0" />
               </ToolTip>
             </div>
-            {isLocalAgent && (
+            {!isOllama && isLocalAgent && (
               <ExclamationTriangleIcon className="text-warning h-2.5 w-2.5" />
             )}
             <CheckIcon
