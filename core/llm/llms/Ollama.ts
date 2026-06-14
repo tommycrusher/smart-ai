@@ -518,8 +518,14 @@ class Ollama extends BaseLLM implements ModelInstaller {
    * will fall back to content-based tool call parsing.
    */
   private static readonly NATIVE_TOOL_MODELS = new Set([
-    "qwen3",
-    "qwen2.5",
+    // Note: qwen3 and qwen3.6 are excluded because they have critical bugs in Ollama's
+    // tool formatting that cause context truncation and response issues.
+    // They will still use tools, but via system-message format instead of native tools.
+    // "qwen3",
+    // "qwen3.6",
+    // Note: qwen2.5 is excluded due to context truncation issues when using
+    // native tools. Falling back to content-based parsing resolves this.
+    // "qwen2.5",
     // Note: qwen2.5-coder is excluded because it often emits tool calls as raw
     // JSON in content instead of using Ollama's native tool_calls field.
     // Falling back to non-streaming mode ensures reliable content-based parsing.
@@ -539,7 +545,6 @@ class Ollama extends BaseLLM implements ModelInstaller {
     "firefunction",
     "gemma3",
     "phi4",
-    "qwen3.6",
     // smarterp-coder excluded for same reason as qwen2.5-coder
     // "smarterp-coder",
   ]);

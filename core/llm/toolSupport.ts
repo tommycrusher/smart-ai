@@ -156,6 +156,7 @@ export const PROVIDER_TOOL_SUPPORT: Record<string, (model: string) => boolean> =
 
       // Qwen3 has a critical bug in Ollama's /api chat tool formatting:
       // tool definitions are serialized as Go structs instead of valid JSON.
+      // This causes context truncation and response issues.
       // Use system-message tools instead until Ollama #14601 is fixed.
       // https://github.com/ollama/ollama/issues/14601
       if (modelName.toLowerCase().includes("qwen3")) {
@@ -198,7 +199,11 @@ export const PROVIDER_TOOL_SUPPORT: Record<string, (model: string) => boolean> =
           "llama3.2",
           "llama3.1",
           "qwen2",
-          "qwen3",
+          // Note: qwen3 and qwen3.6 are excluded from native tool support due to
+          // tool formatting bugs that cause context truncation and response issues.
+          // They will still use tools via system-message format.
+          // "qwen3",
+          // "qwen3.6",
           "mixtral",
           "command-r",
           "command-a",
