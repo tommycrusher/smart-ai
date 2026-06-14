@@ -184,7 +184,20 @@ async function copyNodeModules() {
   // Copy node_modules for pre-built binaries
   process.chdir(path.join(continueDir, "extensions", "vscode"));
 
-  const NODE_MODULES_TO_COPY = ["@lancedb", "@vscode/ripgrep", "workerpool"];
+  const NODE_MODULES_TO_COPY = [
+    "@lancedb",
+    "@vscode/ripgrep",
+    "workerpool",
+    // External modules (see esbuild.js external list) required at runtime by
+    // google-auth-library/gaxios/jwa. Must be copied since node_modules/** is
+    // excluded from the VSIX (see .vscodeignore).
+    "extend",
+    "ecdsa-sig-formatter",
+    "safe-buffer",
+    // Required by sqlite3 (which is external for per-platform prebuilds)
+    "bindings",
+    "file-uri-to-path",
+  ];
   fs.mkdirSync("out/node_modules", { recursive: true });
 
   await Promise.all(
