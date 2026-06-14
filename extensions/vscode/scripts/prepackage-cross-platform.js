@@ -165,9 +165,6 @@ async function package(target, os, arch, exe) {
     "models/all-MiniLM-L6-v2/vocab.txt",
     "models/all-MiniLM-L6-v2/onnx/model_quantized.onnx",
 
-    // node_modules (it's a bit confusing why this is necessary)
-    `node_modules/@vscode/ripgrep/bin/rg${exe}`,
-
     // out directory (where the extension.js lives)
     // "out/extension.js", This is generated afterward by vsce
     // web-tree-sitter
