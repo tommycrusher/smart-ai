@@ -295,8 +295,11 @@ async function copySqliteBinary() {
 
 async function downloadRipgrepBinary(target) {
   console.log("[info] Downloading pre-built ripgrep binary");
-  rimrafSync("node_modules/@vscode/ripgrep/bin");
-  fs.mkdirSync("node_modules/@vscode/ripgrep/bin", { recursive: true });
+  // Operate on out/node_modules so the target-platform binary ends up in the
+  // VSIX. copyNodeModules() has already copied the host-platform package.
+  const outRgBin = "out/node_modules/@vscode/ripgrep/bin";
+  rimrafSync(outRgBin);
+  fs.mkdirSync(outRgBin, { recursive: true });
 
   const downloadUrl = {
     "darwin-arm64":
@@ -315,18 +318,18 @@ async function downloadRipgrepBinary(target) {
 
   if (target.startsWith("win")) {
     execCmdSync(
-      `curl -L -o node_modules/@vscode/ripgrep/bin/build.zip ${downloadUrl}`,
+      `curl -L -o ${outRgBin}/build.zip ${downloadUrl}`,
     );
-    execCmdSync("cd node_modules/@vscode/ripgrep/bin && unzip build.zip");
-    fs.unlinkSync("node_modules/@vscode/ripgrep/bin/build.zip");
+    execCmdSync(`cd ${outRgBin} && unzip build.zip`);
+    fs.unlinkSync(`${outRgBin}/build.zip`);
   } else {
     execCmdSync(
-      `curl -L -o node_modules/@vscode/ripgrep/bin/build.tar.gz ${downloadUrl}`,
+      `curl -L -o ${outRgBin}/build.tar.gz ${downloadUrl}`,
     );
     execCmdSync(
-      "cd node_modules/@vscode/ripgrep/bin && tar -xvzf build.tar.gz",
+      `cd ${outRgBin} && tar -xvzf build.tar.gz`,
     );
-    fs.unlinkSync("node_modules/@vscode/ripgrep/bin/build.tar.gz");
+    fs.unlinkSync(`${outRgBin}/build.tar.gz`);
   }
 }
 
