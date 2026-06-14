@@ -112,14 +112,17 @@ async function package(target, os, arch, exe) {
     "@lancedb",
   );
 
+  // copy node_modules to out/node_modules FIRST (includes sqlite3 JS wrapper
+  // with the HOST platform binary in node_modules/sqlite3/build/Release).
+  await copyNodeModules();
+
   // *** sqlite ***
+  // Download the target-platform native binary and overwrite the one inside
+  // out/node_modules/sqlite3/build/Release that was just copied above.
   await downloadSqliteBinary(target);
   await copySqliteBinary();
 
   await downloadRipgrepBinary(target);
-
-  // copy node_modules to out/node_modules
-  await copyNodeModules();
 
   // Copy over any worker files
   fs.cpSync(
