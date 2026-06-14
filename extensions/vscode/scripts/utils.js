@@ -197,6 +197,10 @@ async function copyNodeModules() {
     // Required by sqlite3 (which is external for per-platform prebuilds)
     "bindings",
     "file-uri-to-path",
+    // The sqlite3 package itself (JS wrapper + binary). Must be copied because
+    // it is external in esbuild. The native binary is overwritten afterward by
+    // copySqliteBinary() with the target-platform prebuild.
+    "sqlite3",
   ];
   fs.mkdirSync("out/node_modules", { recursive: true });
 
@@ -253,10 +257,14 @@ async function downloadSqliteBinary(target) {
 async function copySqliteBinary() {
   process.chdir(path.join(continueDir, "extensions", "vscode"));
   console.log("[info] Copying sqlite node binding from core");
+
+  // Copy the native binary to out/build (used by validateFilesPresent)
+  const coreBuildPath = path.join(__dirname, "../../../core/node_modules/sqlite3/build");
+  const outBuildPath = path.join(__dirname, "../out/build");
   await new Promise((resolve, reject) => {
     ncp(
-      path.join(__dirname, "../../../core/node_modules/sqlite3/build"),
-      path.join(__dirname, "../out/build"),
+      coreBuildPath,
+      outBuildPath,
       { dereference: true },
       (error) => {
         if (error) {
@@ -268,6 +276,21 @@ async function copySqliteBinary() {
       },
     );
   });
+
+  // Also overwrite the binary inside out/node_modules/sqlite3 so the sqlite3
+  // JS wrapper can find it at runtime (it looks in node_modules/sqlite3/build).
+  const targetBinaryPath = path.join(coreBuildPath, "Release", "node_sqlite3.node");
+  const outNodeModulesBinaryPath = path.join(
+    __dirname,
+    "../out/node_modules/sqlite3/build/Release/node_sqlite3.node",
+  );
+  if (fs.existsSync(targetBinaryPath)) {
+    fs.mkdirSync(path.join(__dirname, "../out/node_modules/sqlite3/build/Release"), {
+      recursive: true,
+    });
+    fs.copyFileSync(targetBinaryPath, outNodeModulesBinaryPath);
+    console.log("[info] Overwrote sqlite3 native binary in out/node_modules/sqlite3");
+  }
 }
 
 async function downloadRipgrepBinary(target) {
